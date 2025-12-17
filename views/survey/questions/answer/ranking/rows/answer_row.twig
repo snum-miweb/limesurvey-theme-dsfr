@@ -1,0 +1,35 @@
+{#
+/**
+ * Ranking question, item Html - DSFR Theme
+ * @var $value
+ * @var $selected
+ * @var $classes
+ * @var $id
+ * @var $optiontext
+ * @var $labeltext
+ * @var $myfname
+ * @var $thisvalue
+ * @var $options
+ */
+#}
+
+<li class="select-item fr-mb-2w">
+    <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle">
+        <div class="fr-col-12 fr-col-md-4">
+            <label for="answer{{myfname}}" class="fr-label">
+                {{ processString(labeltext) }}
+            </label>
+        </div>
+        <div class="fr-col-12 fr-col-md-8">
+            <select class='fr-select form-select' name="{{myfname}}" id="answer{{myfname}}">
+                {% for option in options %}
+                    <option value="{{ option.value }}" {{ option.selected }} class='{{option.classes}}'>
+                        {{ flatString(processString(option.optiontext,1)) }}
+                    </option>
+                {% endfor %}
+            </select>
+            <!-- Hidden form: maybe can be replaced with ranking.js -->
+            <input type="hidden" id="java{{myfname}}" disabled="disabled" value="{{thisvalue}}"/>
+        </div>
+    </div>
+</li>

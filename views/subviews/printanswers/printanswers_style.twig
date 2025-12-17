@@ -1,0 +1,427 @@
+<style>
+/*!
+ * DSFR Print Styles for LimeSurvey
+ * Based on Système de Design de l'État Français
+ * Minimal print stylesheet - replaces Bootstrap 3.3.7
+ */
+
+/* ============================================
+   PRINT RESET & BASE
+   ============================================ */
+@media print {
+    * {
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    body {
+        font-family: "Marianne", Arial, sans-serif;
+        font-size: 12pt;
+        line-height: 1.5;
+        color: #000;
+        background: #fff;
+    }
+
+    /* ============================================
+       DSFR GRID SYSTEM FOR PRINT
+       ============================================ */
+    .fr-container,
+    .fr-container--fluid {
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    .fr-grid-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: -0.5rem;
+        margin-right: -0.5rem;
+    }
+
+    .fr-grid-row:before,
+    .fr-grid-row:after {
+        content: " ";
+        display: table;
+    }
+
+    .fr-grid-row:after {
+        clear: both;
+    }
+
+    /* Columns */
+    [class*="fr-col-"] {
+        position: relative;
+        min-height: 1px;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        float: left;
+    }
+
+    .fr-col-1 { width: 8.333333%; }
+    .fr-col-2 { width: 16.666667%; }
+    .fr-col-3 { width: 25%; }
+    .fr-col-4 { width: 33.333333%; }
+    .fr-col-5 { width: 41.666667%; }
+    .fr-col-6 { width: 50%; }
+    .fr-col-7 { width: 58.333333%; }
+    .fr-col-8 { width: 66.666667%; }
+    .fr-col-9 { width: 75%; }
+    .fr-col-10 { width: 83.333333%; }
+    .fr-col-11 { width: 91.666667%; }
+    .fr-col-12 { width: 100%; }
+
+    /* Small breakpoint */
+    .fr-col-sm-1 { width: 8.333333%; }
+    .fr-col-sm-2 { width: 16.666667%; }
+    .fr-col-sm-3 { width: 25%; }
+    .fr-col-sm-4 { width: 33.333333%; }
+    .fr-col-sm-5 { width: 41.666667%; }
+    .fr-col-sm-6 { width: 50%; }
+    .fr-col-sm-7 { width: 58.333333%; }
+    .fr-col-sm-8 { width: 66.666667%; }
+    .fr-col-sm-9 { width: 75%; }
+    .fr-col-sm-10 { width: 83.333333%; }
+    .fr-col-sm-11 { width: 91.666667%; }
+    .fr-col-sm-12 { width: 100%; }
+
+    /* Medium breakpoint */
+    .fr-col-md-1 { width: 8.333333%; }
+    .fr-col-md-2 { width: 16.666667%; }
+    .fr-col-md-3 { width: 25%; }
+    .fr-col-md-4 { width: 33.333333%; }
+    .fr-col-md-5 { width: 41.666667%; }
+    .fr-col-md-6 { width: 50%; }
+    .fr-col-md-7 { width: 58.333333%; }
+    .fr-col-md-8 { width: 66.666667%; }
+    .fr-col-md-9 { width: 75%; }
+    .fr-col-md-10 { width: 83.333333%; }
+    .fr-col-md-11 { width: 91.666667%; }
+    .fr-col-md-12 { width: 100%; }
+
+    /* Large breakpoint */
+    .fr-col-lg-1 { width: 8.333333%; }
+    .fr-col-lg-2 { width: 16.666667%; }
+    .fr-col-lg-3 { width: 25%; }
+    .fr-col-lg-4 { width: 33.333333%; }
+    .fr-col-lg-5 { width: 41.666667%; }
+    .fr-col-lg-6 { width: 50%; }
+    .fr-col-lg-7 { width: 58.333333%; }
+    .fr-col-lg-8 { width: 66.666667%; }
+    .fr-col-lg-9 { width: 75%; }
+    .fr-col-lg-10 { width: 83.333333%; }
+    .fr-col-lg-11 { width: 91.666667%; }
+    .fr-col-lg-12 { width: 100%; }
+
+    /* Offsets */
+    .fr-col-offset-1 { margin-left: 8.333333%; }
+    .fr-col-offset-2 { margin-left: 16.666667%; }
+    .fr-col-offset-3 { margin-left: 25%; }
+    .fr-col-offset-4 { margin-left: 33.333333%; }
+    .fr-col-offset-1--lg { margin-left: 8.333333%; }
+    .fr-col-offset-2--lg { margin-left: 16.666667%; }
+    .fr-col-offset-3--lg { margin-left: 25%; }
+    .fr-col-offset-4--lg { margin-left: 33.333333%; }
+
+    /* ============================================
+       TYPOGRAPHY
+       ============================================ */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: "Marianne", Arial, sans-serif;
+        font-weight: 700;
+        page-break-after: avoid;
+        orphans: 3;
+        widows: 3;
+    }
+
+    h1 { font-size: 2rem; margin: 1.5rem 0 1rem; }
+    h2 { font-size: 1.5rem; margin: 1.25rem 0 0.75rem; }
+    h3 { font-size: 1.25rem; margin: 1rem 0 0.5rem; }
+    h4 { font-size: 1.125rem; margin: 0.75rem 0 0.5rem; }
+    h5 { font-size: 1rem; margin: 0.5rem 0 0.25rem; }
+    h6 { font-size: 0.875rem; margin: 0.5rem 0 0.25rem; }
+
+    p, ul, ol, dl {
+        orphans: 3;
+        widows: 3;
+    }
+
+    a {
+        color: #000091; /* DSFR blue-france */
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+        font-size: 0.875em;
+    }
+
+    /* Don't show links for fragment identifiers or javascript: */
+    a[href^="#"]:after,
+    a[href^="javascript:"]:after {
+        content: "";
+    }
+
+    /* ============================================
+       DSFR COMPONENTS FOR PRINT
+       ============================================ */
+
+    /* Alerts */
+    .fr-alert {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border: 1px solid #ddd;
+        page-break-inside: avoid;
+    }
+
+    .fr-alert--error {
+        border-left: 4px solid #CE0500; /* DSFR error red */
+        background-color: #FFF5F5;
+    }
+
+    .fr-alert--warning {
+        border-left: 4px solid #FC5D00; /* DSFR warning orange */
+        background-color: #FFF8F5;
+    }
+
+    .fr-alert--success {
+        border-left: 4px solid #18753C; /* DSFR success green */
+        background-color: #F5FFF8;
+    }
+
+    .fr-alert--info {
+        border-left: 4px solid #0063CB; /* DSFR info blue */
+        background-color: #F5F8FF;
+    }
+
+    /* Callouts */
+    .fr-callout {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: 2px solid #ddd;
+        page-break-inside: avoid;
+    }
+
+    .fr-callout--red-marianne {
+        border-color: #C9191E;
+    }
+
+    .fr-callout--grey-light {
+        background-color: #F6F6F6;
+    }
+
+    .fr-callout__title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem;
+    }
+
+    .fr-callout__text {
+        margin: 0;
+    }
+
+    /* Tables */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        page-break-inside: avoid;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    tr {
+        page-break-inside: avoid;
+    }
+
+    th, td {
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    th {
+        font-weight: 700;
+        background-color: #F6F6F6;
+    }
+
+    /* ============================================
+       UTILITY CLASSES
+       ============================================ */
+
+    /* Spacing */
+    .fr-mb-1w { margin-bottom: 0.25rem; }
+    .fr-mb-2w { margin-bottom: 0.5rem; }
+    .fr-mb-3w { margin-bottom: 1rem; }
+    .fr-mb-4w { margin-bottom: 1.5rem; }
+    .fr-mb-6w { margin-bottom: 2.5rem; }
+
+    .fr-mt-1w { margin-top: 0.25rem; }
+    .fr-mt-2w { margin-top: 0.5rem; }
+    .fr-mt-3w { margin-top: 1rem; }
+    .fr-mt-4w { margin-top: 1.5rem; }
+    .fr-mt-6w { margin-top: 2.5rem; }
+
+    .fr-p-1w { padding: 0.25rem; }
+    .fr-p-2w { padding: 0.5rem; }
+    .fr-p-3w { padding: 1rem; }
+    .fr-p-4w { padding: 1.5rem; }
+
+    /* Display */
+    .fr-hidden {
+        display: none !important;
+    }
+
+    .fr-sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    /* ============================================
+       LIMESURVEY SPECIFIC
+       ============================================ */
+
+    .survey-question {
+        page-break-inside: avoid;
+        margin-bottom: 2rem;
+    }
+
+    .question-title {
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .answer-item {
+        margin-bottom: 0.5rem;
+    }
+
+    /* Hide elements not needed in print */
+    .ls-no-js-hidden,
+    .fr-header__navbar,
+    .fr-header__tools,
+    .fr-modal,
+    button,
+    input[type="button"],
+    input[type="submit"] {
+        display: none !important;
+    }
+
+    /* Show hidden content for print */
+    .printonly {
+        display: block !important;
+    }
+
+    /* Form elements */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    textarea,
+    select {
+        border: 1px solid #333;
+        padding: 0.25rem 0.5rem;
+        font-size: 11pt;
+        background: #fff;
+    }
+
+    /* Radio and checkbox */
+    input[type="radio"],
+    input[type="checkbox"] {
+        margin-right: 0.25rem;
+    }
+
+    /* Page breaks */
+    .page-break-before {
+        page-break-before: always;
+    }
+
+    .page-break-after {
+        page-break-after: always;
+    }
+
+    .avoid-break {
+        page-break-inside: avoid;
+    }
+
+    /* ============================================
+       HEADER & FOOTER
+       ============================================ */
+    .fr-header {
+        border-bottom: 2px solid #000091;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+    }
+
+    .fr-header__service-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .fr-header__service-tagline {
+        font-size: 1rem;
+        margin: 0.25rem 0 0;
+        color: #666;
+    }
+
+    .fr-footer {
+        border-top: 1px solid #ddd;
+        margin-top: 2rem;
+        padding-top: 1rem;
+        font-size: 0.875rem;
+    }
+}
+
+/* ============================================
+   SPECIFIC PRINT ADJUSTMENTS
+   ============================================ */
+@page {
+    margin: 2cm;
+}
+
+@media print {
+    /* Ensure proper spacing for print answers */
+    .printanswers-question {
+        margin-bottom: 2rem;
+        page-break-inside: avoid;
+    }
+
+    .printanswers-title {
+        font-weight: 700;
+        font-size: 1.125rem;
+        margin-bottom: 0.75rem;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 0.25rem;
+    }
+
+    .printanswers-answer {
+        padding-left: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Clean table display */
+    .printanswers-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .printanswers-table th,
+    .printanswers-table td {
+        padding: 0.5rem;
+        border: 1px solid #333;
+    }
+
+    .printanswers-table th {
+        background-color: #F6F6F6;
+        font-weight: 700;
+    }
+}
+</style>

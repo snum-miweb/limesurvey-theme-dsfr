@@ -1,0 +1,174 @@
+{#
+    LimeSurvey
+    Copyright (C) 2007-2017 The LimeSurvey Project Team / Louis Gac
+    All rights reserved.
+    License: GNU/GPL License v2 or later, see LICENSE.php
+    LimeSurvey is free software. This version may have been modified pursuant
+    to the GNU General Public License, and as distributed it includes or
+    is derivative of works licensed under the GNU General Public License or
+    other free or open source software licenses.
+    See COPYRIGHT.php for copyright notices and details.
+
+    (¯`·._.·(¯`·._.· Header  ·._.·´¯)·._.·´¯)
+
+    This file generates the headers.
+    Most of the time, it is not the right place to add your own JS/CSS - instead, use the config.xml file for that.
+#}
+
+{% if(aSurveyInfo.jYesNo) %}
+    {{ registerScript('activateConfirmLanguage',"$.extend(LSvar.lang," ~ aSurveyInfo.jYesNo ~ ")", "POS_BEGIN") }}
+{% endif %}
+{{ registerScript('activateActionLink',"activateActionLink();", "POS_POSTSCRIPT") }}
+{{ registerScript('activateConfirmButton',"activateConfirmButton();", "POS_POSTSCRIPT") }}
+
+{# Stubs Bootstrap et TempusDominus - évite les erreurs #}
+{# Utiliser POS_HEAD pour charger très tôt #}
+{{ registerScript('bootstrapStubsHead',"
+    (function(){
+        // Intercepter les erreurs TempusDominus (No element was provided)
+        window.addEventListener('error', function(e) {
+            if (e.message && (e.message.includes('No element was provided') || e.message.includes('TD:'))) {
+                e.preventDefault();
+                e.stopPropagation();
+                return true;
+            }
+        }, true);
+
+        // Wrapper pour TempusDominus qui gère l'absence d'élément
+        var originalTD = null;
+        Object.defineProperty(window, 'TempusDominus', {
+            get: function() { return originalTD; },
+            set: function(val) {
+                if (val && typeof val === 'function') {
+                    originalTD = function(element, options) {
+                        if (!element) {
+                            // Retourner un objet stub si pas d'élément
+                            return {
+                                dates: { picked: [] },
+                                updateOptions: function() {},
+                                dispose: function() {},
+                                show: function() {},
+                                hide: function() {},
+                                toggle: function() {},
+                                clear: function() {},
+                                subscribe: function() {},
+                                unsubscribe: function() {}
+                            };
+                        }
+                        try {
+                            return new val(element, options);
+                        } catch(err) {
+                            console.warn('TempusDominus error caught:', err.message);
+                            return {
+                                dates: { picked: [] },
+                                updateOptions: function() {},
+                                dispose: function() {},
+                                show: function() {},
+                                hide: function() {},
+                                toggle: function() {},
+                                clear: function() {},
+                                subscribe: function() {},
+                                unsubscribe: function() {}
+                            };
+                        }
+                    };
+                    // Copier les propriétés statiques
+                    for (var key in val) {
+                        if (val.hasOwnProperty(key)) {
+                            originalTD[key] = val[key];
+                        }
+                    }
+                } else {
+                    originalTD = val;
+                }
+            },
+            configurable: true
+        });
+
+        function initStubs() {
+            if (typeof jQuery !== 'undefined' && jQuery.fn) {
+                // Ne PAS écraser modal si Bootstrap est chargé
+                if (!jQuery.fn.tooltip && typeof bootstrap === 'undefined') jQuery.fn.tooltip = function() { return this; };
+                if (!jQuery.fn.selectpicker) jQuery.fn.selectpicker = function() { return this; };
+                if (!jQuery.fn.popover && typeof bootstrap === 'undefined') jQuery.fn.popover = function() { return this; };
+                // IMPORTANT: Ne pas écraser modal - Bootstrap en a besoin
+                // if (!jQuery.fn.modal) jQuery.fn.modal = function() { return this; };
+                if (!jQuery.fn.collapse && typeof bootstrap === 'undefined') jQuery.fn.collapse = function() { return this; };
+                if (!jQuery.fn.dropdown && typeof bootstrap === 'undefined') jQuery.fn.dropdown = function() { return this; };
+                if (!jQuery.fn.tab && typeof bootstrap === 'undefined') jQuery.fn.tab = function() { return this; };
+                if (!jQuery.fn.button && typeof bootstrap === 'undefined') jQuery.fn.button = function() { return this; };
+                if (!jQuery.fn.carousel && typeof bootstrap === 'undefined') jQuery.fn.carousel = function() { return this; };
+                if (!jQuery.fn.scrollspy && typeof bootstrap === 'undefined') jQuery.fn.scrollspy = function() { return this; };
+                if (!jQuery.fn.affix) jQuery.fn.affix = function() { return this; };
+                // jQuery datetimepicker stub
+                if (!jQuery.fn.datetimepicker) jQuery.fn.datetimepicker = function() { return this; };
+                return true;
+            }
+            return false;
+        }
+        if (!initStubs()) {
+            var interval = setInterval(function() {
+                if (initStubs()) clearInterval(interval);
+            }, 10);
+        }
+    })();
+", "POS_HEAD") }}
+{# Aussi en POS_BEGIN pour être sûr #}
+{{ registerScript('bootstrapStubsBegin',"
+    if (typeof jQuery !== 'undefined' && jQuery.fn) {
+        // Ne PAS écraser les méthodes si Bootstrap est chargé
+        var bsLoaded = typeof bootstrap !== 'undefined';
+        if (!jQuery.fn.tooltip && !bsLoaded) jQuery.fn.tooltip = function() { return this; };
+        if (!jQuery.fn.selectpicker) jQuery.fn.selectpicker = function() { return this; };
+        if (!jQuery.fn.popover && !bsLoaded) jQuery.fn.popover = function() { return this; };
+        // IMPORTANT: Ne pas écraser modal - Bootstrap en a besoin pour file upload
+        if (!jQuery.fn.collapse && !bsLoaded) jQuery.fn.collapse = function() { return this; };
+        if (!jQuery.fn.dropdown && !bsLoaded) jQuery.fn.dropdown = function() { return this; };
+        if (!jQuery.fn.tab && !bsLoaded) jQuery.fn.tab = function() { return this; };
+        if (!jQuery.fn.button && !bsLoaded) jQuery.fn.button = function() { return this; };
+        if (!jQuery.fn.carousel && !bsLoaded) jQuery.fn.carousel = function() { return this; };
+        if (!jQuery.fn.scrollspy && !bsLoaded) jQuery.fn.scrollspy = function() { return this; };
+        if (!jQuery.fn.affix) jQuery.fn.affix = function() { return this; };
+        if (!jQuery.fn.datetimepicker) jQuery.fn.datetimepicker = function() { return this; };
+    }
+    // TempusDominus stub si pas encore défini
+    if (typeof window.TempusDominus === 'undefined') {
+        window.TempusDominus = function(el, opts) {
+            return { dates: { picked: [] }, updateOptions: function(){}, dispose: function(){}, show: function(){}, hide: function(){}, toggle: function(){}, clear: function(){} };
+        };
+    }
+", "POS_BEGIN") }}
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="LimeSurvey http://www.limesurvey.org" />
+
+    {{ aSurveyInfo.metas }}
+
+    <title>
+        {{ processString(aSurveyInfo.surveyls_title,1) }}
+    </title>
+    {% if(imageSrc('./files/favicon.ico')) %}
+        <link rel="shortcut icon" href="{{ imageSrc('./files/favicon.ico') }}" />
+    {% endif %}
+    <script type="text/javascript">
+        if(window.basicThemeScripts === undefined){ 
+            window.basicThemeScripts = new ThemeScripts(); 
+        } 
+    </script>
+    {# LSvar update with  #}
+    {{ registerScript("LSvarTemplateInit","LSvar= LSvar || {};","POS_HEAD") }}
+
+    {# Options du thème DSFR accessibles en JavaScript #}
+    {{ registerScript("LSThemeOptionsInit","window.LSThemeOptions = window.LSThemeOptions || {}; LSThemeOptions.sanitize_rte_content = '" ~ (aSurveyInfo.options.sanitize_rte_content|default('on')) ~ "';","POS_HEAD") }}
+
+    {% if(aSurveyInfo.options.fixnumauto and aSurveyInfo.options.fixnumauto != "off") %}
+        {{ registerScript("LSvarTemplateRealFixNumAuto","LSvar.bFixNumAuto = "~(aSurveyInfo.options.fixnumauto == "enable" ? 1 : 0)~";","POS_HEAD") }}
+        {{ registerScript("LSvarTemplateRealNumRealValue","LSvar.bNumRealValue = "~(aSurveyInfo.options.fixnumauto == "disable" ? 1 : 0)~";","POS_HEAD") }}
+    {% endif %}
+    {{ include('./subviews/header/custom_header.twig') }}
+
+    {{ include('./subviews/header/google_analytics.twig') }}
+</head>

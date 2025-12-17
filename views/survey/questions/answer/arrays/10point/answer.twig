@@ -1,0 +1,26 @@
+{#
+/**
+ * Array 10-Point Choice - DSFR Theme
+ * Table with 10 columns (1-10 scale)
+ */
+#}
+
+<!-- DSFR Array 10-Point Table -->
+<div class="ls-table-wrapper fr-table--responsive" role="group" aria-labelledby="ls-question-text-{{ basename }}">
+    <table class="{{ coreClass }} fr-table fr-table--bordered" role="group" aria-labelledby="ls-question-text-{{ basename }}">
+        <colgroup class="col-responses">
+            <col class="col-answers" style='width: {{ answerwidth }}%;' />
+            {{ sColumns }}
+        </colgroup>
+
+        <thead>
+            <tr class="ls-heading">
+                {{ sHeaders }}
+            </tr>
+        </thead>
+
+        <tbody>
+            {{ sRows }}
+        </tbody>
+    </table>
+</div>

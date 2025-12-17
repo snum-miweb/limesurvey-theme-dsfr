@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Thème DSFR (Système de Design de l'État Français)
+    Pour LimeSurvey
+-->
+<config>
+    <!-- Métadonnées du thème -->
+    <metadata>
+        <name>dsfr</name>
+        <title>DSFR - Système de Design de l'État Français</title>
+        <type>theme</type>
+        <creationDate>2025-11-06</creationDate>
+        <author>Bertrand Matge</author>
+        <authorEmail>bertrand.matge@finances.gouv.fr</authorEmail>
+        <authorUrl>https://github.com/bmatge</authorUrl>
+        <copyright>Licence etalab-2.0</copyright>
+        <license>GNU General Public License version 2 or later</license>
+        <version>1.0.4</version>
+        <apiVersion>3</apiVersion>
+        <description>Thème conforme au Système de Design de l'État Français (DSFR) pour les enquêtes LimeSurvey.</description>
+        <lastUpdate>2025-11-07 00:00:00</lastUpdate>
+        <preview>files/preview.png</preview>
+        <!-- Thème autonome 100% DSFR -->
+    </metadata>
+
+    <!-- Compatibilité -->
+    <compatibility>
+        <version>6.0</version>
+    </compatibility>
+
+    <!-- Fichiers CSS et JavaScript -->
+    <files>
+        <css>
+            <!-- Fichiers CSS DSFR (doivent être déclarés explicitement) -->
+            <replace>css/dsfr-no-datauri.min.css</replace>
+            <replace>css/icons.min.css</replace>
+            <replace>css/dsfr-grid-helpers.css</replace>
+            <!-- Styles du thème -->
+            <replace>css/theme.css</replace>
+            <!-- Surcharges + linéarisation (PRIORITÉ ABSOLUE) -->
+            <replace>css/custom.css</replace>
+            <!-- Supprimer les CSS Bootstrap du core LimeSurvey -->
+            <remove>template-core.css</remove>
+            <remove>awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css</remove>
+            <remove>awesome-bootstrap-checkbox/awesome-bootstrap-checkbox-rtl.css</remove>
+        </css>
+        <js>
+            <!-- Stubs Bootstrap (doit être chargé en premier pour éviter les erreurs) -->
+            <replace>scripts/bootstrap-stubs.js</replace>
+            <!-- Scripts du thème (theme.js charge automatiquement le DSFR JS) -->
+            <replace>scripts/theme.js</replace>
+            <replace>scripts/custom.js</replace>
+        </js>
+        <print_css>
+            <replace>css/print_theme.css</replace>
+        </print_css>
+    </files>
+
+    <!-- Options du thème (configurables dans l'interface admin) -->
+    <options>
+        <!-- Options simples -->
+        <!-- <container type="buttons" category="Options générales" width="4" title="Conteneur de l'enquête" options="on|off" optionlabels="Oui|Non">on</container> -->
+        <!-- <showpopups type="buttons" category="Options générales" width="4" title="Afficher les popups" options="1|0|-1" optionlabels="Popup|Sur la page|Non">1</showpopups> -->
+        <showclearall type="buttons" category="Options générales" width="4" title="Bouton 'Tout effacer'" options="on|off" optionlabels="Oui|Non">off</showclearall>
+        <!-- <questionhelptextposition type="buttons" category="Options générales" width="4" title="Position de l'aide" options="top|bottom" optionlabels="Haut|Bas">top</questionhelptextposition> -->
+        <fixnumauto type="buttons" category="Options générales" width="4" title="Correction automatique des valeurs numériques" options="enable|partial|disable" optionlabels="Oui|Pour expression|Non">enable</fixnumauto>
+        <showquestioncode type="buttons" category="Options générales" width="4" title="Afficher le code/numéro de question (utile pour les questions conditionnelles)" options="on|off" optionlabels="Oui|Non">on</showquestioncode>
+        <sanitize_rte_content type="buttons" category="Options générales" width="12" title="Nettoyer les styles inline du titre et de l'aide des questions (conformité DSFR)" options="on|off" optionlabels="Oui|Non" default="on">on</sanitize_rte_content>
+
+        <!-- Images et logos -->
+        <brandlogo type="buttons" category="Images" width="12" title="⚠ AVERTISSEMENT DSFR : Seuls les opérateurs et directions recevant du public sont autorisés à afficher leur logo dans l'en-tête. Si un logo est utilisé, vous devez modifier le texte Marianne (onglet 'Header et footer') pour qu'il affiche 'République Française'.|Afficher le logo" options="on|off" optionlabels="Oui|Non" default="off">off</brandlogo>
+        <brandlogo_sircom_certified type="buttons" category="Images" width="12" title="Je certifie avoir eu l'accord du SIRCOM pour utiliser le logo de mon entité dans l'en-tête d'un site en Design System" options="on|off" optionlabels="Oui|Non" default="off">off</brandlogo_sircom_certified>
+        <brandlogofile type="dropdown" category="Images" width="6" title="Fichier logo">./files/logo.png</brandlogofile>
+        <!-- <hideprivacyinfo type="buttons" category="Options générales" width="4" title="Masquer les informations de confidentialité" options="on|off" optionlabels="Oui|Non">off</hideprivacyinfo> -->
+
+        <!-- Variantes DSFR (thème clair/sombre) -->
+        <dsfr_theme type="dropdown" category="Header et footer" title="Variante du thème" width="4">light
+            <dropdownoptions>
+                <optgroup>
+                    <option value="light">Clair</option>
+                    <option value="dark">Sombre</option>
+                </optgroup>
+            </dropdownoptions>
+        </dsfr_theme>
+
+        <!-- Options spécifiques DSFR -->
+        <show_marianne type="buttons" category="Header et footer" width="4" title="Afficher Marianne" options="on|off" optionlabels="Oui|Non">on</show_marianne>
+        <show_footer_links type="buttons" category="Header et footer" width="4" title="Liens de pied de page" options="on|off" optionlabels="Oui|Non">on</show_footer_links>
+        <marianne_text type="textarea" category="Header et footer" width="6" rows="2" title="Texte Marianne (sous le bloc-marque)">Liberté&#10;Égalité&#10;Fraternité</marianne_text>
+        <header_title type="textarea" category="Header et footer" width="6" rows="2" title="Titre dans l'en-tête (nom du service/site)">Enquêtes et questionnaires</header_title>
+        <footer_text type="textarea" category="Header et footer" width="12" rows="3" title="Texte dans le pied de page (description courte)">Service de questionnaires en ligne</footer_text>
+        <intellectual_property type="textarea" category="Header et footer" width="12" rows="3" title="Propriété intellectuelle (licence, copyright)">Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont proposés sous licence etalab-2.0</intellectual_property>
+
+        <!-- Onglet Accessibilité -->
+        <accessibility_content type="textarea" category="Accessibilité" width="12" rows="40" title="Contenu Accessibilité (le titre H1 est déjà dans le template, ne pas le répéter ici)" />
+
+        <!-- Onglet Mentions légales -->
+        <editor type="textarea" category="Mentions légales" width="12" rows="5" title="Éditeur" />
+        <publication_director type="textarea" category="Mentions légales" width="12" rows="3" title="Directeur de publication" />
+        <host type="textarea" category="Mentions légales" width="12" rows="3" title="Hébergeur" />
+        <legal_content type="textarea" category="Mentions légales" width="12" rows="10" title="Contenu personnalisé (remplace tout le contenu par défaut si rempli)" />
+
+        <!-- Onglet Données personnelles -->
+        <data_controller type="textarea" category="Données personnelles" width="12" rows="3" title="Responsable de traitement" />
+        <survey_purpose type="textarea" category="Données personnelles" width="12" rows="3" title="Objectif du questionnaire" />
+        <data_retention type="text" category="Données personnelles" width="6" title="Durée de conservation" />
+        <contact_email type="text" category="Données personnelles" width="6" title="Email de contact" />
+        <privacy_content type="textarea" category="Données personnelles" width="12" rows="10" title="Contenu personnalisé (remplace tout le contenu par défaut si rempli)" />
+
+        <!-- Onglet Gestion des cookies -->
+        <cookies_content type="textarea" category="Gestion des cookies" width="12" rows="10" title="Contenu Gestion des cookies (le titre H1 est déjà dans le template, ne pas le répéter ici)" />
+
+        <!-- Onglet Protection anti-bot -->
+        <antibot_enabled type="buttons" category="Protection anti-bot" width="12" title="Activer la protection anti-bot (alternative accessible au CAPTCHA)" options="on|off" optionlabels="Oui|Non">off</antibot_enabled>
+        <antibot_timer type="text" category="Protection anti-bot" width="6" title="Temps minimum (secondes) avant validation">2</antibot_timer>
+        <antibot_custom_questions type="textarea" category="Protection anti-bot" width="12" rows="8" title="Questions personnalisées (une par ligne, format: Question|Réponse). Laissez vide pour utiliser les questions par défaut." />
+    </options>
+
+    <!-- Configuration du moteur de rendu -->
+    <engine>
+        <!-- Framework CSS : DSFR au lieu de Bootstrap -->
+        <!-- Note: Le DSFR sera chargé via CDN dans theme.css ou localement si installé via npm -->
+        <cssframework>
+            <name>dsfr</name>
+            <!-- Pour le moment, on utilise toujours Bootstrap comme base, mais on va l'override -->
+            <css replace="css/bootstrap.css">css/theme.css</css>
+        </cssframework>
+
+        <!-- Répertoire des vues (fichiers .twig) -->
+        <viewdirectory>views</viewdirectory>
+
+        <!-- Répertoire des fichiers (images, fonts, etc.) -->
+        <filesdirectory>files</filesdirectory>
+
+        <!-- Packages tiers à charger -->
+        <packages>
+            <add>jquery</add>
+            <add>pjax</add>
+            <add>moment</add>
+        </packages>
+
+        <!-- Page d'options : utilise la page core par défaut -->
+        <optionspage>core</optionspage>
+
+        <!-- Configuration de l'éditeur de templates -->
+        <template_editor>
+            <screens>
+                <question>
+                    <screen_title type="data" role="title" twig="on"><![CDATA[ {{gT('Question')}} ]]></screen_title>
+                    <file type="view" role="layout">layout_global.twig</file>
+                    <file type="view" role="subview">./subviews/header/nav_bar.twig</file>
+                    <file type="view" role="subview">./subviews/footer/footer.twig</file>
+                    <file type="view" role="subview">./subviews/footer/modals/accessibility.twig</file>
+                    <file type="view" role="subview">./subviews/footer/modals/legal.twig</file>
+                    <file type="view" role="subview">./subviews/footer/modals/privacy.twig</file>
+                    <file type="view" role="subview">./subviews/footer/modals/cookies.twig</file>
+                    <file type="view" role="content">./subviews/content/main.twig</file>
+                    <file type="view" role="subview">./subviews/content/mainrow.twig</file>
+                    <file type="view" role="subview">./subviews/content/outerframe.twig</file>
+                    <file type="view" role="subview">./subviews/survey/question.twig</file>
+                    <file type="view" role="subview">./subviews/navigation/navigator.twig</file>
+                    <file type="view" role="subview">./subviews/privacy/privacy.twig</file>
+                    <file type="css">./css/theme.css</file>
+                    <file type="js">./scripts/theme.js</file>
+                    <file type="css">./css/custom.css</file>
+                    <file type="js">./scripts/custom.js</file>
+                </question>
+
+                <welcome>
+                    <screen_title type="data" role="title" twig="on"><![CDATA[ {{gT('Bienvenue')}} ]]></screen_title>
+                    <file type="view" role="layout">layout_global.twig</file>
+                    <file type="view" role="subview">./subviews/header/nav_bar.twig</file>
+                    <file type="view" role="subview">./subviews/footer/footer.twig</file>
+                    <file type="view" role="subview">./subviews/footer/modals/accessibility.twig</file>
+                    <file type="view" role="subview">./subviews/footer/modals/legal.twig</file>
+                    <file type="view" role="subview">./subviews/footer/modals/privacy.twig</file>
+                    <file type="view" role="subview">./subviews/footer/modals/cookies.twig</file>
+                    <file type="view" role="content">./subviews/content/firstpage.twig</file>
+                    <file type="view" role="subview">./subviews/content/mainrow.twig</file>
+                    <file type="view" role="subview">./subviews/content/outerframe.twig</file>
+                    <file type="view" role="subview">./subviews/messages/welcome.twig</file>
+                    <file type="view" role="subview">./subviews/privacy/privacy.twig</file>
+                    <file type="view" role="subview">./subviews/navigation/navigator.twig</file>
+                    <file type="css">./css/theme.css</file>
+                    <file type="js">./scripts/theme.js</file>
+                </welcome>
+
+                <completed>
+                    <screen_title type="data" role="title" twig="on"><![CDATA[ {{gT('Terminé')}} ]]></screen_title>
+                    <file type="view" role="layout">layout_global.twig</file>
+                    <file type="view" role="subview">./subviews/header/nav_bar.twig</file>
+                    <file type="view" role="subview">./subviews/footer/footer.twig</file>
+                    <file type="view" role="subview">./subviews/footer/modals/accessibility.twig</file>
+                    <file type="view" role="subview">./subviews/footer/modals/legal.twig</file>
+                    <file type="view" role="subview">./subviews/footer/modals/privacy.twig</file>
+                    <file type="view" role="subview">./subviews/footer/modals/cookies.twig</file>
+                    <file type="view" role="content">./subviews/content/submit.twig</file>
+                    <file type="view" role="subview">./subviews/content/mainrow.twig</file>
+                    <file type="view" role="subview">./subviews/content/outerframe.twig</file>
+                    <file type="css">./css/theme.css</file>
+                    <file type="js">./scripts/theme.js</file>
+                </completed>
+
+                <assessments>
+                    <screen_title type="data" role="title" twig="on"><![CDATA[ {{gT('Évaluations')}} ]]></screen_title>
+                    <file type="view" role="layout">layout_global.twig</file>
+                    <file type="view" role="subview">./subviews/header/nav_bar.twig</file>
+                    <file type="view" role="subview">./subviews/footer/footer.twig</file>
+                    <file type="view" role="content">./subviews/content/submit.twig</file>
+                    <file type="view" role="subview">./subviews/content/mainrow.twig</file>
+                    <file type="view" role="subview">./subviews/content/outerframe.twig</file>
+                    <file type="view" role="subview">./subviews/messages/assessments.twig</file>
+                    <file type="css">./css/theme.css</file>
+                    <file type="js">./scripts/theme.js</file>
+                </assessments>
+
+                <error>
+                    <screen_title type="data" role="title" twig="on"><![CDATA[ {{gT('Erreur')}} ]]></screen_title>
+                    <file type="view" role="layout">layout_errors.twig</file>
+                    <file type="view" role="subview">./subviews/header/nav_bar.twig</file>
+                    <file type="view" role="subview">./subviews/footer/footer.twig</file>
+                </error>
+
+                <clearall>
+                    <screen_title type="data" role="title" twig="on"><![CDATA[ {{gT('Tout effacer')}} ]]></screen_title>
+                    <file type="view" role="layout">layout_global.twig</file>
+                    <file type="view" role="subview">./subviews/header/nav_bar.twig</file>
+                    <file type="view" role="subview">./subviews/footer/footer.twig</file>
+                    <file type="view" role="content">./subviews/content/clearall.twig</file>
+                    <file type="view" role="subview">./subviews/content/mainrow.twig</file>
+                    <file type="view" role="subview">./subviews/content/outerframe.twig</file>
+                    <file type="css">./css/theme.css</file>
+                    <file type="js">./scripts/theme.js</file>
+                </clearall>
+
+                <load>
+                    <screen_title type="data" role="title" twig="on"><![CDATA[ {{gT('Charger')}} ]]></screen_title>
+                    <file type="view" role="layout">layout_global.twig</file>
+                    <file type="view" role="subview">./subviews/header/nav_bar.twig</file>
+                    <file type="view" role="subview">./subviews/footer/footer.twig</file>
+                    <file type="view" role="content">./subviews/content/load.twig</file>
+                    <file type="view" role="subview">./subviews/content/mainrow.twig</file>
+                    <file type="view" role="subview">./subviews/content/outerframe.twig</file>
+                    <file type="css">./css/theme.css</file>
+                    <file type="js">./scripts/theme.js</file>
+                </load>
+
+                <save>
+                    <screen_title type="data" role="title" twig="on"><![CDATA[ {{gT('Sauvegarder')}} ]]></screen_title>
+                    <file type="view" role="layout">layout_global.twig</file>
+                    <file type="view" role="subview">./subviews/header/nav_bar.twig</file>
+                    <file type="view" role="subview">./subviews/footer/footer.twig</file>
+                    <file type="view" role="content">./subviews/content/save.twig</file>
+                    <file type="view" role="subview">./subviews/content/mainrow.twig</file>
+                    <file type="view" role="subview">./subviews/content/outerframe.twig</file>
+                    <file type="css">./css/theme.css</file>
+                    <file type="js">./scripts/theme.js</file>
+                </save>
+
+                <register>
+                    <screen_title type="data" role="title" twig="on"><![CDATA[ {{gT('Inscription')}} ]]></screen_title>
+                    <file type="view" role="layout">layout_global.twig</file>
+                    <file type="view" role="subview">./subviews/header/nav_bar.twig</file>
+                    <file type="view" role="subview">./subviews/footer/footer.twig</file>
+                    <file type="view" role="content">./subviews/content/register.twig</file>
+                    <file type="view" role="subview">./subviews/content/mainrow.twig</file>
+                    <file type="view" role="subview">./subviews/content/outerframe.twig</file>
+                    <file type="view" role="subview">./subviews/registration/register_error.twig</file>
+                    <file type="view" role="subview">./subviews/registration/register_head.twig</file>
+                    <file type="view" role="subview">./subviews/registration/register_message.twig</file>
+                    <file type="view" role="subview">./subviews/registration/register_success.twig</file>
+                    <file type="view" role="subview">./subviews/registration/required.twig</file>
+                </register>
+
+                <printanswers>
+                    <screen_title type="data" role="title" twig="on"><![CDATA[ {{gT('Imprimer les réponses')}} ]]></screen_title>
+                    <file type="view" role="layout">layout_printanswers.twig</file>
+                    <file type="view" role="content">./subviews/content/printanswers.twig</file>
+                    <file type="view" role="subview">./subviews/printanswers/printanswers_head.twig</file>
+                    <file type="view" role="subview">./subviews/printanswers/printanswers_table.twig</file>
+                    <file type="view" role="subview">./subviews/printanswers/printanswers_question.twig</file>
+                    <file type="view" role="subview">./subviews/printanswers/printanswers_foot.twig</file>
+                </printanswers>
+
+                <statistics_user>
+                    <screen_title type="data" role="title" twig="on"><![CDATA[ {{gT('Statistiques publiques')}} ]]></screen_title>
+                    <file type="view" role="layout">layout_statistics_user.twig</file>
+                    <file type="view" role="content">./subviews/content/statistics_user.twig</file>
+                    <file type="view" role="subview">./subviews/statistics_user/statistics_user_head.twig</file>
+                    <file type="view" role="subview">./subviews/statistics_user/statistics_user_content.twig</file>
+                    <file type="view" role="subview">./subviews/statistics_user/statistics_user_foot.twig</file>
+                </statistics_user>
+
+                <pdf>
+                    <screen_title type="data" role="title" twig="on"><![CDATA[ {{gT('PDF')}} ]]></screen_title>
+                    <file type="view" role="layout">layout_print.twig</file>
+                </pdf>
+
+                <navigation>
+                    <screen_title type="data" role="title" twig="on"><![CDATA[ {{gT('Navigation')}} ]]></screen_title>
+                    <file type="view" role="layout">layout_global.twig</file>
+                    <file type="view" role="subview">./subviews/header/nav_bar.twig</file>
+                    <file type="view" role="subview">./subviews/footer/footer.twig</file>
+                    <file type="view" role="content">./subviews/content/main.twig</file>
+                    <file type="view" role="subview">./subviews/content/mainrow.twig</file>
+                    <file type="view" role="subview">./subviews/content/outerframe.twig</file>
+                    <file type="view" role="subview">./subviews/navigation/ajax_indicator.twig</file>
+                    <file type="view" role="subview">./subviews/navigation/clearall_links.twig</file>
+                    <file type="view" role="subview">./subviews/navigation/navigator.twig</file>
+                    <file type="view" role="subview">./subviews/navigation/question_index_menu.twig</file>
+                    <file type="view" role="subview">./subviews/navigation/save_links.twig</file>
+                </navigation>
+
+                <quotas>
+                    <screen_title type="data" role="title" twig="on"><![CDATA[ {{gT('Quotas dépassés')}} ]]></screen_title>
+                    <file type="view" role="layout">layout_global.twig</file>
+                    <file type="view" role="subview">./subviews/header/nav_bar.twig</file>
+                    <file type="view" role="subview">./subviews/footer/footer.twig</file>
+                    <file type="view" role="content">./subviews/content/quotas.twig</file>
+                    <file type="view" role="subview">./subviews/content/mainrow.twig</file>
+                    <file type="view" role="subview">./subviews/content/outerframe.twig</file>
+                    <file type="view" role="subview">./subviews/header/start_form.twig</file>
+                </quotas>
+
+                <token>
+                    <screen_title type="data" role="title" twig="on"><![CDATA[ {{gT('Participant')}} ]]></screen_title>
+                    <file type="view" role="layout">layout_user_forms.twig</file>
+                    <file type="view" role="content">./subviews/content/userforms.twig</file>
+                    <file type="view" role="subview">./subviews/logincomponents/token.twig</file>
+                    <file type="view" role="subview">./subviews/logincomponents/captcha.twig</file>
+                </token>
+            </screens>
+
+            <!-- Données par défaut pour l'éditeur de thème -->
+            <default_data>
+                <survey type="core">
+                    <name type="data" twig="on"><![CDATA[{{ gT("Enquête DSFR") }}]]></name>
+                    <description type="data" twig="on"><![CDATA[<p>{{ gT('Ceci est une enquête utilisant le thème DSFR.') }}</p>]]></description>
+                    <welcome type="data" twig="on"><![CDATA[<p>{{ gT('Bienvenue dans cette enquête') }}</p>]]></welcome>
+                    <therearexquestions type="data" twig="on"><![CDATA[{{ gT('Il y a 2 questions dans cette enquête') }}]]></therearexquestions>
+                    <surveyls_url type="data" twig="on">"https://www.gouvernement.fr/"</surveyls_url>
+                    <surveyls_urldescription type="data" twig="on"><![CDATA[{{ gT("Site du gouvernement") }}]]></surveyls_urldescription>
+                </survey>
+
+                <group type="core">
+                    <name type="data" twig="on"><![CDATA[{{ gT("Groupe 1 : Les premières questions") }}]]></name>
+                    <description type="data" twig="on"><![CDATA[{{ gT("Description du groupe de questions.") }}]]></description>
+                </group>
+
+                <question_1 type="core">
+                    <code type="data">'Q1'</code>
+                    <text type="data" twig="on"><![CDATA[{{ gT("Quelle est votre question ?") }}]]></text>
+                    <valid_message type="data" twig="on"><![CDATA[<div class="em_num_answers emtip error"><span class="fr-icon-warning-fill" aria-hidden="true"></span> {{ gT("Choisissez une des réponses suivantes") }}</div>]]></valid_message>
+                </question_1>
+
+                <question_2 type="core">
+                    <code type="data">'Q2'</code>
+                    <text type="data" twig="on"><![CDATA[{{ gT("Veuillez expliquer en détail :") }}]]></text>
+                    <valid_message type="data" twig="on"><![CDATA[<div class="em_num_answers emtip error"><span class="fr-icon-warning-fill" aria-hidden="true"></span> {{ gT("Indication quand la réponse n'est pas valide") }}</div>]]></valid_message>
+                </question_2>
+
+                <assessments type="core">
+                    <name type="data" twig="on"><![CDATA[{{ gT("Bienvenue dans l'évaluation") }}]]></name>
+                    <message type="data" twig="on"><![CDATA[{{ gT("Vous avez obtenu {TOTAL} points sur 3 points possibles.") }}]]></message>
+                </assessments>
+            </default_data>
+        </template_editor>
+    </engine>
+
+    <!-- Désactiver le système de mise à jour pour les thèmes personnalisés -->
+    <updaters disabled="disabled">
+    </updaters>
+
+</config>

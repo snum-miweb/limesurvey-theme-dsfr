@@ -1,0 +1,20 @@
+<div class="fr-grid-row question-container-printanswers" style="page-break-inside:avoid;">
+    {% include './subviews/printanswers/partials/_question_header.twig' %}
+    <div class="fr-col-lg-8">
+        {% for file in question.fileinfo %}
+            <div class="fr-grid-row">
+                        <div class="fr-col-lg-4 fr-text-right">
+                            <b>{{file.title}}</b></a>
+                        </div>
+                        <div class="fr-col-lg-8 fr-text-left">
+                            {{file.comment == '' ? gT('No comment') : file.comment}}
+                        </div>
+                        <div class="fr-col-lg-4 fr-text-right">
+                            {{ gT("File type") }} "{{file.ext}}"
+                        </div>
+                        <div class="fr-col-lg-8 fr-text-left">
+                        </div>
+                    </div>
+        {% endfor %}
+    </div>
+</div>

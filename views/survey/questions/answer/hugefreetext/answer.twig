@@ -1,0 +1,52 @@
+{#
+/**
+ * Huge Free Text Question - DSFR Theme
+ * Type: U (Huge Free Text)
+ *
+ * This template renders a very large textarea (typically 20-30 rows)
+ * Similar to Long Free Text but with more rows
+ *
+ * @var $name           Question name
+ * @var $value          Current value
+ * @var $rows           Number of rows (typically 20-30)
+ * @var $maxlength      Maximum character length
+ * @var $basename       Base name for aria labels
+ */
+#}
+
+<!-- Huge Free Text (Type U) - DSFR avec fr-messages-group -->
+<!-- Note: answer-item est requis pour que em_javascript.js détecte les événements keyup/change -->
+<div class="fr-input-group answer-item text-item">
+    {% if help %}
+        <span class="fr-hint-text">{{ help }}</span>
+    {% endif %}
+
+    <textarea
+        class="fr-input"
+        name="{{ name }}"
+        id="answer{{ name }}"
+        rows="{% if drows %}{{ drows }}{% else %}20{% endif %}"
+        {% if maxlength %}maxlength="{{ maxlength }}"{% endif %}
+        {% if readonly %}readonly="readonly"{% endif %}
+        aria-labelledby="ls-question-text-{{ basename }}"
+        aria-describedby="answer{{ name }}-messages{% if help %} help-{{ basename }}{% endif %}{% if maxlength %} maxlength-{{ basename }}{% endif %}"
+    >{{ dispVal }}</textarea>
+
+    {% if maxlength %}
+        <p class="fr-hint-text fr-mt-1w" id="maxlength-{{ basename }}">
+            {{ gT('Maximum characters:') }} {{ maxlength }}
+        </p>
+    {% endif %}
+
+    <div class="fr-messages-group" id="answer{{ name }}-messages" aria-live="polite">
+        {# Messages d'erreur/succès injectés ici par JavaScript (theme.js) #}
+    </div>
+</div>
+
+{# Hidden field for ExpressionScript Engine #}
+{{ C.Html.hiddenField("java"~name, dispVal, ({
+    'id': "java"~name,
+    'disabled': true
+})) }}
+
+<!-- end of Huge Free Text -->

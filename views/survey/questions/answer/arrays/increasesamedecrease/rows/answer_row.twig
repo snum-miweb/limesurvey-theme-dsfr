@@ -1,0 +1,90 @@
+{#
+/**
+ * Array Increase/Same/Decrease - Answer row - DSFR Theme
+ *
+ * @var $basename
+ * @var $myfname
+ * @var $answertext
+ * @var $answerwidth
+ * @var $Ichecked
+ * @var $Schecked
+ * @var $Dchecked
+ * @var $NAchecked
+ * @var $value
+ * @var $checkconditionFunction
+ * @var $no_answer
+ * @var $error
+ * @var $odd
+ */
+#}
+
+<!-- answer_row - DSFR -->
+<tr id="javatbd{{ myfname }}" class="row-inc-same-dec answers-list radio-list {% if odd %}ls-odd{% else %}ls-even{% endif %} {% if error %}ls-error-mandatory has-error{% endif %}" role="radiogroup" aria-labelledby="answertext{{ myfname }}">
+    <!-- Answer text -->
+    <th id="answertext{{ myfname }}" class="answertext control-label{% if answerwidth == 0 %} visually-hidden{% endif %}" scope="row">
+        {{ processString(answertext) }}
+        {{ C.Html.hiddenField("java"~myfname, value, {
+            'id': "java"~myfname,
+            'disabled': true,
+        }) }}
+    </th>
+
+    <!-- Increase -->
+    <td class="answer_cell_I answer-item radio-item fr-text--center">
+        <input
+            type="radio"
+            name="{{ myfname }}"
+            id="answer{{ myfname }}-I"
+            aria-labelledby="answer{{ basename }}-I answertext{{ myfname }}"
+            value="I"
+            class="dsfr-radio-table"
+            {{ Ichecked }}
+        />
+        <label for="answer{{ myfname }}-I" class="fr-sr-only">{{ gT("Increase") }}</label>
+    </td>
+
+    <!-- Same -->
+    <td class="answer_cell_S answer-item radio-item fr-text--center">
+        <input
+            type="radio"
+            name="{{ myfname }}"
+            id="answer{{ myfname }}-S"
+            aria-labelledby="answer{{ basename }}-S answertext{{ myfname }}"
+            value="S"
+            class="dsfr-radio-table"
+            {{ Schecked }}
+        />
+        <label for="answer{{ myfname }}-S" class="fr-sr-only">{{ gT("Same") }}</label>
+    </td>
+
+    <!-- Decrease -->
+    <td class="answer_cell_D answer-item radio-item fr-text--center">
+        <input
+            type="radio"
+            name="{{ myfname }}"
+            id="answer{{ myfname }}-D"
+            aria-labelledby="answer{{ basename }}-D answertext{{ myfname }}"
+            value="D"
+            class="dsfr-radio-table"
+            {{ Dchecked }}
+        />
+        <label for="answer{{ myfname }}-D" class="fr-sr-only">{{ gT("Decrease") }}</label>
+    </td>
+
+    <!-- No Answer -->
+    {% if no_answer %}
+        <td class="answer_cell_ answer-item noanswer-item radio-item fr-text--center">
+            <input
+                type="radio"
+                name="{{ myfname }}"
+                id="answer{{ myfname }}-"
+                aria-labelledby="answer{{ basename }}- answertext{{ myfname }}"
+                value=""
+                class="dsfr-radio-table"
+                {{ NAchecked }}
+            />
+            <label for="answer{{ myfname }}-" class="fr-sr-only">{{ gT("No answer") }}</label>
+        </td>
+    {% endif %}
+</tr>
+<!-- end of answer_row - DSFR -->

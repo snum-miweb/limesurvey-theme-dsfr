@@ -1,0 +1,26 @@
+{#
+/**
+ * Multiple choice with comments Html - DSFR Theme
+ *
+ * @var $sRows      : the rows, generated with the views rows/answer_row.php
+ * @var $name
+ * @var $value
+ * @var $coreClass
+ * @var $basename
+ * @var $aRows
+ */
+#}
+<!-- Multiple Choice with comment DSFR -->
+
+<!-- answer -->
+<input type='hidden' name='{{ name }}' value='{{ value }}' />
+<fieldset class="fr-fieldset {{ coreClass }}" aria-labelledby="ls-question-text-{{ basename }}">
+    <legend class="fr-fieldset__legend fr-sr-only">{{ gT('Select one or more answers and add comments') }}</legend>
+    <div class="fr-fieldset__content">
+        {% for aRow in aRows %}
+            {% set rowTemplate = aRow.other ? './survey/questions/answer/multiplechoice_with_comments/rows/answer_row_other.twig' : './survey/questions/answer/multiplechoice_with_comments/rows/answer_row.twig' %}
+            {% include rowTemplate with aRow %}
+        {% endfor %}
+    </div>
+</fieldset>
+<!-- end of answer -->

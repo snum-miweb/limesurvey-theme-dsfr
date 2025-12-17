@@ -1,0 +1,594 @@
+{#<?php
+/**
+ * File upload question - DSFR Theme (100% standalone)
+ * Type: | (File Upload)
+ *
+ * Upload direct sans iframe, compatible DSFR
+ *
+ * @var $fileid             Unique field identifier
+ * @var $value              Current value (JSON of uploaded files)
+ * @var $filecountvalue     Number of uploaded files
+ * @var $uploadurl          URL for upload
+ * @var $showTitle          Show title field for uploads
+ * @var $showComment        Show comment field for uploads
+ * @var $basename           Base name for aria labels
+ * @var $maxFiles           Maximum number of files
+ * @var $minFiles           Minimum number of files
+ * @var $allowedTypes       Allowed file types (comma separated)
+ * @var $maxFileSize        Maximum file size in KB
+ * @var $uploadButtonLabel  Label for upload button
+ * @var $imageurl           Image URL
+ * @var $scriptloc          Script location
+ * @var $surveyId           Survey ID
+ * @var $coreClass          Core CSS classes
+ */
+?>#}
+
+<!-- File Upload - DSFR Standalone -->
+<div class="{{ coreClass }} upload-item dsfr-upload-container" id="upload-container-{{ fileid }}">
+
+    {# Hidden fields for LimeSurvey compatibility #}
+    <input type="hidden" id="java{{ fileid }}" name="{{ fileid }}" value="{{ value|escape('html_attr') }}" />
+    <input type="hidden" id="java{{ fileid }}_filecount" name="{{ fileid }}_filecount" value="{{ filecountvalue }}" />
+
+    {# Upload restrictions info - conditional display #}
+    {# Sans modification du core PHP, seul maxFiles est passé directement #}
+    {# minFiles peut être extrait de l'URL par JavaScript #}
+    {% set hasAllowedTypes = allowedTypes is defined and allowedTypes is not empty and allowedTypes != '' %}
+    {% set hasMaxFileSize = maxFileSize is defined and maxFileSize > 0 %}
+    {% set hasMaxFiles = maxFiles is defined and maxFiles > 0 %}
+    {% set hasMinFiles = minFiles is defined and minFiles > 0 %}
+    {% set hasAnyInfo = hasAllowedTypes or hasMaxFileSize or hasMaxFiles %}
+
+    <div class="fr-callout fr-callout--blue-ecume fr-mb-3w" id="upload-info-{{ fileid }}"{% if not hasAnyInfo %} style="display: none;"{% endif %}>
+        <p class="fr-callout__text fr-text--sm" id="upload-info-text-{{ fileid }}">
+            {% if hasAllowedTypes %}
+            <span id="info-types-{{ fileid }}"><strong>{{ gT('Allowed file types') }} :</strong> <span class="value">{{ allowedTypes }}</span></span>{% if hasMaxFileSize or hasMaxFiles %}<br>{% endif %}
+            {% else %}
+            <span id="info-types-{{ fileid }}" style="display: none;"><strong>{{ gT('Allowed file types') }} :</strong> <span class="value"></span><br></span>
+            {% endif %}
+            {% if hasMaxFileSize %}
+            <span id="info-size-{{ fileid }}"><strong>{{ gT('Maximum file size allowed (in KB)') }} :</strong> <span class="value">{{ maxFileSize }}</span> Ko</span>{% if hasMaxFiles %}<br>{% endif %}
+            {% else %}
+            <span id="info-size-{{ fileid }}" style="display: none;"><strong>{{ gT('Maximum file size allowed (in KB)') }} :</strong> <span class="value"></span> Ko<br></span>
+            {% endif %}
+            {% if hasMaxFiles %}
+            <span id="info-max-{{ fileid }}"><strong>{{ gT('Max number of files') }} :</strong> <span class="value">{{ maxFiles }}</span></span>
+            {% else %}
+            <span id="info-max-{{ fileid }}" style="display: none;"><strong>{{ gT('Max number of files') }} :</strong> <span class="value"></span></span>
+            {% endif %}
+            <span id="info-min-{{ fileid }}" style="display: none;"><br><strong>{{ gT('Min number of files') }} :</strong> <span class="value">0</span></span>
+        </p>
+    </div>
+
+    {# Upload zone #}
+    <div class="fr-upload-group" id="upload-zone-{{ fileid }}">
+        <label class="fr-label" for="file-input-{{ fileid }}">
+            {{ uploadButtonLabel }}
+            <span class="fr-hint-text">{{ gT('Choose file or drop image here') }}</span>
+        </label>
+        <input
+            class="fr-upload"
+            type="file"
+            id="file-input-{{ fileid }}"
+            aria-describedby="upload-info-{{ fileid }}"
+            {% if hasAllowedTypes %}accept=".{{ allowedTypes|replace({' ': ''})|replace({',': ',.'}) }}"{% endif %}
+            data-fieldname="{{ fileid }}"
+            data-surveyid="{{ surveyId|default('') }}"
+            data-uploadurl="{{ scriptloc }}"
+            data-fullurl="{{ uploadurl }}"
+            {% if hasMaxFiles %}data-maxfiles="{{ maxFiles }}"{% endif %}
+            {% if hasAllowedTypes %}data-allowedtypes="{{ allowedTypes|replace({' ': ''}) }}"{% endif %}
+            {% if hasMaxFileSize %}data-maxfilesize="{{ maxFileSize }}"{% endif %}
+            data-showtitle="{{ showTitle|default(0) }}"
+            data-showcomment="{{ showComment|default(0) }}"
+        />
+    </div>
+
+    {# Upload progress #}
+    <div id="upload-progress-{{ fileid }}" class="fr-mt-2w" style="display: none;">
+        <div class="fr-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+            <div class="fr-progress__bar" style="width: 0%"></div>
+        </div>
+        <p class="fr-text--sm fr-mt-1w" id="upload-status-{{ fileid }}">{{ gT('Uploading file') }}...</p>
+    </div>
+
+    {# Error/Success messages #}
+    <div id="upload-messages-{{ fileid }}" class="fr-mt-2w"></div>
+
+    {# Uploaded files list #}
+    <div id="uploaded-files-{{ fileid }}" class="fr-mt-3w">
+        <h4 class="fr-text--md fr-mb-2w" style="display: none;" id="files-title-{{ fileid }}">
+            {{ gT('Uploaded files') }} :
+        </h4>
+        <ul class="fr-raw-list" id="files-list-{{ fileid }}"></ul>
+    </div>
+
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    var fieldname = '{{ fileid }}';
+    var uploadurl = '{{ scriptloc }}';
+
+    // DOM elements
+    var container = document.getElementById('upload-container-' + fieldname);
+    var fileInput = document.getElementById('file-input-' + fieldname);
+    var uploadZone = document.getElementById('upload-zone-' + fieldname);
+    var progressDiv = document.getElementById('upload-progress-' + fieldname);
+    var progressBar = progressDiv ? progressDiv.querySelector('.fr-progress__bar') : null;
+    var statusText = document.getElementById('upload-status-' + fieldname);
+    var messagesDiv = document.getElementById('upload-messages-' + fieldname);
+    var filesListUl = document.getElementById('files-list-' + fieldname);
+    var filesTitle = document.getElementById('files-title-' + fieldname);
+    var hiddenValue = document.getElementById('java' + fieldname);
+    var hiddenCount = document.getElementById('java' + fieldname + '_filecount');
+
+    // Parse uploadurl to get parameters (minfiles, maxfiles are in URL)
+    var fullUrl = fileInput.dataset.fullurl || '';
+    var urlParams = {};
+    if (fullUrl.indexOf('?') !== -1) {
+        fullUrl.split('?')[1].split('&').forEach(function(param) {
+            var parts = param.split('=');
+            if (parts.length === 2) {
+                urlParams[parts[0]] = decodeURIComponent(parts[1]);
+            }
+        });
+    }
+
+    // Get surveyid from URL params or data attribute
+    var surveyid = urlParams.sid || fileInput.dataset.surveyid || '';
+
+    // Get settings: prefer URL params, then data attributes, then defaults
+    var maxFilesFromData = fileInput.dataset.maxfiles ? parseInt(fileInput.dataset.maxfiles) : null;
+    var maxFilesFromUrl = urlParams.maxfiles ? parseInt(urlParams.maxfiles) : null;
+    var maxFiles = maxFilesFromUrl || maxFilesFromData || 1;
+
+    var minFilesFromUrl = urlParams.minfiles ? parseInt(urlParams.minfiles) : 0;
+    var minFiles = minFilesFromUrl;
+
+    var maxFileSizeFromData = fileInput.dataset.maxfilesize ? parseInt(fileInput.dataset.maxfilesize) : null;
+    var maxFileSize = maxFileSizeFromData || 10240; // Default for validation only
+
+    var allowedTypesFromData = fileInput.dataset.allowedtypes || null;
+    var allowedTypesStr = allowedTypesFromData || 'png,gif,doc,odt,jpg,jpeg,pdf';
+    var allowedTypes = allowedTypesStr.toLowerCase().split(',').filter(function(t) { return t.trim(); });
+
+    var showTitle = (urlParams.show_title || fileInput.dataset.showtitle) == '1';
+    var showComment = (urlParams.show_comment || fileInput.dataset.showcomment) == '1';
+
+    // Update info display dynamically based on URL params (for cases where PHP didn't pass values)
+    var uploadInfoDiv = document.getElementById('upload-info-' + fieldname);
+    var infoMax = document.getElementById('info-max-' + fieldname);
+    var infoMin = document.getElementById('info-min-' + fieldname);
+    var hasDisplayedInfo = false;
+
+    // Show maxFiles from URL if not already displayed from PHP
+    if (infoMax && maxFilesFromUrl && !maxFilesFromData) {
+        infoMax.querySelector('.value').textContent = maxFilesFromUrl;
+        infoMax.style.display = '';
+        hasDisplayedInfo = true;
+    }
+
+    // Show minFiles from URL if > 0
+    if (infoMin && minFiles > 0) {
+        infoMin.querySelector('.value').textContent = minFiles;
+        infoMin.style.display = '';
+        hasDisplayedInfo = true;
+    }
+
+    // Show info container if we have info to display
+    if (uploadInfoDiv && hasDisplayedInfo) {
+        uploadInfoDiv.style.display = '';
+    }
+
+    // Get CSRF token
+    var csrfToken = typeof LS !== 'undefined' && LS.data ? LS.data.csrfToken : '';
+    if (!csrfToken) {
+        var csrfMeta = document.querySelector('meta[name="csrf-token"]');
+        if (csrfMeta) csrfToken = csrfMeta.getAttribute('content');
+    }
+    if (!csrfToken) {
+        var csrfInput = document.querySelector('input[name="YII_CSRF_TOKEN"]');
+        if (csrfInput) csrfToken = csrfInput.value;
+    }
+
+    // File data array
+    var uploadedFiles = [];
+
+    // Initialize from existing value
+    function initFromValue() {
+        var val = hiddenValue ? hiddenValue.value : '';
+        if (val && val !== '[]') {
+            try {
+                uploadedFiles = JSON.parse(val);
+            } catch(e) {
+                uploadedFiles = [];
+            }
+        }
+        updateDisplay();
+    }
+
+    // Update hidden fields and display
+    function updateHiddenFields() {
+        if (hiddenValue) {
+            hiddenValue.value = JSON.stringify(uploadedFiles);
+            // Trigger change for Expression Manager
+            var event = new Event('change', { bubbles: true });
+            hiddenValue.dispatchEvent(event);
+            // Also trigger 'updated' for EM
+            if (typeof jQuery !== 'undefined') {
+                jQuery(hiddenValue).trigger('updated');
+            }
+        }
+        if (hiddenCount) {
+            hiddenCount.value = uploadedFiles.length;
+            if (typeof jQuery !== 'undefined') {
+                jQuery(hiddenCount).trigger('updated');
+            }
+        }
+    }
+
+    // Update file count display
+    function updateDisplay() {
+        if (fileCountSpan) {
+            fileCountSpan.textContent = uploadedFiles.length;
+        }
+
+        // Show/hide upload zone based on max files
+        if (uploadZone) {
+            uploadZone.style.display = uploadedFiles.length >= maxFiles ? 'none' : 'block';
+        }
+
+        // Show/hide files title
+        if (filesTitle) {
+            filesTitle.style.display = uploadedFiles.length > 0 ? 'block' : 'none';
+        }
+
+        // Render files list
+        renderFilesList();
+        updateHiddenFields();
+    }
+
+    // Render uploaded files
+    function renderFilesList() {
+        if (!filesListUl) return;
+        filesListUl.innerHTML = '';
+
+        var imageExts = ['gif', 'jpeg', 'jpg', 'png', 'webp', 'bmp', 'ico'];
+
+        uploadedFiles.forEach(function(file, index) {
+            var li = document.createElement('li');
+            li.className = 'fr-p-2w fr-mb-2w';
+            li.style.background = 'var(--background-alt-grey)';
+            li.style.borderRadius = '4px';
+
+            var isImage = imageExts.indexOf((file.ext || '').toLowerCase()) > -1;
+
+            var html = '<div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle">';
+
+            // Preview
+            html += '<div class="fr-col-auto">';
+            if (isImage && file.filename) {
+                html += '<img src="' + uploadurl + '/filegetcontents/' + encodeURIComponent(file.filename) + '" alt="" style="max-width:60px;max-height:60px;border-radius:4px;">';
+            } else {
+                html += '<span class="fr-icon-file-line" aria-hidden="true" style="font-size:2rem;"></span>';
+            }
+            html += '</div>';
+
+            // File info
+            html += '<div class="fr-col">';
+            html += '<p class="fr-text--bold fr-mb-0">' + escapeHtml(file.name || '{{ gT("File") }}') + '</p>';
+            if (file.size) {
+                html += '<p class="fr-text--sm fr-mb-0" style="color:var(--text-mention-grey);">' + formatSize(file.size) + '</p>';
+            }
+            if (showTitle && file.title) {
+                html += '<p class="fr-text--sm fr-mb-0"><em>' + escapeHtml(file.title) + '</em></p>';
+            }
+            html += '</div>';
+
+            // Delete button
+            html += '<div class="fr-col-auto">';
+            html += '<button type="button" class="fr-btn fr-btn--sm fr-btn--tertiary fr-icon-delete-line" data-index="' + index + '" title="{{ gT("Delete this file") }}">';
+            html += '{{ gT("Delete") }}';
+            html += '</button>';
+            html += '</div>';
+
+            html += '</div>';
+            li.innerHTML = html;
+
+            // Bind delete button
+            var deleteBtn = li.querySelector('button[data-index]');
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', function() {
+                    deleteFile(index);
+                });
+            }
+
+            filesListUl.appendChild(li);
+        });
+    }
+
+    // Delete file
+    function deleteFile(index) {
+        var file = uploadedFiles[index];
+        if (!file) return;
+
+        // Call server to delete
+        var formData = new FormData();
+        formData.append('delete', '1');
+        formData.append('fieldname', fieldname);
+        formData.append('filename', file.filename || '');
+        formData.append('name', file.name || '');
+        formData.append('YII_CSRF_TOKEN', csrfToken);
+
+        fetch(uploadurl, {
+            method: 'POST',
+            body: formData
+        })
+        .then(function(response) {
+            return response.text();
+        })
+        .then(function(msg) {
+            // Remove from array
+            uploadedFiles.splice(index, 1);
+            updateDisplay();
+            showMessage('success', msg || '{{ gT("File deleted") }}');
+        })
+        .catch(function(err) {
+            showMessage('error', '{{ gT("Error") }}');
+        });
+    }
+
+    // Validate file before upload
+    function validateFile(file) {
+        // Check max files
+        if (uploadedFiles.length >= maxFiles) {
+            return { valid: false, error: '{{ gT("Sorry, no more files can be uploaded!") }}' };
+        }
+
+        // Check file extension
+        var fileName = file.name || '';
+        var ext = fileName.split('.').pop().toLowerCase();
+        if (allowedTypes.indexOf(ext) === -1) {
+            return {
+                valid: false,
+                error: '{{ gT("This file type is not allowed to be uploaded.") }} {{ gT("Allowed file types") }}: ' + allowedTypes.join(', ')
+            };
+        }
+
+        // Check file size (file.size is in bytes, maxFileSize is in KB)
+        var fileSizeKB = Math.round(file.size / 1024);
+        if (fileSizeKB > maxFileSize) {
+            return {
+                valid: false,
+                error: '{{ gT("Sorry, this file is too large.") }} {{ gT("Maximum file size allowed (in KB)") }}: ' + formatSize(maxFileSize * 1024)
+            };
+        }
+
+        return { valid: true };
+    }
+
+    // Upload file
+    function uploadFile(file) {
+        // Validate first
+        var validation = validateFile(file);
+        if (!validation.valid) {
+            showMessage('error', validation.error);
+            if (fileInput) fileInput.value = '';
+            return;
+        }
+
+        // Show progress
+        if (progressDiv) progressDiv.style.display = 'block';
+        if (progressBar) progressBar.style.width = '0%';
+        if (statusText) statusText.textContent = '{{ gT("Uploading file") }}... ' + file.name;
+
+        var formData = new FormData();
+        formData.append('uploadfile', file);
+        formData.append('fieldname', fieldname);
+        formData.append('surveyid', surveyid);
+        formData.append('preview', '1');
+        formData.append('YII_CSRF_TOKEN', csrfToken);
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.upload.addEventListener('progress', function(e) {
+            if (e.lengthComputable && progressBar) {
+                var percent = Math.round((e.loaded / e.total) * 100);
+                progressBar.style.width = percent + '%';
+            }
+        });
+
+        xhr.addEventListener('load', function() {
+            if (progressDiv) progressDiv.style.display = 'none';
+
+            try {
+                var response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    // Add to uploaded files
+                    uploadedFiles.push({
+                        title: '',
+                        comment: '',
+                        size: response.size || 0,
+                        name: response.name || file.name,
+                        filename: response.filename || '',
+                        ext: response.ext || ''
+                    });
+                    updateDisplay();
+                    showMessage('success', response.msg || '{{ gT("The file has been successfully uploaded.") }}');
+                } else {
+                    showMessage('error', response.msg || '{{ gT("An error occurred uploading your file.") }}');
+                }
+            } catch(e) {
+                showMessage('error', '{{ gT("An error occurred uploading your file.") }}');
+            }
+
+            // Reset input
+            if (fileInput) fileInput.value = '';
+        });
+
+        xhr.addEventListener('error', function() {
+            if (progressDiv) progressDiv.style.display = 'none';
+            showMessage('error', '{{ gT("An error occurred uploading your file.") }}');
+            if (fileInput) fileInput.value = '';
+        });
+
+        xhr.open('POST', uploadurl + '/sid/' + surveyid + '/preview/1/fieldname/' + fieldname + '/');
+        xhr.send(formData);
+    }
+
+    // Show message
+    function showMessage(type, text) {
+        if (!messagesDiv) return;
+
+        var alertClass = type === 'success' ? 'fr-alert--success' : 'fr-alert--error';
+        var iconClass = type === 'success' ? 'fr-icon-checkbox-circle-line' : 'fr-icon-error-line';
+
+        messagesDiv.innerHTML = '<div class="fr-alert ' + alertClass + ' fr-alert--sm fr-mb-2w">' +
+            '<p>' + escapeHtml(text) + '</p>' +
+            '</div>';
+
+        // Auto-hide after 5 seconds
+        setTimeout(function() {
+            messagesDiv.innerHTML = '';
+        }, 5000);
+    }
+
+    // Helper: escape HTML
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    // Helper: format file size
+    function formatSize(kb) {
+        if (kb < 1024) return kb + ' KB';
+        return (kb / 1024).toFixed(1) + ' MB';
+    }
+
+    // Bind file input change
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            var files = e.target.files;
+            if (files && files.length > 0) {
+                uploadFile(files[0]);
+            }
+        });
+    }
+
+    // Drag and drop support
+    if (uploadZone) {
+        uploadZone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadZone.classList.add('fr-upload-group--dragover');
+        });
+
+        uploadZone.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadZone.classList.remove('fr-upload-group--dragover');
+        });
+
+        uploadZone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadZone.classList.remove('fr-upload-group--dragover');
+            var files = e.dataTransfer.files;
+            if (files && files.length > 0) {
+                uploadFile(files[0]);
+            }
+        });
+    }
+
+    // Expose controller for LimeSurvey compatibility
+    window.uploadQuestionController_{{ fileid }} = {
+        fieldname: fieldname,
+        displayUploadedFiles: function() {
+            initFromValue();
+        },
+        prepareOpenUploadModalDialog: function() {
+            // Not needed - no modal
+        }
+    };
+
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initFromValue);
+    } else {
+        initFromValue();
+    }
+
+    // Also init on pjax
+    if (typeof jQuery !== 'undefined') {
+        jQuery(document).on('pjax:scriptcomplete', initFromValue);
+    }
+
+})();
+</script>
+
+<style>
+.dsfr-upload-container .fr-upload-group--dragover {
+    background: var(--background-action-low-blue-france);
+    border-color: var(--border-action-high-blue-france);
+}
+
+.dsfr-upload-container .fr-progress {
+    height: 8px;
+    background: var(--background-alt-grey);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.dsfr-upload-container .fr-progress__bar {
+    height: 100%;
+    background: var(--background-action-high-blue-france);
+    transition: width 0.3s ease;
+}
+
+/* Style DSFR pour le bouton d'upload */
+.dsfr-upload-container .fr-upload {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: var(--text-action-high-blue-france);
+    background-color: var(--background-default-grey);
+    border: 1px dashed var(--border-action-high-blue-france);
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.dsfr-upload-container .fr-upload:hover {
+    background-color: var(--background-action-low-blue-france);
+}
+
+.dsfr-upload-container .fr-upload:focus {
+    outline: 2px solid var(--border-action-high-blue-france);
+    outline-offset: 2px;
+}
+
+.dsfr-upload-container .fr-upload::file-selector-button {
+    padding: 0.5rem 1rem;
+    margin-right: 1rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-inverted-blue-france);
+    background-color: var(--background-action-high-blue-france);
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.dsfr-upload-container .fr-upload::file-selector-button:hover {
+    background-color: var(--background-action-high-blue-france-hover);
+}
+</style>

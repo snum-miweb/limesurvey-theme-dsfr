@@ -1,0 +1,34 @@
+{#
+/**
+ * Array Texts - Repeat Header - DSFR Theme
+ * Renders a repeated header row for long tables
+ *
+ * @var $basename           Base name for aria labels
+ * @var $answerwidth        Answer width
+ * @var $labelans           Array of column labels
+ * @var $right_exists       Whether right column exists
+ * @var $col_head           Column header HTML
+ */
+#}
+
+<!-- repeat_header -->
+</tbody>
+<thead>
+    <tr class="ls-heading ls-header">
+        <td>&nbsp;</td>
+
+        {% for code, text in labelans %}
+            <th id="answertext{{ basename }}_{{ code }}_repeat" class="answertext fr-text--bold" role="columnheader">
+                {{ processString(text) }}
+            </th>
+        {% endfor %}
+
+        {% if right_exists %}
+            <td>&nbsp;</td>
+        {% endif %}
+
+        {{ col_head|raw }}
+    </tr>
+</thead>
+<tbody>
+<!-- end of repeat_header -->

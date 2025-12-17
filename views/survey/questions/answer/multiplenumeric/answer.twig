@@ -1,0 +1,47 @@
+{# /**
+ * Multiple Numerical Question - DSFR Theme (with sliders)
+ * Type: K (Multiple Numeric)
+ *
+ * @var $aRows              : Array of rows with data
+ * @var $rowTemplate        : Template to use for each row
+ * @var $dynamicTemplate    : Template for dynamic rows (total/remaining)
+ * @var $coreClass          : Core CSS classes
+ * @var $basename           : Base name for aria labels
+ * @var $id                 : Question ID
+ * @var $sumRemainingEqn    : Remaining sum equation
+ * @var $sumEqn             : Total sum equation
+ * @var $sLabelWidth        : Label column width
+ * @var $sInputContainerWidth : Input container width
+ * @var $prefix             : Prefix text
+ * @var $suffix             : Suffix text
+ */ #}
+
+<!-- Multiple Numerical - DSFR -->
+<ul class="{{coreClass}} ls-answers answers-list numeric-list" role="group" aria-labelledby="ls-question-text-{{basename}}">
+    {% block rows %}
+        {% if aRows is empty %}
+            {% include './survey/questions/answer/multiplenumeric/empty.twig' %}
+        {% else %}
+            {% for aRow in aRows %}
+                {% include rowTemplate with aRow %}
+            {% endfor %}
+        {% endif %}
+    {% endblock %}
+
+    {% block dynamic %}
+        {{
+            include(dynamicTemplate|default("./survey/questions/answer/multiplenumeric/rows/dynamic.twig"),
+                {
+                'id' : id,
+                'sumRemainingEqn' : sumRemainingEqn,
+                'sumEqn' : sumEqn,
+                'sLabelWidth' : sLabelWidth,
+                'sInputContainerWidth' : sInputContainerWidth,
+                'prefix' : prefix,
+                'suffix' : suffix,
+                }
+            )|raw
+        }}
+    {% endblock %}
+</ul>
+<!-- end of Multiple Numerical -->

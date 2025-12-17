@@ -1,0 +1,29 @@
+{#
+/**
+ * Month dropdown Html - DSFR Theme
+ * @var $monthId
+ * @var $currentmonth
+ * @var $montharray
+ */
+#}
+
+<!-- month -->
+<!-- select-item requis pour em_javascript.js -->
+<div class="fr-col-12 fr-col-md-3 select-item answer-item">
+    <div class="fr-select-group">
+        <label for="month{{ monthId }}" class="fr-label">
+            {{ gT('Month') }}
+        </label>
+        <select id="month{{ monthId }}" name="month{{ monthId }}" class="fr-select month em_sq_validation">
+            <option value="">
+                {{ gT('Month') }}
+            </option>
+            {% for i in 1..12 %}
+                <option value="{{ sprintf('%02d', i) }}"{% if i == intval(currentmonth) %} selected{% endif %}>
+                    {{ montharray[(i-1)] }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<!-- end of month -->

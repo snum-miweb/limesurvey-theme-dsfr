@@ -1,0 +1,41 @@
+{#/**
+ * Multiple Numerical question - DSFR Theme
+ * Html for input boxes mode
+ *
+ * @var $sRows      : the rows, generated with the views rows/answer_row.php
+ * @var $coreClass
+ * @var $basename
+ * @var $prefixclass
+ * @var $equals_num_value
+ * @var $id
+ * @var $prefix
+ * @var $suffix
+ * @var $sumRemainingEqn
+ * @var $displaytotal
+ * @var $sumEqn
+ * @var $sLabelWidth
+ * @var $sInputContainerWidth
+ */
+#}
+<!-- Multiple Numerical - Input Mode - DSFR -->
+
+<!-- answer -->
+<ul class="{{coreClass}} ls-answers answers-list numeric-list" role="group" aria-describedby="ls-question-text-{{basename}}">
+    {% block rows %}
+    {# rows are pre-rendered #}
+    {{sRows|raw}}
+    {% endblock %}
+
+    {% block dynamic %}
+        {{ include("./survey/questions/answer/multiplenumeric/rows/dynamic.twig", {
+            'id' : id,
+            'sumRemainingEqn' : sumRemainingEqn,
+            'sumEqn' : sumEqn,
+            'sLabelWidth' : sLabelWidth,
+            'sInputContainerWidth' : sInputContainerWidth,
+            'prefix' : prefix,
+            'suffix' : suffix,
+        })|raw }}
+    {% endblock %}
+</ul>
+<!-- endof answer -->

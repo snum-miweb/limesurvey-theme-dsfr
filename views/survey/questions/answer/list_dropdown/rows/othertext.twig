@@ -1,0 +1,56 @@
+{#
+/**
+ * List Dropdown - Other Text Field - DSFR Theme
+ * Text field displayed when user selects "Other" option
+ *
+ * @var $name                       Field name
+ * @var $basename                   Base name for IDs
+ * @var $value                      Current value
+ * @var $label                      Label text
+ * @var $checkconditionFunction     JS condition function
+ */
+#}
+
+<!-- Other text field - DSFR -->
+<div class="fr-input-group fr-mt-2w">
+    <label for="othertext{{ name }}" class="fr-label">
+        {{ processString(label) }}
+    </label>
+    <input
+        type="text"
+        class="fr-input"
+        id="othertext{{ name }}"
+        name="{{ name }}other"
+        value="{{ value }}"
+        aria-labelledby="answer{{ name }}-oth-"
+    />
+</div>
+
+<script>
+// Hide/show "Other" text field based on dropdown selection
+(function() {
+    var selectEl = document.getElementById("answer{{ name }}");
+    var otherEl = document.getElementById("othertext{{ name }}");
+    var otherContainer = otherEl.closest('.fr-input-group');
+
+    function toggleOther() {
+        if (selectEl.value !== "-oth-") {
+            otherContainer.style.display = 'none';
+            otherEl.value = "";
+            // Trigger keyup for Expression Manager
+            var event = new Event('keyup');
+            otherEl.dispatchEvent(event);
+        } else {
+            otherContainer.style.display = 'block';
+            otherEl.focus();
+        }
+    }
+
+    // Initial state
+    toggleOther();
+
+    // Listen for changes
+    selectEl.addEventListener('change', toggleOther);
+})();
+</script>
+<!-- end of othertext -->

@@ -1,0 +1,58 @@
+{#
+LimeSurvey - DSFR Theme
+Question Index Modal avec Sommaire DSFR
+#}
+
+{% if (aSurveyInfo.aQuestionIndex.bShow == true) and (aSurveyInfo.format != 'A') %}
+    <!-- DSFR Modal for Question Index -->
+    <dialog id="question-index-modal"
+            class="fr-modal"
+            aria-labelledby="question-index-modal-title"
+            aria-modal="true">
+        <div class="fr-container fr-container--fluid fr-container-md">
+            <div class="fr-grid-row fr-grid-row--center">
+                <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+                    <div class="fr-modal__body">
+                        <div class="fr-modal__header">
+                            <button type="button"
+                                    class="fr-btn--close fr-btn"
+                                    aria-controls="question-index-modal"
+                                    title="{{ gT("Close") }}">
+                                {{ gT("Close") }}
+                            </button>
+                        </div>
+                        <div class="fr-modal__content">
+                            <h2 id="question-index-modal-title" class="fr-modal__title">
+                                {{ gT("Liste des étapes") }}
+                            </h2>
+
+                            <!-- Sommaire DSFR -->
+                            <nav class="fr-summary"
+                                 role="navigation"
+                                 aria-label="{{ gT('Navigation dans le questionnaire') }}"
+                                 aria-labelledby="question-index-modal-title">
+
+                                <ol class="fr-summary__list">
+                                    {% for step, indexItem in aSurveyInfo.aQuestionIndex.items %}
+                                        <li>
+                                            {% if attribute(indexItem.stepStatus, 'index-item-current') is defined and attribute(indexItem.stepStatus, 'index-item-current') == true %}
+                                                <a class="fr-summary__link" href="#" aria-current="page">
+                                                    {{ indexItem.text }}
+                                                </a>
+                                            {% else %}
+                                                <a class="fr-summary__link" href="{{ indexItem.url }}">
+                                                    {{ indexItem.text }}
+                                                </a>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ol>
+                            </nav>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </dialog>
+{% endif %}

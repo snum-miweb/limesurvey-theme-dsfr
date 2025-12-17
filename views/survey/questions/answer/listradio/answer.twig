@@ -1,0 +1,31 @@
+{#
+/**
+ * List Radio - DSFR Theme
+ * Radio buttons with DSFR fr-radio-group component
+ *
+ * Variables available:
+ * @var $name
+ * @var $value
+ * @var $sRows
+ * @var $iNbCols
+ */
+#}
+
+<!-- DSFR Radio List -->
+{{ sTimer }}
+<fieldset class="fr-fieldset {{ coreClass }}" aria-labelledby="ls-question-text-{{ name }}">
+    <legend class="fr-sr-only" id="ls-question-text-{{ name }}-legend">
+        {{ gT('Please choose one of the following options') }}
+    </legend>
+    <div class="fr-fieldset__content">
+        {{ sRows }}
+    </div>
+</fieldset>
+
+{# Value for expression manager javascript #}
+{{ C.Html.hiddenField("java"~name,value,({
+    'id' : "java"~name,
+    'disabled' : true,
+}))
+}}
+<!-- end of answer -->

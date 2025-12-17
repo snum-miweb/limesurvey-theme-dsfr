@@ -1,0 +1,30 @@
+{#
+    LimeSurvey
+    Copyright (C) 2007-2017 The LimeSurvey Project Team / Louis Gac
+    All rights reserved.
+    License: GNU/GPL License v2 or later, see LICENSE.php
+    LimeSurvey is free software. This version may have been modified pursuant
+    to the GNU General Public License, and as distributed it includes or
+    is derivative of works licensed under the GNU General Public License or
+    other free or open source software licenses.
+    See COPYRIGHT.php for copyright notices and details.
+
+
+
+    (¯`·._.·(¯`·._.· Survey Question Help  ·._.·´¯)·._.·´¯)
+
+    The additional question help as entered by the survey creator in question editing
+    This is different from valid_message which is system-generated.
+    NOTE: see views/subviews/survey/question.twig comments for more infos
+#}
+
+{% set helpText = aQuestion.help.text|default('')|trim %}
+
+{% if helpText is not empty %}
+<!-- Survey question help DSFR (custom help from backoffice) -->
+<div class="{{ aSurveyInfo.class.helpcontainer }} fr-col-12" {{ aSurveyInfo.attr.helpcontainer }}>
+    <div class="fr-hint-text ls-questionhelp {{ aSurveyInfo.class.lsquestionhelp }}">
+        {{ aQuestion.help.text | raw }}
+    </div>
+</div>
+{% endif %}

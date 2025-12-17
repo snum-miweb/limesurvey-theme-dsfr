@@ -1,0 +1,29 @@
+{#
+/**
+ * List radio 'No answer' row - DSFR Theme
+ * DSFR-compliant radio button for "No answer" option
+ *
+ * Variables available:
+ * @var $name
+ * @var $check_ans
+ * @var $checkconditionFunction
+ */
+#}
+
+<!-- answer_row_noanswer DSFR -->
+<div class="fr-fieldset__element radio-item answer-item">
+    <div id='javatbd{{ name }}' class="fr-radio-group">
+        <input
+            type="radio"
+            name="{{ name }}"
+            id="answer{{ name }}"
+            value=""
+            {{ check_ans }}
+            onclick="if (document.getElementById('answer{{ name }}othertext') != null) document.getElementById('answer{{ name }}othertext').value='';{{ checkconditionFunction }}(this.value, this.name, this.type)"
+        />
+        <label class="fr-label" for="answer{{ name }}">
+            {{ gT('No answer') }}
+        </label>
+    </div>
+</div>
+<!-- endof answer_row_noanswer -->

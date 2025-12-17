@@ -1,0 +1,17 @@
+{#
+/**
+ * List Dropdown - Option - DSFR Theme
+ * Generate a single <option> element
+ *
+ * @var $value          Option value (code)
+ * @var $opt_select     "selected" attribute if selected
+ * @var $answer         Option text (label)
+ * @var $classes        Optional CSS classes
+ */
+#}
+
+<!-- option -->
+<option value="{{ value }}" {{ opt_select }} {% if classes is not empty %}class="{{ classes }}"{% endif %}>
+    {{ flatString(processString(answer, 1), 1) }}
+</option>
+<!-- end of option -->

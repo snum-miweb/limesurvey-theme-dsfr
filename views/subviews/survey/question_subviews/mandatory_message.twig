@@ -1,0 +1,15 @@
+{#
+    Message obligatoire
+    Affiché AVANT le champ de saisie (structure DSFR)
+    Affiché dès le chargement si la question est obligatoire
+#}
+
+<!-- Message question obligatoire - DEBUG: mandatory={{ aQuestion.mandatory }} -->
+{% if aQuestion.mandatory == 'Y' or aQuestion.mandatory == 'S' or aQuestion.mandatory == 'X' %}
+<div class="question-mandatory-container fr-col-12 fr-mb-2w">
+    <div class="ls-question-mandatory ls-question-mandatory-permanent text-danger" role="alert">
+        <span class="fa fa-exclamation-circle ri-error-warning-fill" aria-hidden="true"></span>
+        Cette question est obligatoire
+    </div>
+</div>
+{% endif %}

@@ -1,0 +1,41 @@
+{#
+/**
+ * Multiple Choice Item Row - DSFR Theme
+ * Checkbox with DSFR fr-checkbox-group
+ *
+ * Variables available:
+ * @var $name
+ * @var $title
+ * @var $question
+ * @var $checkedState
+ * @var $sCheckconditionFunction
+ * @var $myfname
+ * @var $sValue
+ * @var $kpclass
+ * @var $relevanceClass
+ */
+#}
+<!-- answer_row -->
+<div class="fr-fieldset__element checkbox-item answer-item" id='javatbd{{ myfname }}'>
+    <div class="fr-checkbox-group {{ relevanceClass }}">
+        <input
+            type="checkbox"
+            name="{{ myfname }}"
+            id="answer{{ myfname }}"
+            {{ checkedState }}
+            value="Y"
+            aria-label="{{ processString(question) }}"
+            {% if kpclass %}class="{{ kpclass }}"{% endif %}
+        />
+        <label class="fr-label" for="answer{{ myfname }}">
+            {{ processString(question) }}
+        </label>
+        <input
+            type="hidden"
+            name="java{{ myfname }}"
+            id="java{{ myfname }}"
+            value="{{ C.Html.encode( sValue ) }}"
+        />
+    </div>
+</div>
+<!-- end of answer_row -->

@@ -1,0 +1,67 @@
+{#
+/**
+ * Yes / No Question, radio item Html - DSFR
+ *
+ * @var $name                           $ia[1]
+ * @var $yChecked
+ * @var $nChecked
+ * @var $naChecked
+ * @var $noAnswer
+ * @var $value                          $_SESSION['survey_'.Yii::app()->getConfig('surveyID')][$name]
+ */
+#}
+
+<div class="fr-form-group">
+    <fieldset class="fr-fieldset" aria-labelledby="ls-question-text-{{ basename }}">
+        <div class="fr-fieldset__content">
+            <!-- Yes -->
+            <div class="fr-radio-group" id="javatbd{{ name }}Y">
+                <input
+                    type="radio"
+                    name="{{ name }}"
+                    id="answer{{ name }}Y"
+                    value="Y"
+                    {{ yChecked }}
+                />
+                <label class="fr-label" for="answer{{ name }}Y">
+                    {{ gT('Yes') }}
+                </label>
+            </div>
+
+            <!-- No -->
+            <div class="fr-radio-group" id="javatbd{{ name }}N">
+                <input
+                    type="radio"
+                    name="{{ name }}"
+                    id="answer{{ name }}N"
+                    value="N"
+                    {{ nChecked }}
+                />
+                <label class="fr-label" for="answer{{ name }}N">
+                    {{ gT('No') }}
+                </label>
+            </div>
+
+            <!-- No answer -->
+            {% if noAnswer %}
+                <div class="fr-radio-group" id="javatbd{{ name }}">
+                    <input
+                        type="radio"
+                        name="{{ name }}"
+                        id="answer{{ name }}"
+                        value=""
+                        {{ naChecked }}
+                    />
+                    <label class="fr-label" for="answer{{ name }}">
+                        {{ gT('No answer') }}
+                    </label>
+                </div>
+            {% endif %}
+        </div>
+    </fieldset>
+</div>
+{# Value for expression manager javascript (use id) ; no need to submit #}
+{{ C.Html.hiddenField("java"~name,value,({
+    'id' : "java"~name,
+    'disabled' : true,
+})) }}

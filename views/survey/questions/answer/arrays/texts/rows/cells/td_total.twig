@@ -1,0 +1,26 @@
+{#
+/**
+ * Array Texts - Total Cell - DSFR Theme
+ * Renders a total cell for row totals
+ *
+ * @var $empty              Whether cell is empty
+ * @var $inputsize          Input size
+ * @var $basename           Base name for aria labels
+ */
+#}
+
+<!-- td_total -->
+{% if empty %}
+    <td class="answertextright total"></td>
+{% else %}
+    <td class="answertextright total">
+        <input
+            type="text"
+            class="fr-input total-input"
+            readonly="readonly"
+            size="{{ inputsize ? inputsize : 10 }}"
+            aria-label="{{ gT('Total') }}"
+        />
+    </td>
+{% endif %}
+<!-- end of td_total -->

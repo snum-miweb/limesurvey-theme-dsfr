@@ -1,0 +1,70 @@
+{#
+/**
+ * List radio 'Other' row - DSFR Theme
+ * DSFR-compliant radio button with text input for "Other" option
+ *
+ * Variables available:
+ * @var $name
+ * @var $answer_other
+ * @var $sDisplayStyle
+ * @var $myfname
+ * @var $othertext
+ * @var $checkedState
+ * @var $kpclass
+ * @var $checkconditionFunction
+ */
+#}
+
+<!-- answer_row_other DSFR -->
+<div class="fr-fieldset__element radio-item answer-item" {{ sDisplayStyle }}>
+    <div id='javatbd{{ myfname }}' class="fr-radio-group">
+        <input
+            type="radio"
+            value="-oth-"
+            name="{{ name }}"
+            id="SOTH{{ name }}"
+            {{ checkedState }}
+            aria-controls="answer{{ name }}othertext"
+            aria-expanded="{{ checkedState ? 'true' : 'false' }}"
+            onclick="{{ checkconditionFunction }}(this.value, this.name, this.type)"
+        />
+        <label class="fr-label" for="SOTH{{ name }}" id="label-id-{{ name }}">
+            {{ processString(othertext) }}
+        </label>
+    </div>
+
+    <!-- Text input for "Other" -->
+    <div class="fr-input-group fr-mt-1w">
+        <input
+            type="text"
+            class="fr-input {{ kpclass }}"
+            id="answer{{ name }}othertext"
+            name="{{ name }}other"
+            title="{{ flatString(processString(othertext,1),1) }}"
+            {{ answer_other }}
+            aria-labelledby="label-id-{{ name }}"
+            {% if numbers_only %} data-number="1" {% endif %}
+        />
+    </div>
+
+    <script>
+        // Mise à jour de aria-expanded quand l'utilisateur tape dans le champ texte
+        $("#answer{{ name }}othertext").on("keyup",function(){
+            if($.trim($(this).val())!=''){
+                $('#SOTH{{ name }}').click();
+                $('#SOTH{{ name }}').attr('aria-expanded', 'true');
+            };
+            {{ checkconditionFunction }}(this.value, '{{ name }}', 'text');
+        });
+
+        // Mise à jour de aria-expanded quand le radio est sélectionné
+        $('#SOTH{{ name }}').on('change', function(){
+            var isChecked = $(this).is(':checked');
+            $(this).attr('aria-expanded', isChecked ? 'true' : 'false');
+            if(isChecked) {
+                $("#answer{{ name }}othertext").focus();
+            }
+        });
+    </script>
+</div>
+<!-- end of answer_row_other -->

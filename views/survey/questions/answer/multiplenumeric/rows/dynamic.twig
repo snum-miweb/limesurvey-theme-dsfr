@@ -1,0 +1,74 @@
+{#
+/**
+ * Multiple Numerical - Dynamic Row (Remaining + Total) - DSFR Theme
+ *
+ * @var $id
+ * @var $sumRemainingEqn
+ * @var $sumEqn
+ * @var $sLabelWidth
+ * @var $sInputContainerWidth
+ * @var $prefix
+ * @var $suffix
+ */
+#}
+{% if sumRemainingEqn %}
+    <li class="fr-mb-3w ls-group-remaining ls-group-dynamic" style="list-style: none;">
+        <div class="fr-grid-row fr-grid-row--gutters">
+            <div class="fr-col-12 fr-col-md-6">
+                <span class="fr-text--bold">{{ gT('Remaining') }}:</span>
+            </div>
+            <div class="fr-col-12 fr-col-md-6">
+                <div class="ls-input-group">
+                    {% if prefix %}
+                        <div class="ls-input-group-extra prefix-text prefix">
+                            {{ processString(prefix) }}
+                        </div>
+                    {% endif %}
+                    <div id="remainingvalue_{{id}}" class="numeric dynamic-remaining" data-number="1" style="border: none; background: transparent; padding-left: 0;">
+                        {{ sumRemainingEqn }}
+                    </div>
+                    {% if suffix %}
+                        <div class="ls-input-group-extra suffix-text suffix">
+                            {{ processString(suffix) }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </li>
+{% endif %}
+
+{% if sumEqn %}
+    <li class="ls-group-total-separator-row fr-hidden">
+        <div class="fr-grid-row">
+            <div class="fr-col-12 fr-col-md-6"></div>
+            <div class="fr-col-12 fr-col-md-6">
+                <hr class="fr-hr">
+            </div>
+        </div>
+    </li>
+    <li class="fr-mb-3w ls-group-total ls-group-dynamic" style="list-style: none;">
+        <div class="fr-grid-row fr-grid-row--gutters">
+            <div class="fr-col-12 fr-col-md-6">
+                <span class="fr-text--bold">{{ gT('Total:') }}</span>
+            </div>
+            <div class="fr-col-12 fr-col-md-6">
+                <div class="ls-input-group">
+                    {% if prefix %}
+                        <div class="ls-input-group-extra prefix-text prefix fr-hidden">
+                            {{ processString(prefix) }}
+                        </div>
+                    {% endif %}
+                    <div id="totalvalue_{{id}}" class="numeric dynamic-total" data-number="1" style="border: none; background: transparent; padding-left: 0;">
+                        {{ sumEqn }}
+                    </div>
+                    {% if suffix %}
+                        <div class="ls-input-group-extra suffix-text suffix fr-hidden">
+                            {{ processString(suffix) }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </li>
+{% endif %}

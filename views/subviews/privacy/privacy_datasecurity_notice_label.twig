@@ -1,0 +1,10 @@
+{#
+    use aSurveyInfo datasecurity_notice_label
+    Note: Le lien n'est plus nécessaire car l'accordéon DSFR gère l'affichage
+#}
+{% set STARTPOLICYLINK = "" %}
+{% set ENDPOLICYLINK = "" %}
+{# Support pour les anciens labels avec placeholders {STARTPOLICYLINK} et {ENDPOLICYLINK} #}
+{% set dataSecurityNoticeLabel = str_replace('{STARTPOLICYLINK}', '', dataSecurityNoticeLabel) %}
+{% set dataSecurityNoticeLabel = str_replace('{ENDPOLICYLINK}', '', dataSecurityNoticeLabel) %}
+{{ dataSecurityNoticeLabel }}

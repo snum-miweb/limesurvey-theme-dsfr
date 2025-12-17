@@ -1,0 +1,120 @@
+{#
+/**
+ * Numerical Question - DSFR Theme
+ * Input number with DSFR fr-input-group component and responsive grid
+ *
+ * Variables available:
+ * @var $extraclass
+ * @var $id
+ * @var $prefix
+ * @var $answertypeclass
+ * @var $fValue
+ * @var $integeronly
+ * @var $maxlength
+ * @var $suffix
+ * @var $placeholder
+ */
+#}
+
+<!-- Numerical - Structure DSFR avec fr-input-group -->
+
+<!-- answer -->
+<div class='{{ coreClass }} {{ extraclass }}'>
+    <div class="fr-input-group">
+        <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle">
+            {% if prefix != '' and suffix != '' %}
+                {# Prefix + Input + Suffix: 3-6-3 #}
+                <div class="fr-col-12 fr-col-md-3 fr-text--right">
+                    <span class="fr-text--sm fr-text--bold">{{ processString(prefix) }}</span>
+                </div>
+                <div class="fr-col-12 fr-col-md-6">
+                    {{ C.Html.textField(id,fValue,({
+                        'id' : "answer"~id,
+                        'class' : "fr-input "~answertypeclass,
+                        'title' : gT('Only numbers may be entered in this field.'),
+                        'size' : (inputsize ? inputsize : null),
+                        'placeholder' : flatString(processString(placeholder,1),1),
+                        'maxlength' : (maxlength ? maxlength : null),
+                        'data-number' : 1,
+                        'data-integer' : integeronly,
+                        'aria-labelledby' : "ls-question-text-"~basename,
+                        'aria-describedby' : "answer"~id~"-messages",
+                        'inputmode' : 'numeric',
+                        'pattern' : (integeronly ? '[0-9]*' : '[0-9]*[.,]?[0-9]*')
+                    }))
+                    }}
+                </div>
+                <div class="fr-col-12 fr-col-md-3">
+                    <span class="fr-text--sm fr-text--bold">{{ processString(suffix) }}</span>
+                </div>
+            {% elseif prefix != '' %}
+                {# Prefix + Input: 3-9 #}
+                <div class="fr-col-12 fr-col-md-3 fr-text--right">
+                    <span class="fr-text--sm fr-text--bold">{{ processString(prefix) }}</span>
+                </div>
+                <div class="fr-col-12 fr-col-md-9">
+                    {{ C.Html.textField(id,fValue,({
+                        'id' : "answer"~id,
+                        'class' : "fr-input "~answertypeclass,
+                        'title' : gT('Only numbers may be entered in this field.'),
+                        'size' : (inputsize ? inputsize : null),
+                        'placeholder' : flatString(processString(placeholder,1),1),
+                        'maxlength' : (maxlength ? maxlength : null),
+                        'data-number' : 1,
+                        'data-integer' : integeronly,
+                        'aria-labelledby' : "ls-question-text-"~basename,
+                        'aria-describedby' : "answer"~id~"-messages",
+                        'inputmode' : 'numeric',
+                        'pattern' : (integeronly ? '[0-9]*' : '[0-9]*[.,]?[0-9]*')
+                    }))
+                    }}
+                </div>
+            {% elseif suffix != '' %}
+                {# Input + Suffix: 9-3 #}
+                <div class="fr-col-12 fr-col-md-9">
+                    {{ C.Html.textField(id,fValue,({
+                        'id' : "answer"~id,
+                        'class' : "fr-input "~answertypeclass,
+                        'title' : gT('Only numbers may be entered in this field.'),
+                        'size' : (inputsize ? inputsize : null),
+                        'placeholder' : flatString(processString(placeholder,1),1),
+                        'maxlength' : (maxlength ? maxlength : null),
+                        'data-number' : 1,
+                        'data-integer' : integeronly,
+                        'aria-labelledby' : "ls-question-text-"~basename,
+                        'aria-describedby' : "answer"~id~"-messages",
+                        'inputmode' : 'numeric',
+                        'pattern' : (integeronly ? '[0-9]*' : '[0-9]*[.,]?[0-9]*')
+                    }))
+                    }}
+                </div>
+                <div class="fr-col-12 fr-col-md-3">
+                    <span class="fr-text--sm fr-text--bold">{{ processString(suffix) }}</span>
+                </div>
+            {% else %}
+                {# Input seul: full width #}
+                <div class="fr-col-12">
+                    {{ C.Html.textField(id,fValue,({
+                        'id' : "answer"~id,
+                        'class' : "fr-input "~answertypeclass,
+                        'title' : gT('Only numbers may be entered in this field.'),
+                        'size' : (inputsize ? inputsize : null),
+                        'placeholder' : flatString(processString(placeholder,1),1),
+                        'maxlength' : (maxlength ? maxlength : null),
+                        'data-number' : 1,
+                        'data-integer' : integeronly,
+                        'aria-labelledby' : "ls-question-text-"~basename,
+                        'aria-describedby' : "answer"~id~"-messages",
+                        'inputmode' : 'numeric',
+                        'pattern' : (integeronly ? '[0-9]*' : '[0-9]*[.,]?[0-9]*')
+                    }))
+                    }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="fr-messages-group" id="answer{{ id }}-messages" aria-live="polite">
+            {# Messages d'erreur/succès injectés ici par JavaScript (theme.js) #}
+        </div>
+    </div>
+</div>
+<!-- end of answer -->

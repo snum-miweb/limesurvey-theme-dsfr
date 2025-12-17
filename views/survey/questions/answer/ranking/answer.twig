@@ -1,0 +1,97 @@
+{#
+/**
+ * Ranking Question - DSFR Theme
+ * Type: R (Ranking)
+ *
+ * This template uses the vanilla LimeSurvey ranking functionality
+ * with DSFR CSS styling applied on top
+ *
+ * @var $sSelects       Hidden select elements for session persistence
+ * @var $name           Question name
+ * @var $answers        Array of answer options to rank
+ * @var $rankingName    Base name for ranking fields
+ * @var $qId            Question ID
+ * @var $max_answers    Maximum number of answers to rank
+ * @var $min_answers    Minimum number of answers to rank
+ * @var $choice_title   Title for available choices column
+ * @var $rank_title     Title for ranked items column
+ * @var $showpopups     Show validation popups
+ * @var $samechoiceheight   Make all choice items same height
+ * @var $samelistheight     Make both lists same height
+ */
+#}
+
+<!-- Ranking (Type R) - DSFR -->
+<div class="{{coreClass}} ranking-question-dsfr"
+     data-ranking-qid="{{qId}}"
+     data-ranking-name="{{rankingName}}"
+     data-max-answers="{{max_answers}}"
+     data-min-answers="{{min_answers}}"
+     data-showpopups="{{showpopups}}"
+     data-samechoiceheight="{{samechoiceheight}}"
+     data-samelistheight="{{samelistheight}}">
+    <!-- Hidden select elements for session persistence -->
+    <ul class="list-unstyled fr-sr-only answers-list select-list" role="group" aria-labelledby="ls-question-text-{{basename}} ls-question-validation-{{basename}}">
+        {{sSelects|raw}}
+    </ul>
+
+    <!-- Visible ranking interface with DSFR styling -->
+    <div class="ls-no-js-hidden answers-list{{ samechoiceheight ? ' list-samechoiceheight': '' }} {{ samelistheight ? ' list-samelistheight': '' }}" aria-hidden="true">
+        <div class="fr-grid-row fr-grid-row--gutters">
+            <!-- Available choices (left column) -->
+            <div class="fr-col-12 fr-col-md-6 ranking-available-items">
+                <h4 class="sortable-subtitle sortable-rank-subtitle fr-h6 fr-mb-2w">{{choice_title}}</h4>
+                <ul id="sortable-choice-{{qId}}" class="sortable-choice sortable-list list-group" role="list">
+                    {% for ansrow in answers %}
+                        <li id="javatbd{{rankingName}}{{ansrow.code}}"
+                            class="ls-choice list-group-item answer-item sortable-item grabable sortable-enable fr-mb-2w"
+                            data-value="{{ansrow.code}}"
+                            tabindex="0"
+                            role="button"
+                            aria-label="{{ processString(ansrow.answer) }} - {{ gT('Press Enter or Space to move to ranked list, or use drag and drop') }}">
+                            {{ processString(ansrow.answer) }}
+                            <span class="grabable selector__dragHandle float-end" aria-hidden="true">
+                                <svg class="" width="9" height="14" viewBox="0 0 9 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0.4646 0.125H3.24762V2.625H0.4646V0.125ZM6.03064 0.125H8.81366V2.625H6.03064V0.125ZM0.4646 5.75H3.24762V8.25H0.4646V5.75ZM6.03064 5.75H8.81366V8.25H6.03064V5.75ZM0.4646 11.375H3.24762V13.875H0.4646V11.375ZM6.03064 11.375H8.81366V13.875H6.03064V11.375Z" fill="currentColor"/>
+                                </svg>
+                            </span>
+                        </li>
+                    {% endfor %}
+                    <li class="d-none ls-remove"></li>
+                </ul>
+            </div>
+
+            <!-- Ranked choices (right column) -->
+            <div class="fr-col-12 fr-col-md-6 ranking-sorted-items">
+                <h4 class="sortable-subtitle sortable-rank-subtitle fr-h6 fr-mb-2w">{{rank_title}}</h4>
+                <ul id="sortable-rank-{{qId}}" class="sortable-rank sortable-list list-group" role="list" aria-label="{{rank_title}}">
+                    <li class="d-none ls-remove"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% set script %}
+try{
+ var ranking{{qId}} = new RankingQuestion({
+        max_answers      : "{{ processString("{" ~ max_answers ~ "}", 1) }}",
+        min_answers      : "{{ processString("{" ~ min_answers ~ "}", 1) }}",
+        showpopups       : "{{showpopups}}",
+        samechoiceheight : "{{samechoiceheight}}",
+        samelistheight   : "{{samelistheight}}",
+        rankingName      : "{{rankingName}}",
+        questionId       : "{{qId}}"
+    });
+ ranking{{qId}}.init()
+} catch(e){}
+{% endset %}
+{{ registerPackage('sortablejs') }}
+{{ registerPackage('question-ranking') }}
+{{ registerScript(
+    'RankingQuestionTranslate'~qId,
+    'LSvar.lang.rankhelp="' ~ gT("Double-click or drag-and-drop items in the left list to move them to the right - your highest ranking item should be on the top right, moving through to your lowest ranking item.") ~ '";', 'POS_BEGIN')
+}}
+{{ registerScript( 'RankingQuestion'~qId, script, 'POS_POSTSCRIPT') }}
+
+<!-- end of Ranking -->

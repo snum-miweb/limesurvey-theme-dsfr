@@ -1,0 +1,24 @@
+{#
+/**
+ * Multiple short text question - DSFR Theme
+ *
+ * @var $sRows      : the rows
+ * @var $aRows      : array of row data
+ * @var $coreClass  : core CSS class
+ * @var $basename   : question base name
+ */
+#}
+<!-- Multiple Short Text DSFR -->
+
+<!-- answer -->
+<ul class="{{ coreClass }} ls-answers subquestion-list questions-list text-list list-unstyled" role="group" aria-labelledby="ls-question-text-{{ basename }}">
+    {% if aRows is empty %}
+        {% include 'survey/questions/answer/multipleshorttext/empty.twig' %}
+    {% else %}
+        {% for aRow in aRows %}
+            {% set rowTemplate = (aRow.textarea ? 'survey/questions/answer/multipleshorttext/rows/answer_row_textarea.twig' : 'survey/questions/answer/multipleshorttext/rows/answer_row_inputtext.twig') %}
+            {% include rowTemplate with aRow %}
+        {% endfor %}
+    {% endif %}
+</ul>
+<!-- end of answer -->

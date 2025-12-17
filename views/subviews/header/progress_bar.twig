@@ -1,0 +1,82 @@
+{#
+    LimeSurvey - DSFR Theme
+    Stepper DSFR officiel avec données de l'index des questions
+
+    Structure conforme : https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/indicateur-d-etapes/
+#}
+
+{# Traductions personnalisées pour le stepper DSFR #}
+{% set stepperLang = {
+    'fr': {
+        'step': 'Étape',
+        'of': 'sur',
+        'nextStep': 'Étape suivante :'
+    },
+    'en': {
+        'step': 'Step',
+        'of': 'of',
+        'nextStep': 'Next step:'
+    },
+    'es': {
+        'step': 'Paso',
+        'of': 'de',
+        'nextStep': 'Siguiente paso:'
+    },
+    'de': {
+        'step': 'Schritt',
+        'of': 'von',
+        'nextStep': 'Nächster Schritt:'
+    }
+} %}
+
+{# Détecter la langue active (fallback: français) #}
+{% set currentLang = aSurveyInfo.alanguageChanger.datas.sSelected|default('fr') %}
+{% set lang = stepperLang[currentLang]|default(stepperLang.fr) %}
+
+{% if aSurveyInfo.showprogress == 'Y' and aSurveyInfo.format != 'A' and not aSurveyInfo.aCompleted and aSurveyInfo.aQuestionIndex.items %}
+    <!-- DSFR Stepper -->
+    <div class="fr-container fr-my-4w">
+        {# Utiliser les données de l'index des questions #}
+        {% set totalSteps = aSurveyInfo.aQuestionIndex.items ? aSurveyInfo.aQuestionIndex.items|length : 1 %}
+        {% set currentStepIndex = 0 %}
+        {% set currentStepText = '' %}
+        {% set nextStepText = '' %}
+
+        {# Trouver l'étape actuelle dans l'index #}
+        {% if aSurveyInfo.aQuestionIndex.items %}
+            {% for index, item in aSurveyInfo.aQuestionIndex.items %}
+                {% if attribute(item.stepStatus, 'index-item-current') is defined and attribute(item.stepStatus, 'index-item-current') == true %}
+                    {% set currentStepIndex = index + 1 %}
+                    {% set currentStepText = item.text %}
+                    {# Étape suivante #}
+                    {% if aSurveyInfo.aQuestionIndex.items[index + 1] is defined %}
+                        {% set nextStepText = aSurveyInfo.aQuestionIndex.items[index + 1].text %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {# Fallback si pas trouvé #}
+        {% if currentStepIndex == 0 %}
+            {% set currentStepIndex = 1 %}
+            {% set currentStepText = aSurveyInfo.groupname ? aSurveyInfo.groupname : gT("Current step") %}
+        {% endif %}
+
+        <div class="fr-stepper">
+            <h2 class="fr-stepper__title">
+                {{ currentStepText }}
+                <span class="fr-stepper__state">{{ lang.step }} {{ currentStepIndex }} {{ lang.of }} {{ totalSteps }}</span>
+            </h2>
+            <div class="fr-stepper__steps"
+                 data-fr-current-step="{{ currentStepIndex }}"
+                 data-fr-steps="{{ totalSteps }}"
+                 aria-hidden="true">
+            </div>
+            {% if nextStepText %}
+                <p class="fr-stepper__details">
+                    <span class="fr-text--bold">{{ lang.nextStep }}</span> {{ nextStepText }}
+                </p>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

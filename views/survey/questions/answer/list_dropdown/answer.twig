@@ -1,0 +1,57 @@
+{#
+/**
+ * List Dropdown - DSFR Theme
+ * Type: ! (List - Dropdown)
+ *
+ * Question de type liste déroulante conforme au DSFR
+ * https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/liste-deroulante
+ *
+ * @var $sOptions           Pre-rendered options HTML
+ * @var $sOther             Pre-rendered "Other" field HTML
+ * @var $name               Field name
+ * @var $basename           Base name for IDs
+ * @var $dropdownSize       Size attribute (if multi-select)
+ * @var $value              Current value (for JS)
+ * @var $coreClass          Core CSS classes
+ */
+#}
+
+<!-- DSFR Select -->
+<div class="fr-select-group select-item ls-dropdown-item {{ coreClass }}">
+    <select
+        class="fr-select"
+        name="{{ name }}"
+        id="answer{{ name }}"
+        {% if dropdownSize %} size="{{ dropdownSize }}" {% endif %}
+        aria-labelledby="ls-question-text-{{ basename }}"
+    >
+        {# Options rendues par PHP (option.twig, optgroup.twig) #}
+        {{ sOptions|raw }}
+    </select>
+
+    {# Champ "Autre" si activé #}
+    {% if sOther %}
+        {{ sOther|raw }}
+    {% endif %}
+
+    {# Hidden field pour Expression Manager #}
+    {{ C.Html.hiddenField("java"~name, value, {
+        'id': "java"~name,
+        'disabled': true,
+    }) }}
+</div>
+
+{# Script pour nettoyer le HTML des options (DSFR n'accepte que du texte brut) #}
+<script type="text/javascript">
+    $(function () {
+        var select = document.getElementById('answer{{ name }}');
+        if (select) {
+            Array.from(select.options).forEach(function(option) {
+                var temp = document.createElement('div');
+                temp.innerHTML = option.innerHTML;
+                option.textContent = temp.textContent || temp.innerText || '';
+            });
+        }
+    });
+</script>
+<!-- end of DSFR Select -->

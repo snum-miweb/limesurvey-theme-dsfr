@@ -1,0 +1,22 @@
+<div class="fr-grid-row question-container-printanswers" style="page-break-inside:avoid;">
+    {% include './subviews/printanswers/partials/_question_header.twig' %}
+    <div class="fr-col-lg-8">
+        {% for subquestionId, subquestion in question.subquestions %}
+            <div class="fr-grid-row">
+                <div class="fr-col-lg-4 fr-text-right">
+                    {% if subquestion.answervalue is same as("Y") %}
+                        <i class="fa fa-check-square-o"></i>
+                    {% else %}
+                        {{subquestion.answervalue|escape}}
+                    {% endif %}
+                </div>
+                <div class="fr-col-lg-4 fr-text-left">
+                    <b>{{subquestion.question}} ({{subquestion.qid}})</b>
+                </div>
+                <div class="fr-col-lg-4 fr-text-left">
+                        {{subquestion.comment.answervalue|escape}}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>

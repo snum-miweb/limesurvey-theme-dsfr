@@ -1,0 +1,16 @@
+{#
+    Partial : En-tête de question pour printanswers
+
+    Variables attendues :
+    - question.question : Texte de la question
+    - question.qid : ID de la question
+    - question.type : Type de question (code)
+    - question.questionclass : Classe de question
+
+    Usage :
+    {% include './subviews/printanswers/partials/_question_header.twig' %}
+#}
+<div class="fr-col-md-4">
+    <b>{{question.question}} ({{question.qid}})</b><br/>
+    <small>{{ gT("Type:") }} ({{question.type}}/{{question.questionclass}})</small>
+</div>

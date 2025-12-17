@@ -1,0 +1,167 @@
+{#
+/**
+ * Array Dual Scale Question - DSFR Theme (No Dropdown)
+ * Type: 1 (Array Dual Scale)
+ *
+ * This template renders two scales for each subquestion
+ * Typically used for Importance vs Satisfaction matrices
+ *
+ * @var $coreClass          Core CSS classes
+ * @var $basename           Base name for aria labels
+ * @var $answerwidth        Answer column width
+ * @var $cellwidth          Cell width for each scale
+ * @var $labelans0          First scale answer labels
+ * @var $labelcode0         First scale answer codes
+ * @var $labelans1          Second scale answer labels
+ * @var $labelcode1         Second scale answer codes
+ * @var $labelcode0_checked Array of checked states for scale 0
+ * @var $labelcode1_checked Array of checked states for scale 1
+ * @var $separatorwidth     Separator column width
+ * @var $shownoanswer       Whether to show no answer option
+ * @var $rightexists        Whether right column exists
+ * @var $rightwidth         Right column width
+ * @var $leftheader         Left header text (Scale 1 label)
+ * @var $rightheader        Right header text (Scale 2 label)
+ * @var $aSubQuestions      Array of subquestions with metadata
+ */
+#}
+
+<!-- Array Dual Scale (Type 1) - DSFR -->
+<div role="group" aria-labelledby="ls-question-text-{{ basename }}">
+    <div class="fr-table fr-table--bordered" data-fr-js-table="true">
+        <table class="{{ coreClass }}">
+            <caption class="fr-sr-only">{{ gT('Dual scale response matrix') }}</caption>
+            <colgroup class="col-responses">
+                <col class="answertext" style="width: {{ answerwidth }}%;" />
+                {% for code, label in labelans0 %}
+                    <col class="answer-scale0" style="width: {{ cellwidth }}%;" />
+                {% endfor %}
+                {% if separatorwidth %}
+                    <col class="separator" style="width: {{ separatorwidth }}%;" />
+                {% endif %}
+                {% for code, label in labelans1 %}
+                    <col class="answer-scale1" style="width: {{ cellwidth }}%;" />
+                {% endfor %}
+                {% if shownoanswer %}
+                    <col class="noanswer" style="width: {{ cellwidth }}%;" />
+                {% endif %}
+                {% if rightexists %}
+                    <col class="answertextright" style="width: {{ rightwidth }}%;" />
+                {% endif %}
+            </colgroup>
+
+            <thead>
+                {% if leftheader or rightheader %}
+                    <tr class="ls-heading dualscale-header">
+                        <th scope="col"></th>
+                        <th scope="colgroup" class="fr-text--bold" colspan="{{ labelans0|length }}">{{ processString(leftheader) }}</th>
+                        {% if separatorwidth %}<th scope="col"></th>{% endif %}
+                        <th scope="colgroup" class="fr-text--bold" colspan="{{ labelans1|length }}">{{ processString(rightheader) }}</th>
+                        {% if shownoanswer %}<th scope="col"></th>{% endif %}
+                        {% if rightexists %}<th scope="col"></th>{% endif %}
+                    </tr>
+                {% endif %}
+
+                <tr class="ls-heading dualscale-labels">
+                    <th scope="col"></th>
+                    {% for code, label in labelans0 %}
+                        <th scope="col" class="fr-text--bold answertext">{{ processString(label) }}</th>
+                    {% endfor %}
+                    {% if separatorwidth %}<th scope="col"></th>{% endif %}
+                    {% for code, label in labelans1 %}
+                        <th scope="col" class="fr-text--bold answertext">{{ processString(label) }}</th>
+                    {% endfor %}
+                    {% if shownoanswer %}
+                        <th scope="col" class="fr-text--bold noanswer-text">{{ gT('No answer') }}</th>
+                    {% endif %}
+                    {% if rightexists %}
+                        <th scope="col"></th>
+                    {% endif %}
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for i, subquestion in aSubQuestions %}
+                    {% if subquestion.repeatheadings %}
+                        {{ include('./survey/questions/answer/arrays/dualscale/repeat_header.twig') }}
+                    {% endif %}
+
+                    <tr id="javatbd{{ subquestion.myfname }}" class="answers-list dualscale-row {% if i % 2 %}ls-odd{% else %}ls-even{% endif %}{% if subquestion.alert %} ls-mandatory-error{% endif %}" role="group">
+                        <th scope="row" id="answertext{{ subquestion.myfname }}" class="answertext fr-text--bold{% if answerwidth==0 %} fr-sr-only{% endif %}">
+                            {{ processString(subquestion.answertext) }}
+                        </th>
+
+                        {# Scale 0 (first scale) #}
+                        {% for j, ld in labelcode0 %}
+                            <td class="answer_cell_{{ ld }} answer-item radio-item scale0-item">
+                                <input
+                                    type="radio"
+                                    name="{{ subquestion.myfname0 }}"
+                                    value="{{ ld }}"
+                                    id="answer{{ subquestion.myfname0 }}-{{ ld }}"
+                                    aria-labelledby="answertext{{ subquestion.myfname }}"
+                                    {{ labelcode0_checked[subquestion.title][ld]|raw }}
+                                />
+                                <label class="fr-sr-only" for="answer{{ subquestion.myfname0 }}-{{ ld }}">
+                                    {{ processString(labelans0[j]) }}
+                                </label>
+                            </td>
+                        {% endfor %}
+
+                        {# Separator column #}
+                        {% if separatorwidth %}
+                            <td class="separator">
+                                {{ processString(subquestion.answertextcenter) }}
+                            </td>
+                        {% endif %}
+
+                        {# Scale 1 (second scale) #}
+                        {% for j, ld in labelcode1 %}
+                            <td class="answer_cell_{{ ld }} answer-item radio-item scale1-item">
+                                <input
+                                    type="radio"
+                                    name="{{ subquestion.myfname1 }}"
+                                    value="{{ ld }}"
+                                    id="answer{{ subquestion.myfname1 }}-{{ ld }}"
+                                    aria-labelledby="answertext{{ subquestion.myfname }}"
+                                    {{ labelcode1_checked[subquestion.title][ld]|raw }}
+                                />
+                                <label class="fr-sr-only" for="answer{{ subquestion.myfname1 }}-{{ ld }}">
+                                    {{ processString(labelans1[j]) }}
+                                </label>
+                            </td>
+                        {% endfor %}
+
+                        {# No answer option #}
+                        {% if shownoanswer %}
+                            <td class="answer-item noanswer-item">
+                                {# No answer is handled by JavaScript #}
+                            </td>
+                        {% endif %}
+
+                        {# Right text column #}
+                        {% if rightexists %}
+                            <td class="answertextright">
+                                {{ processString(subquestion.answertextright) }}
+                            </td>
+                        {% endif %}
+                    </tr>
+
+                    {# Hidden fields for expression manager #}
+                    {{ C.Html.hiddenField("java"~subquestion.myfname0, subquestion.sessionfname0, ({
+                        'id': "java"~subquestion.myfname0,
+                        'disabled': true
+                    })) }}
+                    {% if labelcode1 is not empty %}
+                        {{ C.Html.hiddenField("java"~subquestion.myfname1, subquestion.sessionfname1, ({
+                            'id': "java"~subquestion.myfname1,
+                            'disabled': true
+                        })) }}
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- end of Array Dual Scale -->

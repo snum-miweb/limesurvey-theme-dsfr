@@ -1,0 +1,195 @@
+{#
+LimeSurvey - DSFR Theme
+Copyright (C) 2007-2017 The LimeSurvey Project Team / Louis Gac
+Modified for DSFR (Système de Design de l'État Français)
+
+This file renders a DSFR-compliant header navigation bar.
+For the survey navigator ("Next", "Back", etc.), see: navigation/navigator.twig
+#}
+{% if not aSurveyInfo.popupPreview %}
+    {% set ShowMenu = (aSurveyInfo.aNavigator.load.show == "Y" or aSurveyInfo.aNavigator.save.show == "Y")
+        or ((aSurveyInfo.bShowClearAll == true or aSurveyInfo.bShowClearAll == null) and aSurveyInfo.options.showclearall == 'on')
+        or (aSurveyInfo.aQuestionIndex.bShow == true and aSurveyInfo.format != 'A')
+        or (aSurveyInfo.alanguageChanger.show)
+    %}
+
+    <!-- DSFR Header -->
+    <header role="banner" class="fr-header" id="survey-header">
+        <div class="fr-header__body">
+            <div class="fr-container">
+                <div class="fr-header__body-row">
+                    <div class="fr-header__brand fr-enlarge-link">
+                        <div class="fr-header__brand-top">
+                            <div class="fr-header__logo">
+                                {% if aSurveyInfo.options.show_marianne == "on" or aSurveyInfo.options.show_marianne is not defined %}
+                                    <p class="fr-logo">
+                                        {% if aSurveyInfo.options.marianne_text %}
+                                            {{ aSurveyInfo.options.marianne_text|raw }}
+                                        {% else %}
+                                            République<br>Française
+                                        {% endif %}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            {% if aSurveyInfo.options.brandlogo == "on" and aSurveyInfo.options.brandlogo_sircom_certified == "on" and aSurveyInfo.options.brandlogofile %}
+                                <div class="fr-header__operator">
+                                    {{ image(aSurveyInfo.options.brandlogofile, aSurveyInfo.name, {"class": "fr-responsive-img", "style": "width: 6rem", "role": "presentation"}) }}
+                                </div>
+                            {% endif %}
+                            {% if ShowMenu %}
+                                <div class="fr-header__navbar">
+                                    <button class="fr-btn--menu fr-btn"
+                                            data-fr-opened="false"
+                                            aria-controls="header-menu"
+                                            id="header-menu-btn"
+                                            title="{{ gT("Menu") }}">
+                                        {{ gT("Menu") }}
+                                    </button>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="fr-header__service">
+                            <a href="{{ aSurveyInfo.surveyUrl }}"
+                               title="{{ gT("Accueil") }} - {{ aSurveyInfo.name }} - {{ gT("République Française") }}"
+                               aria-label="{{ gT("Accueil") }} - {{ aSurveyInfo.name }} - {{ gT("République Française") }}">
+                                <p class="fr-header__service-title">
+                                    {% if aSurveyInfo.options.header_title %}
+                                        {{ aSurveyInfo.options.header_title|raw }}
+                                    {% else %}
+                                        {{ aSurveyInfo.name }}
+                                    {% endif %}
+                                </p>
+                            </a>
+                            {% if aSurveyInfo.options.organization_name %}
+                                <p class="fr-header__service-tagline fr-text--sm">{{ aSurveyInfo.options.organization_name }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if ShowMenu %}
+                        <div class="fr-header__tools">
+                            <div class="fr-header__tools-links">
+                                {% if aSurveyInfo.aQuestionIndex.bShow == true and aSurveyInfo.format != 'A' %}
+                                    <button type="button"
+                                            data-fr-opened="false"
+                                            aria-controls="question-index-modal"
+                                            class="fr-btn--team fr-btn"
+                                            title="{{ gT("Liste des étapes") }}">
+                                        {{ gT("Liste des étapes") }}
+                                    </button>
+                                {% endif %}
+
+                                {# Sélecteur de thème clair/sombre - Bouton déclencheur modale DSFR #}
+                                <div class="fr-header__tools-links">
+                                    <button class="fr-btn fr-btn--display fr-btn--icon-left"
+                                            type="button"
+                                            aria-controls="fr-theme-modal"
+                                            data-fr-opened="false"
+                                            title="{{ gT("Paramètres d'affichage") }}">
+                                        {{ gT("Paramètres d'affichage") }}
+                                    </button>
+                                </div>
+
+                                {% if aSurveyInfo.alanguageChanger.show %}
+                                    {% set aLCD = aSurveyInfo.alanguageChanger.datas %}
+                                    <div id="header-translate" class="fr-translate fr-nav">
+                                        <div class="fr-nav__item">
+                                            <button aria-controls="translate-collapse"
+                                                    aria-expanded="false"
+                                                    title="{{ gT("Select a language") }}"
+                                                    type="button"
+                                                    class="fr-translate__btn fr-btn">
+                                                {{ aLCD.sSelected|upper }}<span class="fr-hidden-lg">&nbsp;- {{ gT(aLCD.aListLang[aLCD.sSelected]) }}</span>
+                                            </button>
+                                            <div class="fr-collapse fr-translate__menu fr-menu" id="translate-collapse">
+                                                <ul class="fr-menu__list">
+                                                    {% for langCode, langName in aLCD.aListLang %}
+                                                        <li>
+                                                            <a class="fr-translate__language fr-nav__link"
+                                                               hreflang="{{ langCode }}"
+                                                               lang="{{ langCode }}"
+                                                               href="{{ aLCD.targetUrl }}{% if '?' in aLCD.targetUrl %}&{% else %}?{% endif %}lang={{ langCode }}"
+                                                               {% if langCode == aLCD.sSelected %}aria-current="true"{% endif %}>
+                                                                {{ langCode|upper }} - {{ gT(langName) }}
+                                                            </a>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if ShowMenu %}
+            <div class="fr-header__menu fr-modal" id="header-menu" aria-labelledby="header-menu-btn">
+                <div class="fr-container">
+                    <button aria-controls="header-menu"
+                            title="{{ gT("Close") }}"
+                            type="button"
+                            class="fr-btn--close fr-btn">
+                        {{ gT("Close") }}
+                    </button>
+                    <div class="fr-header__menu-links">
+                        {% if aSurveyInfo.aQuestionIndex.bShow == true and aSurveyInfo.format != 'A' %}
+                            <button type="button"
+                                    data-fr-opened="false"
+                                    aria-controls="question-index-modal"
+                                    class="fr-btn--team fr-btn"
+                                    title="{{ gT("Liste des étapes") }}">
+                                {{ gT("Liste des étapes") }}
+                            </button>
+                        {% endif %}
+
+                        {# Sélecteur de thème clair/sombre (mobile) - Bouton déclencheur modale DSFR #}
+                        <button class="fr-btn fr-btn--display fr-btn--icon-left"
+                                type="button"
+                                aria-controls="fr-theme-modal"
+                                data-fr-opened="false"
+                                title="{{ gT("Paramètres d'affichage") }}">
+                            {{ gT("Paramètres d'affichage") }}
+                        </button>
+
+                        {% if aSurveyInfo.alanguageChanger.show %}
+                            {% set aLCD = aSurveyInfo.alanguageChanger.datas %}
+                            <div id="header-translate-mobile" class="fr-translate fr-nav">
+                                <div class="fr-nav__item">
+                                    <button aria-controls="translate-collapse-mobile"
+                                            aria-expanded="false"
+                                            title="{{ gT("Select a language") }}"
+                                            type="button"
+                                            class="fr-translate__btn fr-btn">
+                                        {{ aLCD.sSelected|upper }}<span class="fr-hidden-lg">&nbsp;- {{ gT(aLCD.aListLang[aLCD.sSelected]) }}</span>
+                                    </button>
+                                    <div class="fr-collapse fr-translate__menu fr-menu" id="translate-collapse-mobile">
+                                        <ul class="fr-menu__list">
+                                            {% for langCode, langName in aLCD.aListLang %}
+                                                <li>
+                                                    <a class="fr-translate__language fr-nav__link"
+                                                       hreflang="{{ langCode }}"
+                                                       lang="{{ langCode }}"
+                                                       href="{{ aLCD.targetUrl }}{% if '?' in aLCD.targetUrl %}&{% else %}?{% endif %}lang={{ langCode }}"
+                                                       {% if langCode == aLCD.sSelected %}aria-current="true"{% endif %}>
+                                                        {{ langCode|upper }} - {{ gT(langName) }}
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </header>
+
+    {# Modale DSFR pour les paramètres d'affichage (thème clair/sombre/système) #}
+    {% include 'subviews/header/theme_modal.twig' %}
+{% endif %}

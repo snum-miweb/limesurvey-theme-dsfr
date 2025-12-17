@@ -1,0 +1,66 @@
+{#
+/**
+ * 5-Point Choice - DSFR Theme
+ * Supports 3 display modes:
+ * - slider_rating == 0 or undefined: Normal mode (numbers 1-5)
+ * - slider_rating == 1: Star mode (★★★★★)
+ * - slider_rating == 2: Emoji slider mode (😞 🙁 😐 🙂 😊)
+ */
+#}
+
+<!-- 5-Point Choice DSFR -->
+<fieldset class="fr-fieldset {{coreClass|replace({'visually-hidden': ''})}}" aria-labelledby="ls-question-text-{{name}}" data-display-mode="{{ slider_rating|default(0) }}">
+    <div class="fr-fieldset__content">
+        {% if slider_rating|default(0) == 1 %}
+            {# Star rating mode: special structure for progressive fill #}
+            <div class="star-rating-container">
+                {# Generate stars in normal order with explicit data-star attribute for CSS targeting #}
+                {% for aRow in aRows %}
+                    {% if aRow.value != "" %}
+                        {% set starLabel = aRow.value ~ ' ' ~ (aRow.value > 1 ? gT('stars') : gT('star')) %}
+                        <div class="fr-fieldset__element fr-fieldset__element--inline">
+                            <!-- radio-item et answer-item requis pour em_javascript.js -->
+                            <div class="star-rating-item radio-item answer-item" data-star="{{aRow.value}}">
+                                <input type="radio"
+                                       name="{{aRow.name}}"
+                                       id="answer{{aRow.id}}"
+                                       value="{{aRow.value}}"
+                                       {{aRow.checkedState}}
+                                       class="star-rating-input"
+                                       aria-label="{{ starLabel }}">
+                                <label for="answer{{aRow.id}}" class="star-rating-label">
+                                    <span class="star-icon-wrapper">
+                                        <i class="fr-icon-star-line star-empty" aria-hidden="true"></i>
+                                        <i class="fr-icon-star-fill star-filled" aria-hidden="true"></i>
+                                    </span>
+                                    <span class="fr-sr-only">{{ starLabel }}</span>
+                                </label>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                {# No answer option if present #}
+                {% for aRow in aRows %}
+                    {% if aRow.value == "" %}
+                        <div class="fr-fieldset__element fr-fieldset__element--inline star-rating-no-answer-wrapper">
+                            <!-- radio-item requis pour em_javascript.js -->
+                            <div class="star-rating-no-answer radio-item answer-item">
+                                <input type="radio" name="{{aRow.name}}" id="answer{{aRow.id}}" value="" {{aRow.checkedState}} class="star-rating-input">
+                                <label for="answer{{aRow.id}}" class="fr-label">{{aRow.labelText}}</label>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            {# Normal and emoji modes: use grid layout #}
+            <div class="fr-grid-row fr-grid-row--gutters">
+                {% for aRow in aRows %}
+                    {% include './survey/questions/answer/5pointchoice/rows/item_row.twig' with aRow|merge({'slider_rating': slider_rating|default(0)}) %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</fieldset>
+
+<input type="hidden" name="java{{name}}" id="java{{name}}" disabled value="{{sessionValue}}" />

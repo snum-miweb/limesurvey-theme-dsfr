@@ -1,0 +1,58 @@
+{#
+/**
+ * Multiple short texts - Textarea row - DSFR Theme
+ *
+ * @var $question
+ * @var $alert
+ * @var $extraclass
+ * @var $sDisplayStyle
+ * @var $myfname
+ * @var $prefix
+ * @var $suffix
+ * @var $kpclass
+ * @var $rows
+ * @var $dispVal
+ * @var $placeholder
+ */
+#}
+
+<!-- answer_row_textarea DSFR -->
+<li id="javatbd{{ myfname }}" class="selector--inputondemand-list-item question-item answer-item text-item{% if alert %} input-error{% endif %}{{ extraclass }}" {{ sDisplayStyle }}>
+    <div class="fr-input-group{% if alert %} fr-input-group--error{% endif %}">
+        <label class="fr-label" for="answer{{ myfname }}">
+            {{ processString(question) }}
+        </label>
+        
+        {% if prefix != '' or suffix != '' %}
+        <div class="fr-input-wrap{% if prefix != '' %} fr-input-wrap--prefix{% endif %}{% if suffix != '' %} fr-input-wrap--suffix{% endif %}">
+            {% if prefix != '' %}
+                <span class="fr-input-wrap__prefix">{{ processString(prefix) }}</span>
+            {% endif %}
+        {% endif %}
+        
+            <textarea
+                class="fr-input selector--inputondemand-list-input {{ kpclass }}"
+                name="{{ myfname }}"
+                id="answer{{ myfname }}"
+                rows="{{ rows }}"
+                placeholder="{{ flatString(processString(placeholder,1),1) }}"
+                {% if inputsize %} size="{{ inputsize }}" {% endif %}
+                {% if maxlength %} maxlength="{{ maxlength }}" {% endif %}
+                {% if numbersonly %} data-number="{{ numbersonly }}" {% endif %}
+            >{{ dispVal }}</textarea>
+            
+        {% if prefix != '' or suffix != '' %}
+            {% if suffix != '' %}
+                <span class="fr-input-wrap__suffix">{{ processString(suffix) }}</span>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <div class="fr-messages-group" aria-live="polite">
+            {% if alert %}
+                <p class="fr-message fr-message--error">Ce champ est obligatoire</p>
+            {% endif %}
+        </div>
+    </div>
+</li>
+<!-- end of answer_row_textarea DSFR -->

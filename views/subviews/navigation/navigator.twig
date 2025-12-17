@@ -1,0 +1,55 @@
+{#
+    LimeSurvey - DSFR Theme
+    Navigator with DSFR buttons
+
+    Render the navigator: Previous, Next, Submit
+    Uses DSFR button components
+#}
+
+{% set aNavigator = aSurveyInfo.aNavigator %}
+
+<!-- DSFR Navigator -->
+<nav aria-label="{{ gT('Survey navigation') }}">
+    <div class="fr-container fr-my-6w" id="{{ aSurveyInfo.id.navigatorcontainer }}" {{ aSurveyInfo.attr.navigatorcontainer }}>
+        <div class="fr-grid-row fr-grid-row--center fr-grid-row--gutters">
+
+            <!-- Previous button -->
+            <div class="fr-col-auto">
+                {% if (not aSurveyInfo.popupPreview) and aNavigator.aMovePrev.show %}
+                    <button {{ aSurveyInfo.attr.navigatorbuttonprev }}
+                            type="submit"
+                            class="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-arrow-left-line {{ aNavigator.disabled }}"
+                            {% if aNavigator.disabled %}disabled{% endif %}>
+                        {{ gT("Previous") }}
+                    </button>
+                {% endif %}
+            </div>
+
+            <!-- Next/Submit button -->
+            <div class="fr-col-auto">
+                {% if (not aSurveyInfo.popupPreview) and aNavigator.aMoveNext.show %}
+
+                    {% if aNavigator.aMoveNext.value == "movesubmit" %}
+                        <button {{ aSurveyInfo.attr.navigatorbuttonsubmit }}
+                                type="submit"
+                                class="fr-btn fr-btn--icon-right fr-icon-check-line {{ aNavigator.disabled }}"
+                                {% if aNavigator.disabled %}disabled{% endif %}>
+                            {{ gT("Submit") }}
+                        </button>
+                    {% else %}
+                        <button {{ aSurveyInfo.attr.navigatorbuttonnext }}
+                                type="submit"
+                                class="fr-btn fr-btn--icon-right fr-icon-arrow-right-line {{ aNavigator.disabled }}"
+                                {% if aNavigator.disabled %}disabled{% endif %}>
+                            {{ gT("Next") }}
+                        </button>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</nav>
+
+<!-- Extra navigator part -->
+{{ include('./subviews/navigation/navigator_complement.twig') }}

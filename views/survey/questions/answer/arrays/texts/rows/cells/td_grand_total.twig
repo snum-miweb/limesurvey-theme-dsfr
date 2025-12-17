@@ -1,0 +1,26 @@
+{#
+/**
+ * Array Texts - Grand Total Cell - DSFR Theme
+ * Renders the grand total cell
+ *
+ * @var $empty              Whether cell is empty
+ * @var $inputsize          Input size
+ * @var $basename           Base name for aria labels
+ */
+#}
+
+<!-- td_grand_total -->
+{% if empty %}
+    <td class="grandtotal"></td>
+{% else %}
+    <td class="grandtotal">
+        <input
+            type="text"
+            class="fr-input grandtotal-input"
+            readonly="readonly"
+            size="{{ inputsize ? inputsize : 10 }}"
+            aria-label="{{ gT('Grand total') }}"
+        />
+    </td>
+{% endif %}
+<!-- end of td_grand_total -->

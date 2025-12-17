@@ -1,0 +1,90 @@
+{#
+/**
+ * Array Texts Question - DSFR Theme
+ * Type: ; (Array with Text Fields)
+ *
+ * This template renders a table where each cell contains a text input
+ *
+ * @var $basename           Base name for aria labels
+ * @var $answerwidth        Answer column width
+ * @var $cellwidth          Cell width percentage
+ * @var $labelans           Array of column labels (answer options)
+ * @var $right_exists       Whether right column exists
+ * @var $showGrandTotal     Whether to show grand total
+ * @var $q_table_id_HTML    Table ID attribute
+ * @var $coreClass          Core CSS classes
+ * @var $extraclass         Extra CSS classes
+ * @var $totals_class       Totals CSS class
+ * @var $showtotals         Whether to show totals
+ * @var $row_head           Row header for totals
+ * @var $total              Total row HTML
+ * @var $col_head           Column header HTML
+ * @var $sRows              Pre-rendered rows HTML (from PHP)
+ * @var $radix              Decimal separator
+ * @var $name               Question name
+ * @var $checkconditionFunction  JS function for conditions
+ */
+#}
+
+<!-- Array Texts (Type ;) - DSFR -->
+<div role="group" aria-labelledby="ls-question-text-{{ basename }}">
+    <div class="fr-table fr-table--bordered" data-fr-js-table="true">
+        <table {{ q_table_id_HTML }} class="{{ coreClass }} {{ extraclass }} {{ totals_class }}">
+            <caption class="fr-sr-only">{{ gT('Response matrix') }}</caption>
+            <colgroup class="col-responses">
+                <!-- Column for answer label -->
+                <col class="answertext" style="width: {{ answerwidth }}%;" />
+
+                <!-- Columns for answers -->
+                {% for code, text in labelans %}
+                    <col class="answer-column" style="width: {{ cellwidth }}%;" />
+                {% endfor %}
+
+                <!-- Column for right text if exists -->
+                {% if right_exists %}
+                    <col class="answertextright" style="width: {{ cellwidth }}%;" />
+                {% endif %}
+
+                <!-- Column for Grand Total -->
+                {% if showGrandTotal %}
+                    <col class="grandtotal" style="width: {{ cellwidth }}%;" />
+                {% endif %}
+            </colgroup>
+
+            <thead>
+                <tr class="ls-heading ls-header">
+                    <th scope="col"></th>
+
+                    {% for code, text in labelans %}
+                        <th scope="col" id="answertext{{ basename }}_{{ code }}" class="answertext fr-text--bold">
+                            {{ processString(text) }}
+                        </th>
+                    {% endfor %}
+
+                    {% if right_exists %}
+                        <th scope="col"></th>
+                    {% endif %}
+
+                    {{ col_head|raw }}
+                </tr>
+            </thead>
+
+            <tbody>
+                {# Rows are pre-rendered by PHP and passed as sRows #}
+                {{ sRows|raw }}
+
+                {% if showtotals %}
+                    <tr class="total">
+                        {{ row_head|raw }}
+                        {{ total|raw }}
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- end of Array Texts -->
+
+{% if (showGrandTotal == true) or (showtotals == true) %}
+    {{ registerPackage('question-array-numeric') }}
+{% endif %}

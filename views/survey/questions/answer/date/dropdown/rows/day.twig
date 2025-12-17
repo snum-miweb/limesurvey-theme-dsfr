@@ -1,0 +1,27 @@
+{#
+/**
+ * Day dropdown Html - DSFR Theme
+ * @var $dayId
+ * @var $currentdate
+ * @var $currentday
+ */
+#}
+
+<!-- day -->
+<!-- select-item requis pour em_javascript.js -->
+<div class="fr-col-12 fr-col-md-3 select-item answer-item">
+    <div class="fr-select-group">
+        <label for="day{{ dayId }}" class="fr-label">
+            {{ gT('Day') }}
+        </label>
+        <select id="day{{ dayId }}" name="day{{ dayId }}" class="fr-select day em_sq_validation">
+            <option value="">{{ gT('Day') }}</option>
+            {% for i in 1..31 %}
+                <option value="{{ sprintf('%02d', i) }}"{% if i == intval(currentday) %} selected{% endif %}>
+                    {{ sprintf('%02d', i) }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<!-- end of day -->

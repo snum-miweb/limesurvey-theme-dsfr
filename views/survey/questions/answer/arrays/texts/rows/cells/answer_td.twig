@@ -1,0 +1,44 @@
+{#
+/**
+ * Array Texts - Answer Cell (Input) - DSFR Theme
+ * Renders a text input cell with DSFR structure
+ *
+ * @var $ld                 Column code
+ * @var $myfname2           Full field name
+ * @var $basename           Base name for aria labels
+ * @var $labelText          Label text for this cell
+ * @var $kpclass            Keypad class (if numeric keypad enabled)
+ * @var $maxlength          Max length attribute
+ * @var $inputsize          Input size attribute
+ * @var $value              Current value
+ * @var $placeholder        Placeholder text
+ * @var $isNumber           Whether input is numeric
+ * @var $isInteger          Whether input is integer only
+ * @var $error              Whether cell has error
+ */
+#}
+
+<!-- answer_td -->
+<td class="answer_cell_{{ ld }} answer-item text-item{% if error %} has-error{% endif %}" title="{{ processString(labelText)|striptags }}">
+    <label class="fr-sr-only" for="answer{{ myfname2 }}">
+        {{ processString(labelText) }}
+    </label>
+    <div class="fr-input-group{% if error %} fr-input-group--error{% endif %}">
+        {{ C.Html.textField(myfname2, value, ({
+            'id' : "answer"~myfname2,
+            'aria-labelledby' : "answertext" ~ basename ~ "_" ~ ld,
+            'class' : "fr-input "~kpclass~(error ? " fr-input--error" : ""),
+            'size' : (inputsize ? inputsize : null),
+            'maxlength' : (maxlength ? maxlength : null),
+            'placeholder' : flatString(processString(placeholder,1),1),
+            'data-number' : isNumber,
+            'data-integer' : isInteger,
+        })) }}
+    </div>
+    {# Hidden field for expression manager javascript #}
+    {{ C.Html.hiddenField("java"~myfname2, value, ({
+        'id' : "java"~myfname2,
+        'disabled' : true,
+    })) }}
+</td>
+<!-- end of answer_td -->

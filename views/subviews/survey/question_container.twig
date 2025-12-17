@@ -1,0 +1,32 @@
+{#
+    LimeSurvey - DSFR Theme
+    Question Container with DSFR styling
+
+    The fr-container wraps each question with DSFR classes and structure.
+    Provides consistent spacing and error handling.
+#}
+
+<!-- Question {{ aQuestion.qid }} -->
+<div {{ aQuestion.attributes }}
+     class="fr-mb-6w {{ aQuestion.class }} {{ aQuestion.input_error_class }} {{ aSurveyInfo.class.questioncontainer }} {% if aQuestion.input_error_class %}fr-input-group--error{% endif %}"
+     {{ aSurveyInfo.attr.questioncontainer }}>
+
+    {# Question number/code - controlled by theme option showquestioncode #}
+    {# Uses aSurveyInfo.aShow which contains the survey's display settings #}
+    {% set aShow = aSurveyInfo.aShow %}
+    {% if aSurveyInfo.options.showquestioncode == 'on' and (aShow.question_number or aShow.question_code) %}
+        <p class="fr-text--xs text-muted fr-mb-1w question-code-display">
+            {% if aShow.question_number and aShow.question_code %}
+                {{ gT("Question") }} <span class="question-number">{{ aQuestion.number }}</span> - <span class="question-code">{{ aQuestion.code }}</span>
+            {% elseif aShow.question_code %}
+                <span class="question-code">{{ aQuestion.code }}</span>
+            {% elseif aShow.question_number %}
+                {{ gT("Question") }} <span class="question-number">{{ aQuestion.number }}</span>
+            {% endif %}
+        </p>
+    {% endif %}
+
+    {# Question content #}
+    {{ include('./subviews/survey/question.twig') }}
+</div>
+<!-- End of question {{ aQuestion.qid }} -->

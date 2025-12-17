@@ -1,0 +1,43 @@
+{#
+/**
+ * Array Multi-Flexi - Answer Row - DSFR Theme
+ * Generate a row for the multiflexi table
+ *
+ * @var $answer_tds      Pre-rendered cell HTML
+ * @var $coreRowClass    Core row CSS classes
+ * @var $myfname         Field name
+ * @var $error           Whether row has error
+ * @var $row_value       Hidden field value
+ * @var $answertext      Answer text for row header
+ * @var $answertextright Right column text
+ * @var $rightTd         Whether right column exists
+ * @var $answerwidth     Answer width percentage
+ * @var $odd             Whether row is odd (for styling)
+ * @var $layout          Layout type (checkbox, text, etc)
+ */
+#}
+
+<!-- answer_row -->
+<tr id="javatbd{{ myfname }}" class="{{ coreRowClass }} {% if odd %}ls-odd{% else %}ls-even{% endif %}{% if error %} ls-mandatory-error{% endif %}" role="group" aria-labelledby="answertext{{ myfname }}">
+    <th
+        id="answertext{{ myfname }}"
+        class="answertext fr-text--bold{% if error %} fr-text--error{% endif %}{% if answerwidth==0 %} fr-sr-only{% endif %}"
+        role="rowheader"
+    >
+        {{ processString(answertext) }}
+        {# Value for expression manager javascript #}
+        {{ C.Html.hiddenField("java"~myfname, row_value, ({
+            'id' : "java"~myfname,
+            'disabled' : true,
+        })) }}
+    </th>
+
+    <!-- All cells for this row -->
+    {{ answer_tds|raw }}
+
+    <!-- Right column (if exists) -->
+    {% if rightTd %}
+        <td class="answertextright">{{ processString(answertextright) }}</td>
+    {% endif %}
+</tr>
+<!-- end of answer_row -->

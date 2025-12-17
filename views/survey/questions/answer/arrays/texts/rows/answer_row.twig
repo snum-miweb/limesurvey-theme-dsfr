@@ -1,0 +1,51 @@
+{#
+/**
+ * Array Texts - Answer Row - DSFR Theme
+ * Generate a row for the array texts table
+ *
+ * @var $myfname            Field name
+ * @var $basename           Base name for aria labels
+ * @var $coreRowClass       Core row CSS classes
+ * @var $answertext         Answer text for row header
+ * @var $error              Whether row has error
+ * @var $value              Hidden field value
+ * @var $answer_tds         Pre-rendered cell HTML
+ * @var $rightTd            Whether right column exists
+ * @var $rightTdEmpty       Whether right column is empty
+ * @var $answerwidth        Answer width
+ * @var $formatedRowTotal   Formatted row total HTML
+ * @var $odd                Whether row is odd (for styling)
+ */
+#}
+
+<!-- answer_row -->
+<tr id="javatbd{{ myfname }}" class="{{ coreRowClass }} {% if odd %}ls-odd{% else %}ls-even{% endif %}{% if error %} ls-mandatory-error{% endif %}" role="group" aria-labelledby="answertext{{ myfname }}">
+    <th
+        id="answertext{{ myfname }}"
+        class="answertext fr-text--bold{% if error %} fr-text--error{% endif %}{% if answerwidth==0 %} fr-sr-only{% endif %}"
+        role="rowheader"
+    >
+        {{ processString(answertext) }}
+        {# Value for expression manager javascript #}
+        {{ C.Html.hiddenField("java"~myfname, value, ({
+            'id' : "java"~myfname,
+            'disabled' : true,
+        })) }}
+    </th>
+
+    <!-- All cells for this row -->
+    {{ answer_tds|raw }}
+
+    <!-- Right column (if exists) -->
+    {% if rightTd %}
+        {% if rightTdEmpty %}
+            <td class="answertextright"></td>
+        {% else %}
+            <td class="answertextright">{{ processString(answertext) }}</td>
+        {% endif %}
+    {% endif %}
+
+    <!-- Formatted total -->
+    {{ formatedRowTotal|raw }}
+</tr>
+<!-- end of answer_row -->

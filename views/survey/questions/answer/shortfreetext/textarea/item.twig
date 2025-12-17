@@ -1,0 +1,84 @@
+{#
+/**
+ * Shortfreetext - DSFR Theme
+ * Textarea style with DSFR fr-input component
+ *
+ * Variables available:
+ * @var $freeTextId
+ * @var $extraclass
+ * @var $labelText
+ * @var $name
+ * @var $drows
+ * @var $tiwidth
+ * @var $dispVal
+ * @var $placeholder
+ * @var $maxlength
+ * @var $prefix
+ * @var $suffix
+ */
+#}
+
+<!-- DSFR Textarea -->
+{% if withColumn %}
+<div class='{{ coreClass }} fr-grid-row'>
+    <div class="{{ extraclass }}">
+{% else %}
+<div class='{{ coreClass }} {{ extraclass }}'>
+{% endif %}
+
+    <div class="fr-input-group">
+        <label for="{{ freeTextId }}" class="fr-sr-only">{{ gT('Your answer') }}</label>
+
+        {% if prefix != '' or suffix != '' %}
+        {# Layout avec prefixe/suffixe #}
+        <div class="ls-textarea-with-addon">
+            {% if prefix != '' %}
+                <span class="fr-text--sm fr-text--bold fr-mb-1w">{{ processString(prefix) }}</span>
+            {% endif %}
+
+            <textarea
+                class="fr-input {{ kpclass }}"
+                name="{{ name }}"
+                id="{{ freeTextId }}"
+                rows="{{ drows }}"
+                placeholder="{{ flatString(processString(placeholder,1),1) }}"
+                {% if inputsize %}cols="{{ inputsize }}" {% endif %}
+                {% if maxlength %}maxlength="{{ maxlength }}" {% endif %}
+                {% if numberonly %}data-number="1" {% endif %}
+                aria-labelledby="ls-question-text-{{ basename }}"
+                aria-describedby="{{ freeTextId }}-messages"
+            >{{ dispVal }}</textarea>
+
+            {% if suffix != '' %}
+                <span class="fr-text--sm fr-text--bold fr-mt-1w">{{ processString(suffix) }}</span>
+            {% endif %}
+        </div>
+        {% else %}
+        {# Layout standard sans prefixe/suffixe #}
+        <textarea
+            class="fr-input {{ kpclass }}"
+            name="{{ name }}"
+            id="{{ freeTextId }}"
+            rows="{{ drows }}"
+            placeholder="{{ flatString(processString(placeholder,1),1) }}"
+            {% if inputsize %}cols="{{ inputsize }}" {% endif %}
+            {% if maxlength %}maxlength="{{ maxlength }}" {% endif %}
+            {% if numberonly %}data-number="1" {% endif %}
+            aria-labelledby="ls-question-text-{{ basename }}"
+            aria-describedby="{{ freeTextId }}-messages"
+        >{{ dispVal }}</textarea>
+        {% endif %}
+
+        <div class="fr-messages-group" id="{{ freeTextId }}-messages" aria-live="polite">
+            {# Messages d'erreur/succes injectes ici par JavaScript #}
+        </div>
+    </div>
+
+{% if withColumn %}
+    </div>
+</div>
+{% else %}
+</div>
+{% endif %}
+
+<!-- end of answer -->

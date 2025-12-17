@@ -1,0 +1,47 @@
+{#
+    LimeSurvey - DSFR Theme
+    Welcome Page with DSFR styling
+
+    This view renders the welcome message with DSFR components.
+#}
+
+<!-- DSFR Welcome Message -->
+<div id="{{ aSurveyInfo.id.welcomecontainer }}" class="fr-container fr-my-6w {{ aSurveyInfo.class.welcomecontainer }}" {{ aSurveyInfo.attr.welcomecontainer }}>
+    <div class="fr-col-12">
+
+            <!-- Survey Name -->
+            <h1 class="{{ aSurveyInfo.class.surveyname }}" {{ aSurveyInfo.attr.surveyname }}>
+                {{ processString(aSurveyInfo.name,1) }}
+            </h1>
+
+            <!-- Survey description -->
+            {% if aSurveyInfo.description %}
+                <p class="fr-text--lead {{ aSurveyInfo.class.description }}" {{ aSurveyInfo.attr.description }}>
+                    {{ processString(aSurveyInfo.description,1) }}
+                </p>
+            {% endif %}
+
+            <!-- Welcome text -->
+            {% if aSurveyInfo.welcome %}
+                <div class="fr-callout {{ aSurveyInfo.class.welcome }}" {{ aSurveyInfo.attr.welcome }}>
+                    <p class="fr-callout__text">
+                        {{ processString(aSurveyInfo.welcome,1) }}
+                    </p>
+                </div>
+            {% endif %}
+
+            <!-- Question count -->
+            {% if aSurveyInfo.bShowxquestions == true %}
+                <p class="fr-badge fr-badge--info {{ aSurveyInfo.class.questioncount }}" {{ aSurveyInfo.attr.questioncount }}>
+                    {% if aSurveyInfo.iTotalquestions < 1 %}
+                        {{ gT("There are no questions in this survey.") }}
+                    {% elseif aSurveyInfo.iTotalquestions == 1 %}
+                        {{ gT("There is 1 question in this survey.") }}
+                    {% else %}
+                        {{ gT("There are %s questions in this survey.") | format(aSurveyInfo.iTotalquestions) }}
+                    {% endif %}
+                </p>
+            {% endif %}
+
+    </div>
+</div>

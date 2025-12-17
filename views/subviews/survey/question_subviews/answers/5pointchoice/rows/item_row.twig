@@ -1,0 +1,62 @@
+{#
+/**
+ * 5-Point Choice Row - DSFR Theme
+ * Adapts display based on slider_rating mode:
+ * - Mode 0 (normal): numbers
+ * - Mode 1 (stars): star icons
+ * - Mode 2 (emoji): emoji with value
+ */
+#}
+
+{% set displayMode = slider_rating|default(0) %}
+
+{# Define emoji map for slider mode #}
+{% set emojiMap = {
+    '1': '😞',
+    '2': '🙁',
+    '3': '😐',
+    '4': '🙂',
+    '5': '😊'
+} %}
+
+<!-- item_row -->
+<div class="fr-col-auto">
+    <div class="fr-radio-group fr-radio-rich {{itemExtraClass}}" data-rating-value="{{value}}">
+        <input type="radio" name="{{name}}" id="answer{{id}}" value="{{value}}" {{checkedState}}>
+
+        {% if value == "" %}
+            {# No answer option - always display as text regardless of mode #}
+            <label class="fr-label" for="answer{{id}}">{{labelText}}</label>
+        {% elseif displayMode == 1 %}
+            {# Star mode: show filled and empty stars #}
+            <label class="fr-label fr-label--star-rating" for="answer{{id}}">
+                <span class="star-rating-wrapper">
+                    {% for i in 1..5 %}
+                        {% if i <= value %}
+                            <i class="fr-icon-star-fill" aria-hidden="true"></i>
+                        {% else %}
+                            <i class="fr-icon-star-line" aria-hidden="true"></i>
+                        {% endif %}
+                    {% endfor %}
+                </span>
+                <span class="fr-sr-only">{{ value }} {% if value > 1 %}{{ gT('stars') }}{% else %}{{ gT('star') }}{% endif %}</span>
+            </label>
+        {% elseif displayMode == 2 %}
+            {# Emoji mode: hide radio, show only emoji centered #}
+            <label class="fr-label fr-label--emoji-rating" for="answer{{id}}">
+                <span class="emoji-icon" aria-hidden="true">
+                    {% if value == 1 %}😞{% endif %}
+                    {% if value == 2 %}🙁{% endif %}
+                    {% if value == 3 %}😐{% endif %}
+                    {% if value == 4 %}🙂{% endif %}
+                    {% if value == 5 %}😊{% endif %}
+                </span>
+                <span class="fr-sr-only">{{ value }}</span>
+            </label>
+        {% else %}
+            {# Normal mode: just the number #}
+            <label class="fr-label" for="answer{{id}}">{{labelText}}</label>
+        {% endif %}
+    </div>
+</div>
+<!-- end of item_row -->

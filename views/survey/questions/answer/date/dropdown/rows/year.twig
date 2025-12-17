@@ -1,0 +1,34 @@
+{#
+/**
+ * Year dropdown Html - DSFR Theme
+ * @var $yearId
+ * @var $currentyear
+ * @var $yearmax
+ * @var $reverse
+ * @var $yearmin
+ * @var $step
+ */
+#}
+
+<!-- year -->
+<!-- select-item requis pour em_javascript.js -->
+<div class="fr-col-12 fr-col-md-3 select-item answer-item">
+    <div class="fr-select-group">
+        <label for="year{{ yearId }}" class="fr-label">
+            {{ gT('Year') }}
+        </label>
+        <select id="year{{ yearId }}" name="year{{ yearId }}" class="fr-select year em_sq_validation">
+            <option value="">
+                {{ gT('Year') }}
+            </option>
+            {% for i in yearmin..(yearmax) %}
+                {% if loop.index is divisible by(step) %}
+                    <option value="{{ i }}"{% if i == intval(currentyear) %} selected{% endif %}>
+                        {{ i }}
+                    </option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<!-- end of year -->

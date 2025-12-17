@@ -1,0 +1,83 @@
+{#
+/**
+ * Date Question - DSFR Theme Override
+ * Uses DSFR fr-input-group with HTML5 native date input
+ *
+ * @var $name
+ * @var $coreClass
+ * @var $dateoutput
+ * @var $mindate
+ * @var $maxdate
+ * @var $dateformatdetails
+ * @var $dateformatdetailsjs
+ * @var $hidetip
+ * @var $dateTimeWidget
+ */
+#}
+
+<!-- Date - DSFR -->
+
+<!-- answer -->
+<div class="{{ coreClass }}">
+    <div class="fr-input-group" id="input-group-{{ name }}">
+        <label class="fr-label" for="answer{{ name }}">
+            {{ sprintf(gT('Date format: %s'), dateformatdetails) }}
+            {% if hidetip %}
+                <span class="fr-hint-text">{{ sprintf(gT('Format: %s'), dateformatdetails) }}</span>
+            {% endif %}
+        </label>
+
+        {# Convert date output to YYYY-MM-DD format for HTML5 date input #}
+        {% set dateValue = '' %}
+        {% if dateoutput %}
+            {# dateoutput might be in DD/MM/YYYY format, need to convert #}
+            {% set dateValue = dateoutput %}
+        {% endif %}
+
+        <input
+            class="fr-input"
+            type="date"
+            id="answer{{ name }}"
+            name="{{ name }}"
+            value="{{ dateValue }}"
+            aria-describedby="ls-question-text-{{ name }} input-{{ name }}-messages"
+            {% if mindate %}min="{{ mindate|split(' ')[0] }}"{% endif %}
+            {% if maxdate %}max="{{ maxdate|split(' ')[0] }}"{% endif %}
+        />
+
+        <div class="fr-messages-group" id="input-{{ name }}-messages" aria-live="polite">
+        </div>
+    </div>
+</div>
+
+{# Hidden divs for JavaScript compatibility with LimeSurvey validation #}
+<div class="d-none" style="display:none">
+    <div id="datemin{{ name }}">{{ processString(mindate) }}</div>
+    <div id="datemax{{ name }}">{{ processString(maxdate) }}</div>
+    <div id="dateformat{{ name }}">{{ dateformatdetailsjs }}</div>
+</div>
+
+{# JavaScript to handle date format conversion if needed #}
+<script type="text/javascript">
+/*<![CDATA[*/
+document.addEventListener('DOMContentLoaded', function() {
+    var dateInput = document.getElementById('answer{{ name }}');
+
+    // HTML5 date input uses YYYY-MM-DD format
+    // Convert from DD/MM/YYYY or other formats if needed
+    if (dateInput && dateInput.value) {
+        var value = dateInput.value;
+        // Check if value is in DD/MM/YYYY format
+        if (value.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+            var parts = value.split('/');
+            // Convert to YYYY-MM-DD
+            dateInput.value = parts[2] + '-' + parts[1] + '-' + parts[0];
+        }
+    }
+
+    // On change, keep the native HTML5 format (YYYY-MM-DD)
+    // LimeSurvey will handle the format conversion on the server side
+});
+/*]]>*/
+</script>
+<!-- end of answer -->

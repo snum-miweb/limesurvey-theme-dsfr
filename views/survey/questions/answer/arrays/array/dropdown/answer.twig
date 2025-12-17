@@ -1,0 +1,26 @@
+{#
+/**
+ * Array dropdown - DSFR Theme
+ * Tableau simple avec liste déroulante
+ *
+ * @var $sRows      : the rows, generated with the view rows/answer_row.php
+ * @var $extraclass
+ * @var $answerwidth
+ * @var $columnswidth
+ * @var $right_exists
+ * @var $aRows
+ */
+#}
+<!-- Array Dropdown - DSFR -->
+<!-- answer -->
+<div class="fr-table fr-table--bordered" role="group" aria-labelledby="ls-question-text-{{ basename }}">
+    <table class="{{ coreClass }}">
+        <caption class="fr-sr-only">{{ gT('Response matrix') }}</caption>
+        <tbody>
+            {% for aRow in aRows %}
+                {% include 'survey/questions/answer/arrays/array/dropdown/rows/answer_row.twig' with aRow %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<!-- end of answer -->

@@ -1,0 +1,117 @@
+<!-- Curseur DSFR horizontal -->
+<div class="fr-range-group" id="range-group-{{ myfname }}">
+    <div class="fr-range">
+        <!-- Affichage de la valeur courante -->
+        <span class="fr-range__output" id="output-{{ myfname }}">{{ dispVal|default(slider_middlestart) }}</span>
+
+        <!-- Input range HTML5 natif -->
+        <input
+            id="answer{{ myfname }}"
+            name="{{ myfname }}"
+            type="range"
+            aria-labelledby="label-{{ myfname }}"
+            min="{{ slider_min }}"
+            max="{{ slider_max }}"
+            step="{{ slider_accuracy|default('1') }}"
+            value="{{ dispVal|default(slider_middlestart) }}"
+            {% if slider_reversed == 'true' %}dir="rtl"{% endif %}
+            class="answer-item numeric-item slider-item"
+            data-slider-orientation="{{ slider_orientation }}"
+        />
+
+        {% if slider_showminmax %}
+            <!-- Min/Max en DSFR -->
+            <span class="fr-range__min" aria-hidden="true">
+                {{ slider_reversed == 'false' ? slider_min : slider_max }}
+            </span>
+            <span class="fr-range__max" aria-hidden="true">
+                {{ slider_reversed == 'false' ? slider_max : slider_min }}
+            </span>
+        {% endif %}
+    </div>
+
+    {% if sliderleft is not empty or sliderright is not empty %}
+        <!-- Labels gauche/droite -->
+        <div class="fr-grid-row fr-grid-row--gutters">
+            {% if sliderleft is not empty %}
+                <div class="fr-col-6 fr-text--sm">
+                    {{ processString(sliderleft) }}
+                </div>
+            {% endif %}
+            {% if sliderright is not empty %}
+                <div class="fr-col-6 fr-text--sm fr-text-right">
+                    {{ processString(sliderright) }}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if slider_reset %}
+        <!-- Bouton reset DSFR -->
+        <div class="fr-mt-2w ls-no-js-hidden">
+            <button
+                id="answer{{ myfname }}_resetslider"
+                class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-refresh-line"
+                type="button"
+                title="{{ gT('Reset') }}"
+                aria-label="{{ gT('Reset slider') }}"
+            >
+                {{ gT('Reset') }}
+            </button>
+        </div>
+    {% endif %}
+
+    <!-- Hidden field pour compatibilité LimeSurvey -->
+    <input type="hidden" id="answer{{ myfname }}slid" name="{{ myfname }}slid" value="{{ dispVal }}" class="d-none" />
+</div>
+
+<script>
+// Mise à jour de la valeur affichée quand le curseur change
+(function() {
+    var slider = document.getElementById('answer{{ myfname }}');
+    var output = document.getElementById('output-{{ myfname }}');
+    var hiddenField = document.getElementById('answer{{ myfname }}slid');
+
+    if (slider && output) {
+        // Mise à jour en temps réel (pendant le glissement)
+        slider.addEventListener('input', function() {
+            output.textContent = this.value;
+            if (hiddenField) {
+                hiddenField.value = this.value;
+            }
+        });
+
+        // Déclencher les événements LimeSurvey quand la valeur change
+        slider.addEventListener('change', function() {
+            output.textContent = this.value;
+            if (hiddenField) {
+                hiddenField.value = this.value;
+            }
+            // Déclencher les événements pour LimeSurvey (validation, conditions)
+            if (typeof $ !== 'undefined') {
+                $(this).trigger('change');
+                $(hiddenField).trigger('change');
+            }
+            // Trigger checkconditions si disponible
+            if (typeof checkconditions === 'function') {
+                checkconditions(this.value, this.name, 'text');
+            }
+        });
+
+        {% if slider_reset %}
+        // Bouton reset
+        var resetBtn = document.getElementById('answer{{ myfname }}_resetslider');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function() {
+                slider.value = '{{ slider_middlestart|default((slider_min + slider_max) / 2) }}';
+                output.textContent = slider.value;
+                if (hiddenField) {
+                    hiddenField.value = slider.value;
+                }
+                slider.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+        }
+        {% endif %}
+    }
+})();
+</script>

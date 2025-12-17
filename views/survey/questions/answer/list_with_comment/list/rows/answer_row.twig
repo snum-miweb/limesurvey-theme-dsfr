@@ -1,0 +1,29 @@
+{#
+/**
+ * List with comment, list layout - DSFR Theme
+ * DSFR-compliant radio button row
+ *
+ * Variables available:
+ * @var $name
+ * @var $id
+ * @var $value
+ * @var $check_ans
+ * @var $checkconditionFunction
+ * @var $labeltext
+ * @var $li_classes
+ */
+#}
+<!-- answer_row DSFR -->
+<div class="fr-fieldset__element radio-item answer-item">
+    <div id='javatbd{{ name }}{{ value }}' class="fr-radio-group">
+        <input
+            type="radio"
+            name="{{ name }}"
+            id="{{ id }}"
+            value="{{ value }}"
+            {{ check_ans }}
+        />
+        <label class="fr-label" for="{{ id }}">{{ processString(labeltext) }}</label>
+    </div>
+</div>
+<!-- end of answer_row -->

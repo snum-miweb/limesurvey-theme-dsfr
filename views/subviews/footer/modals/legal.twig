@@ -1,0 +1,51 @@
+{# Modale Mentions légales #}
+<dialog id="legal-modal"
+        class="fr-modal"
+        aria-labelledby="legal-modal-title"
+        aria-modal="true">
+    <div class="fr-container fr-container--fluid fr-container-md">
+        <div class="fr-grid-row fr-grid-row--center">
+            <div class="fr-col-12 fr-col-md-10">
+                <div class="fr-modal__body">
+                    <div class="fr-modal__header">
+                        <button type="button"
+                                class="fr-btn--close fr-btn"
+                                aria-controls="legal-modal">
+                            {{ gT("Close") }}
+                        </button>
+                    </div>
+                    <div class="fr-modal__content">
+                        <h1 id="legal-modal-title" class="fr-modal__title">
+                            {{ gT("Mentions légales") }}
+                        </h1>
+
+                        {% if aSurveyInfo.options.legal_content %}
+                            {{ aSurveyInfo.options.legal_content|raw }}
+                        {% else %}
+                            <h2>Éditeur</h2>
+                            {% if aSurveyInfo.options.editor %}
+                                {{ aSurveyInfo.options.editor|raw }}
+                            {% else %}
+                                <p>[Rensigner cette information dans les options du thème]</p>
+                            {% endif %}
+
+                            <h2>Directeur de la publication</h2>
+                            {% if aSurveyInfo.options.publication_director %}
+                                {{ aSurveyInfo.options.publication_director|raw }}
+                            {% else %}
+                                <p>[Rensigner cette information dans les options du thème]</p>
+                            {% endif %}
+
+                            <h2>Hébergeur</h2>
+                            {% if aSurveyInfo.options.host %}
+                                {{ aSurveyInfo.options.host|raw }}
+                            {% else %}
+                                <p>[Rensigner cette information dans les options du thème]</p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>

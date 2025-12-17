@@ -1,0 +1,133 @@
+<div class="fr-container fr-my-2w">
+    <div class="fr-alert fr-alert--info {{ aSurveyInfo.class.maincoldivdiva }}" {{ aSurveyInfo.attr.maincoldivdiva }}>
+        {% block formheading %}
+            <p class="fr-alert__title">{{ gT("Before you start, please prove you are human.") }}</p>
+        {% endblock %}
+    </div>
+</div>
+
+<div class="fr-container fr-my-2w">
+    <div class="{{ aSurveyInfo.class.maincoldivdivb }}" {{ aSurveyInfo.attr.maincoldivdivb }}>
+
+    {% block description %}
+
+    {% endblock %}
+
+    <div class="form-{{ aSurveyInfo.aForm.sType }} {{ aSurveyInfo.class.maincoldivdivbdiv }}" {{ aSurveyInfo.attr.maincoldivdivbdiv }} >
+        {#
+            array of attributes of the form tag.
+            To add a new attribute, just add an entry:
+            'attribute' : 'value',
+        #}
+        {%
+            set htmlOptions = {
+                'id'          : 'form-' ~ aSurveyInfo.aForm.sType ,
+                'name'        : 'limesurvey',
+                'class'       : 'ls-form form form-horizontal',
+                'novalidate'  : true,
+            }
+        %}
+
+        {#  TOKEN FORM #}
+        <!-- Start of the main Form-->
+        {{
+            C.Html.form(
+                ( aSurveyInfo.surveyUrl ),
+                    'post',
+                    (htmlOptions)
+                )
+        }}
+
+        {% block formcontent  %}
+
+            <div class='{{ aSurveyInfo.class.maincolformdivb }} fr-mb-3w' {{ aSurveyInfo.attr.maincolformdivb }}>
+                <fieldset class="fr-fieldset">
+                    <legend class='{{ aSurveyInfo.class.maincolformdivblabel }} fr-fieldset__legend' {{ aSurveyInfo.attr.maincolformdivblabel }}>
+                        <span class="fr-badge fr-badge--sm fr-badge--info" aria-label="{{ gT("Mandatory field") }}">
+                            {{ gT("Mandatory") }}
+                        </span>
+                        <span id="ls-captcha-text" style="display: block; color: rgb(22, 22, 22); font-family: 'Marianne', Arial, sans-serif; font-size: 18px; font-weight: 700; line-height: 27px;">
+                            {{ gT("Please solve the following equation:") }}
+                        </span>
+                    </legend>
+                    <div class="fr-fieldset__content">
+                        <!-- Image du captcha agrandie -->
+                        <div class='{{ aSurveyInfo.class.maincolformdivbdivdivdiv }} fr-captcha fr-mb-3w' {{ aSurveyInfo.attr.maincolformdivbdivdivdiv }} style="text-align: center;">
+                            {# see: LS_Twig_Extension::renderCaptcha() in application/core/LS_Twig_Extension.php #}
+                            <div style="display: inline-block; width: 100%; max-width: 500px;">
+                                <div style="width: 100%; transform: scale(1.5); transform-origin: center; margin: 2rem 0;">
+                                    {{ renderCaptcha().renderOut() }}
+                                </div>
+                            </div>
+                            <div class="fr-mt-2w">
+                                <button type="button" class="fr-btn fr-btn--sm fr-btn--tertiary" id="reloadCaptcha" title="{{ gT("Reload captcha") }}" aria-label="{{ gT("Reload captcha") }}">
+                                    <span class="fr-icon-refresh-line" aria-hidden="true"></span>
+                                    {{ gT("Reload captcha") }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Champ de saisie en dessous -->
+                        <div class='{{ aSurveyInfo.class.maincolformdivbdiv }} fr-input-group{% if not empty(aSurveyInfo.aForm.aEnterErrors) %} fr-input-group--error{% endif %}' {{ aSurveyInfo.attr.maincolformdivbdiv }}>
+                            <label class="fr-label" for="loadsecurity">
+                                {{ gT("Answer") }}
+                            </label>
+                            {# Note: aSurveyInfo.attr.maincolformdivbdivdivinput contains: type, id, name, size, maxlength, value, alt, required #}
+                            <input class='fr-input {{ aSurveyInfo.class.maincolformdivbdivdivinput }}' {{ aSurveyInfo.attr.maincolformdivbdivdivinput }} aria-required="true" aria-labelledby="ls-captcha-text" aria-describedby="loadsecurity-messages" placeholder="{{ gT("Enter your answer here") }}" autocomplete="off">
+                            <div class="fr-messages-group" id="loadsecurity-messages" aria-live="polite">
+                                {% if not empty(aSurveyInfo.aForm.aEnterErrors) %}
+                                    {% for key, error in aSurveyInfo.aForm.aEnterErrors %}
+                                        <p class="fr-message fr-message--error">
+                                            {{ error }}
+                                        </p>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            {# Force captcha reload after error to prevent reusing same captcha #}
+            {% if not empty(aSurveyInfo.aForm.aEnterErrors) %}
+            <script>
+            (function() {
+                // Force reload captcha image after validation error
+                document.addEventListener('DOMContentLoaded', function() {
+                    var captchaContainer = document.querySelector('.fr-captcha');
+                    if (captchaContainer) {
+                        var captchaImage = captchaContainer.querySelector('img');
+                        if (captchaImage && captchaImage.src) {
+                            // Add/update timestamp to force reload
+                            var newSrc = captchaImage.src;
+                            if (newSrc.indexOf('v=') > -1) {
+                                newSrc = newSrc.replace(/v=[^&]*/, 'v=' + Date.now());
+                            } else {
+                                newSrc += (newSrc.indexOf('?') > -1 ? '&' : '?') + 'v=' + Date.now();
+                            }
+                            captchaImage.src = newSrc;
+                        }
+                    }
+                    // Clear the input field
+                    var captchaInput = document.getElementById('loadsecurity');
+                    if (captchaInput) {
+                        captchaInput.value = '';
+                        captchaInput.focus();
+                    }
+                });
+            })();
+            </script>
+            {% endif %}
+
+            <div class='{{ aSurveyInfo.class.maincolformdivc }} fr-mb-3w' {{ aSurveyInfo.attr.maincolformdivc }}>
+                <div class='{{ aSurveyInfo.class.maincolformdivcdiv }}' {{ aSurveyInfo.attr.maincolformdivcdiv }}>
+                    <button class='{{ aSurveyInfo.class.maincolformdivcdivbutton }} fr-btn' {{ aSurveyInfo.attr.maincolformdivcdivbutton }}>
+                        {{ gT("Continue") }}
+                    </button>
+                </div>
+            </div>
+        {% endblock %}
+        </form>
+    </div>
+</div>
+</div> <!-- /fr-container -->

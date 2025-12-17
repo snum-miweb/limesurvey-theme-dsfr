@@ -1,0 +1,30 @@
+{#
+/**
+ * Radio Item Row - DSFR Theme
+ * Single radio button with DSFR fr-radio-group
+ *
+ * Variables available:
+ * @var $name
+ * @var $code
+ * @var $answer
+ * @var $checkedState
+ * @var $myfname
+ */
+#}
+
+<!-- DSFR Radio Item -->
+<div class="fr-fieldset__element radio-item answer-item">
+    <div class="fr-radio-group">
+        <input
+            type="radio"
+            value="{{ code }}"
+            name="{{ name }}"
+            id="answer{{ name }}{{ code }}"
+            {{ checkedState }}
+        />
+        <label class="fr-label" for="answer{{ name }}{{ code }}">
+            {{ processString(answer) }}
+        </label>
+    </div>
+</div>
+<!-- end of answer_row -->

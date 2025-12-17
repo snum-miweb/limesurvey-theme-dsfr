@@ -1,0 +1,43 @@
+{#
+    LimeSurvey
+    Copyright (C) 2007-2017 The LimeSurvey Project Team / Louis Gac
+    All rights reserved.
+    License: GNU/GPL License v2 or later, see LICENSE.php
+    LimeSurvey is free software. This version may have been modified pursuant
+    to the GNU General Public License, and as distributed it includes or
+    is derivative of works licensed under the GNU General Public License or
+    other free or open source software licenses.
+    See COPYRIGHT.php for copyright notices and details.
+
+
+
+    (¯`·._.·(¯`·._.· Valid message and helper  ·._.·´¯)·._.·´¯)
+
+    This file renders validation messages and help tips.
+    - valid_message: System-generated tips (e.g., "Only numbers may be entered")
+    - man_message: Mandatory field error message
+    - file_valid_message: File upload specific messages
+    NOTE: see views/subviews/survey/question.twig comments for more infos
+
+#}
+
+<!-- LimeSurvey valid message and help - DSFR -->
+<div id="ls-question-validation-{{ aQuestion.SGQ }}" class="{{ aSurveyInfo.class.questionvalidcontainer }} fr-col-12 fr-mb-2w dsfr-validation-container" {{ aSurveyInfo.attr.questionvalidcontainer }}>
+
+    {# System-generated validation tips (e.g., "Only numbers may be entered in this field.") #}
+    {# The valid_message already contains pre-formatted HTML from question themes #}
+    {% if aQuestion.valid_message is not empty %}
+        {{ aQuestion.valid_message | raw }}
+    {% endif %}
+
+    {# Mandatory field error message: "This question is mandatory!" #}
+    {% if aQuestion.man_message is not empty %}
+        {{ aQuestion.man_message | raw }}
+    {% endif %}
+
+    {# File upload specific validation messages #}
+    {% if aQuestion.file_valid_message is not empty %}
+        {{ aQuestion.file_valid_message | raw }}
+    {% endif %}
+
+</div>

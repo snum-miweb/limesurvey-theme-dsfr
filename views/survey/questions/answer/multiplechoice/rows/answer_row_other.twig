@@ -1,0 +1,91 @@
+{#
+/**
+ * Multiple Choice Html : item 'other' row - DSFR Theme
+ *
+ * @var $sDisable
+ * @var $myfname
+ * @var $othertext
+ * @var $checkedState
+ * @var $kpclass
+ * @var $sValue
+ * @var $oth_checkconditionFunction
+ * @var $checkconditionFunction
+ * @var $sValueHidden
+ * @var $wrapper
+ * @var $relevanceClass
+ */
+#}
+
+<!-- answer_row_other -->
+<div class="fr-fieldset__element checkbox-item answer-item" id='javatbd{{ myfname }}'>
+    <div class="fr-grid-row fr-grid-row--gutters {{ relevanceClass }}">
+        <div class="fr-col-12 fr-col-md-4 fr-mb-2w">
+            <!-- Checkbox + label -->
+            <div class="fr-checkbox-group">
+                <!-- checkbox -->
+                <input
+                    {% if kpclass %}class="{{ kpclass }}"{% endif %}
+                    type="checkbox"
+                    name="{{ myfname }}cbox"
+                    id="answer{{ myfname }}cbox"
+                    {{ checkedState }}
+                    aria-controls="answer{{ myfname }}"
+                    aria-expanded="{{ checkedState ? 'true' : 'false' }}"
+                />
+                <label for="answer{{ myfname }}cbox" class="fr-label"
+                       id="label-{{ myfname }}-other">{{ processString(othertext) }}</label>
+            </div>
+        </div>
+        <div class="fr-col-12 fr-col-md-8 fr-mb-2w">
+            <div class="fr-input-group">
+                <label class="fr-label fr-sr-only" for="answer{{ myfname }}">
+                    {{ processString(othertext) }} - {{ gT("Please specify:") }}
+                </label>
+                <input
+                    class="fr-input {{ kpclass }}"
+                    type="text"
+                    name="{{ myfname }}"
+                    id="answer{{ myfname }}"
+                    value="{{ sValue }}"
+                    aria-labelledby="label-{{ myfname }}-other"
+                    placeholder="{{ gT("Please specify...") }}"
+                />
+            </div>
+        </div>
+
+        <!-- hidden input -->
+        <input
+            type="hidden"
+            name="java{{ myfname }}"
+            id="java{{ myfname }}"
+            value="{{ sValueHidden }}"
+        />
+    </div>
+    <script type='text/javascript'>
+        $('#answer{{ myfname }}').on('keyup focusout', function (event) {
+            var isChecked = $.trim($(this).val()).length > 0;
+            $("#answer{{ myfname }}cbox").prop("checked", isChecked);
+            $("#answer{{ myfname }}cbox").attr("aria-expanded", isChecked ? "true" : "false");
+            $("#java{{ myfname }}").val($(this).val());
+            LEMflagMandOther("{{ myfname }}", $('#answer{{ myfname }}cbox').is(":checked"));
+            {{ oth_checkconditionFunction }}(this.value, this.name, this.type);
+        });
+
+        $('#answer{{ myfname }}cbox').click(function (event) {
+            var isChecked = $(this).is(':checked');
+            $(this).attr("aria-expanded", isChecked ? "true" : "false");
+
+            if (isChecked && $.trim($("#answer{{ myfname }}").val()).length == 0) {
+                $("#answer{{ myfname }}").focus();
+                LEMflagMandOther("{{ myfname }}", true);
+                return false;
+            } else {
+                $("#answer{{ myfname }}").val('');
+                {{ checkconditionFunction }}("", "{{ myfname }}", "text");
+                LEMflagMandOther("{{ myfname }}", false);
+                return true;
+            }
+        });
+    </script>
+</div> <!-- Form group ; item row -->
+<!-- end of answer_row_other -->

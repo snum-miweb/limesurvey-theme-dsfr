@@ -1,0 +1,22 @@
+{#
+/**
+ * Input part for soft mandatory - DSFR Theme
+ * @var qInfo : array, see LimeExpressionManager::
+ * @var sCheckboxLabel : core label
+ */
+#}
+{# Soft mandatory checkbox - DSFR styled with LimeSurvey compatibility class #}
+<input type="hidden" id="mandSoft_{{ qInfo.qseq }}_N" name="mandSoft[{{ qInfo.qseq }}]" value="N">
+<div class="fr-checkbox-group fr-mt-2w ls-softmandatory-input">
+    <input
+        type="checkbox"
+        id="mandSoft_{{ qInfo.qseq }}"
+        name="mandSoft[{{ qInfo.qseq }}]"
+        class="ls-mandSoft-checkbox"
+        value="Y"
+        {% if qInfo.mandSoftForced %} checked {% endif %}
+    >
+    <label class="fr-label" for="mandSoft_{{ qInfo.qseq }}">
+        {{ gT("Continue without answering to this question.") }}
+    </label>
+</div>

@@ -1,0 +1,261 @@
+{#
+    LimeSurvey - DSFR Theme
+    Anti-bot Challenge Page
+
+    Alternative accessible au CAPTCHA utilisant :
+    - Une question simple (cognitive)
+    - Un champ honeypot (piège invisible)
+    - Un timer minimum (empêche soumission instantanée)
+    - Vérification JavaScript activé
+
+    Cette page s'affiche AVANT la page de bienvenue si l'option est activée.
+#}
+
+{# Pool de questions simples par défaut #}
+{% set defaultQuestions = [
+    { question: "Quelle est la couleur du ciel par beau temps ?", answer: "bleu" },
+    { question: "Combien font 2 + 3 ?", answer: "5" },
+    { question: "Quelle est la première lettre de l'alphabet ?", answer: "a" },
+    { question: "Combien y a-t-il de jours dans une semaine ?", answer: "7" },
+    { question: "Quelle couleur obtient-on en mélangeant le jaune et le bleu ?", answer: "vert" },
+    { question: "Quel animal miaule ?", answer: "chat" },
+    { question: "Combien font 10 - 4 ?", answer: "6" },
+    { question: "Quelle saison vient après l'été ?", answer: "automne" },
+    { question: "Combien de pattes a un chien ?", answer: "4" },
+    { question: "Quelle est la dernière lettre de l'alphabet ?", answer: "z" },
+    { question: "Quel est le contraire de 'chaud' ?", answer: "froid" },
+    { question: "Combien font 3 x 3 ?", answer: "9" },
+    { question: "Quel jour vient après lundi ?", answer: "mardi" },
+    { question: "De quelle couleur est le soleil ?", answer: "jaune" },
+    { question: "Combien y a-t-il de mois dans une année ?", answer: "12" }
+] %}
+
+{# Récupération des questions personnalisées si définies #}
+{% set customQuestionsRaw = aSurveyInfo.options.antibot_custom_questions|default('') %}
+{% set questions = [] %}
+
+{% if customQuestionsRaw is not empty %}
+    {% set customLines = customQuestionsRaw|split("\n") %}
+    {% for line in customLines %}
+        {% set line = line|trim %}
+        {% if line is not empty and '|' in line %}
+            {% set parts = line|split('|') %}
+            {% if parts|length >= 2 %}
+                {% set questions = questions|merge([{ question: parts[0]|trim, answer: parts[1]|trim|lower }]) %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{# Si pas de questions personnalisées, utiliser les questions par défaut #}
+{% if questions is empty %}
+    {% set questions = defaultQuestions %}
+{% endif %}
+
+{# Sélection aléatoire d'une question (basée sur le timestamp pour variabilité) #}
+{% set questionIndex = "now"|date("U") % questions|length %}
+{% set selectedQuestion = questions[questionIndex] %}
+
+{# Timer minimum en secondes #}
+{% set timerSeconds = aSurveyInfo.options.antibot_timer|default(5) %}
+
+<!-- Anti-bot Challenge Page -->
+<div id="antibot-challenge-container" class="fr-container fr-my-6w">
+    <div class="fr-col-12 fr-col-md-8 fr-col-lg-6 fr-mx-auto">
+
+        <!-- Titre -->
+        <h1 class="fr-h2">Vérification de sécurité</h1>
+
+        <!-- Explication -->
+        <div class="fr-callout fr-callout--blue-ecume fr-mb-4w">
+            <p class="fr-callout__text">
+                Pour accéder au questionnaire, veuillez répondre à la question ci-dessous.
+                Cette vérification permet de s'assurer que vous êtes bien une personne.
+            </p>
+        </div>
+
+        <!-- Formulaire anti-bot -->
+        <form id="antibot-form" method="post" action="" class="fr-mb-4w" novalidate>
+
+            <!-- Token de session pour la validation -->
+            <input type="hidden" name="antibot_token" id="antibot_token" value="">
+            <input type="hidden" name="antibot_timestamp" id="antibot_timestamp" value="{{ "now"|date("U") }}">
+            <input type="hidden" name="antibot_question_hash" id="antibot_question_hash" value="{{ selectedQuestion.answer|lower|trim }}">
+            <input type="hidden" name="antibot_validated" id="antibot_validated" value="0">
+
+            <!-- Champ honeypot - invisible pour les humains, rempli par les bots -->
+            <div class="antibot-honeypot" aria-hidden="true" tabindex="-1">
+                <label for="antibot_website">Site web (ne pas remplir)</label>
+                <input type="text" name="antibot_website" id="antibot_website" tabindex="-1" autocomplete="off">
+            </div>
+            <div class="antibot-honeypot" aria-hidden="true" tabindex="-1">
+                <label for="antibot_email_confirm">Confirmez votre email (ne pas remplir)</label>
+                <input type="email" name="antibot_email_confirm" id="antibot_email_confirm" tabindex="-1" autocomplete="off">
+            </div>
+
+            <!-- Question de vérification -->
+            <div class="fr-input-group" id="antibot-question-group">
+                <label class="fr-label" for="antibot_answer">
+                    {{ selectedQuestion.question }}
+                    <span class="fr-hint-text">Répondez en un mot ou un chiffre</span>
+                </label>
+                <input
+                    type="text"
+                    class="fr-input"
+                    id="antibot_answer"
+                    name="antibot_answer"
+                    autocomplete="off"
+                    required
+                    aria-describedby="antibot-answer-messages"
+                >
+                <div id="antibot-answer-messages" class="fr-messages-group" aria-live="polite">
+                </div>
+            </div>
+
+            <!-- Message d'erreur JavaScript désactivé -->
+            <noscript>
+                <div class="fr-alert fr-alert--error fr-mb-3w">
+                    <p>JavaScript doit être activé pour accéder à ce questionnaire.</p>
+                </div>
+            </noscript>
+
+            <!-- Bouton de validation -->
+            <div class="fr-btns-group">
+                <button
+                    type="submit"
+                    class="fr-btn"
+                    id="antibot-submit-btn"
+                >
+                    Accéder au questionnaire
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<!-- Script anti-bot -->
+<script>
+(function() {
+    'use strict';
+
+    // Configuration
+    var MIN_TIME_SECONDS = {{ timerSeconds }}; // Temps minimum avant soumission (vérification silencieuse)
+    var EXPECTED_ANSWER = '{{ selectedQuestion.answer|lower|trim|replace({"'": "\\'"}) }}';
+
+    // Éléments DOM
+    var form = document.getElementById('antibot-form');
+    var answerInput = document.getElementById('antibot_answer');
+    var submitBtn = document.getElementById('antibot-submit-btn');
+    var messagesContainer = document.getElementById('antibot-answer-messages');
+    var validatedInput = document.getElementById('antibot_validated');
+    var honeypotWebsite = document.getElementById('antibot_website');
+    var honeypotEmail = document.getElementById('antibot_email_confirm');
+    var questionGroup = document.getElementById('antibot-question-group');
+
+    // Timestamp de chargement (pour vérification silencieuse anti-bot)
+    var startTime = Date.now();
+
+    // État
+    var answerCorrect = false;
+
+    // Générer un token unique côté client
+    var clientToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
+    document.getElementById('antibot_token').value = clientToken;
+
+    // Fonction pour normaliser la réponse (minuscules, sans accents, trim)
+    function normalizeAnswer(str) {
+        return str.toLowerCase()
+            .trim()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+    }
+
+    // Fonction pour vérifier la réponse
+    function checkAnswer() {
+        var userAnswer = normalizeAnswer(answerInput.value);
+        var expected = normalizeAnswer(EXPECTED_ANSWER);
+
+        // Vérification souple : correspond à la réponse attendue
+        answerCorrect = (userAnswer === expected) ||
+                        (userAnswer.includes(expected)) ||
+                        (expected.includes(userAnswer) && userAnswer.length >= expected.length - 1);
+    }
+
+    // Retirer les styles d'erreur quand l'utilisateur commence à corriger (après une erreur)
+    function clearErrorOnInput() {
+        if (questionGroup.classList.contains('fr-input-group--error')) {
+            questionGroup.classList.remove('fr-input-group--error');
+            answerInput.classList.remove('fr-input--error');
+            messagesContainer.innerHTML = '';
+        }
+    }
+
+    // Afficher l'erreur (appelé à la soumission)
+    function showError(message) {
+        questionGroup.classList.add('fr-input-group--error');
+        answerInput.classList.add('fr-input--error');
+        messagesContainer.innerHTML = '<p class="fr-message fr-message--error">' + message + '</p>';
+        answerInput.focus();
+    }
+
+    // Vérification honeypot (champs cachés remplis = bot)
+    function checkHoneypot() {
+        return (honeypotWebsite.value === '' && honeypotEmail.value === '');
+    }
+
+    // Gestionnaire de soumission
+    form.addEventListener('submit', function(e) {
+        // Toujours bloquer la soumission du formulaire (on gère tout en JS)
+        e.preventDefault();
+
+        // Vérifier la réponse au moment du submit
+        checkAnswer();
+
+        var timePassed = (Date.now() - startTime) / 1000;
+
+        // Vérification silencieuse 1 : Honeypot (champs cachés remplis = bot)
+        if (!checkHoneypot()) {
+            // Échec silencieux - message générique pour ne pas aider le bot
+            showError('Une erreur est survenue. Veuillez rafraîchir la page.');
+            return false;
+        }
+
+        // Vérification silencieuse 2 : Timer (soumission trop rapide = bot)
+        if (timePassed < MIN_TIME_SECONDS) {
+            // Échec silencieux - même message générique
+            showError('Une erreur est survenue. Veuillez rafraîchir la page.');
+            return false;
+        }
+
+        // Vérification visible : Réponse correcte
+        if (!answerCorrect) {
+            showError('Merci de vérifier que vous avez répondu correctement à la question.');
+            return false;
+        }
+
+        // Toutes les vérifications sont passées !
+        // Stocker la validation en sessionStorage
+        try {
+            sessionStorage.setItem('antibot_validated_' + '{{ aSurveyInfo.sid }}', clientToken);
+        } catch(err) {
+            // sessionStorage non disponible, continuer quand même
+        }
+
+        // Basculer vers la page de bienvenue
+        if (typeof window.showWelcomePage === 'function') {
+            window.showWelcomePage();
+        }
+
+        return false;
+    });
+
+    // Retirer l'erreur quand l'utilisateur corrige sa réponse
+    answerInput.addEventListener('input', clearErrorOnInput);
+
+    // Focus sur le champ de réponse
+    answerInput.focus();
+
+})();
+</script>

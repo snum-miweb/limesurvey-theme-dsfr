@@ -1,0 +1,26 @@
+{#
+/**
+ * Array 10 point choice - DSFR Theme Override
+ * @var $i
+ * @var $myfname
+ * @var $CHECKED
+ * @var $checkconditionFunction
+ * @var $value
+ */
+#}
+
+<!-- answer_td_input -->
+<td class="answer_cell_{{ i }}{% if i=="" %} noanswer-item{% endif %} answer-item radio-item">
+    <input
+        type="radio"
+        name="{{ myfname }}"
+        id="answer{{ myfname }}-{{ i }}"
+        aria-labelledby="answer{{ basename }}-{{ i }}"
+        value="{{ value }}"
+        {{ CHECKED }}
+     />
+    <label for="answer{{ myfname }}-{{ i }}" class="fr-sr-only">
+        {{ processString(labelText) }}
+    </label>
+</td>
+<!-- end of answer_td_input -->

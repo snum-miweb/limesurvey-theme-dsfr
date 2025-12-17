@@ -1,0 +1,90 @@
+{#
+/**
+ * Short Free Text - DSFR Theme
+ * Type: S (Short Free Text)
+ *
+ * Simple input text avec style DSFR
+ *
+ * @var $extraclass
+ * @var $name           Field name
+ * @var $basename       Base name for IDs
+ * @var $prefix         Prefix text
+ * @var $suffix         Suffix text
+ * @var $kpclass        Keypress class
+ * @var $tiwidth        Text input width
+ * @var $dispVal        Display value
+ * @var $placeholder    Placeholder text
+ * @var $maxlength      Max length
+ * @var $inputsize      Input size attribute
+ * @var $numberonly     Number only validation
+ * @var $checkconditionFunction
+ */
+#}
+
+<!-- DSFR Input Text -->
+{% if withColumn %}
+<div class='{{ coreClass }} fr-grid-row'>
+    <div class="{{ extraclass }}">
+{% else %}
+<div class='{{ coreClass }} {{ extraclass }}'>
+{% endif %}
+
+    <div class="fr-input-group">
+        <label for="answer{{ name }}" class="fr-sr-only">{{ gT('Your answer') }}</label>
+
+        {% if prefix != '' or suffix != '' %}
+        {# Layout avec préfixe/suffixe - utiliser flexbox #}
+        <div class="ls-input-with-addon" style="display: flex; align-items: center; gap: 0.5rem;">
+            {% if prefix != '' %}
+                <span class="fr-text--sm fr-text--bold">{{ processString(prefix) }}</span>
+            {% endif %}
+
+            <input
+                class="fr-input {{ kpclass }}"
+                type="text"
+                name="{{ name }}"
+                id="answer{{ name }}"
+                value="{{ dispVal }}"
+                placeholder="{{ flatString(processString(placeholder,1),1) }}"
+                {% if inputsize %}size="{{ inputsize }}" {% endif %}
+                {% if maxlength %}maxlength="{{ maxlength }}" {% endif %}
+                {% if numberonly %}data-number="1" {% endif %}
+                aria-labelledby="ls-question-text-{{ basename }}"
+                aria-describedby="answer{{ name }}-messages"
+                style="flex: 1;"
+            />
+
+            {% if suffix != '' %}
+                <span class="fr-text--sm fr-text--bold">{{ processString(suffix) }}</span>
+            {% endif %}
+        </div>
+        {% else %}
+        {# Layout standard sans préfixe/suffixe #}
+        <input
+            class="fr-input {{ kpclass }}"
+            type="text"
+            name="{{ name }}"
+            id="answer{{ name }}"
+            value="{{ dispVal }}"
+            placeholder="{{ flatString(processString(placeholder,1),1) }}"
+            {% if inputsize %}size="{{ inputsize }}" {% endif %}
+            {% if maxlength %}maxlength="{{ maxlength }}" {% endif %}
+            {% if numberonly %}data-number="1" {% endif %}
+            aria-labelledby="ls-question-text-{{ basename }}"
+            aria-describedby="answer{{ name }}-messages"
+        />
+        {% endif %}
+
+        <div class="fr-messages-group" id="answer{{ name }}-messages" aria-live="polite">
+            {# Messages d'erreur/succès injectés ici par JavaScript #}
+        </div>
+    </div>
+
+{% if withColumn %}
+    </div>
+</div>
+{% else %}
+</div>
+{% endif %}
+
+<!-- end of answer -->

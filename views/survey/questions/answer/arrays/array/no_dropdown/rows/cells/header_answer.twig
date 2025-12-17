@@ -1,0 +1,14 @@
+{#
+/**
+ * Array header : answer or sub question
+ * @var $class
+ * @var $content
+ * @var $basename
+ * @var $code
+ * @var $isrepeat
+ * @var $oAnswer
+ */
+#}
+<th scope="col" class="{{ class }}" {% if not isrepeat %} id="answer{{ basename }}-{{ code }}" {% endif %}>
+    {{ processString(content) }}
+</th>

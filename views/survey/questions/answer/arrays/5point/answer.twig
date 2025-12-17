@@ -1,0 +1,37 @@
+{#
+/**
+ * Array 5-Point Choice - DSFR Theme
+ * Table with DSFR fr-table component
+ *
+ * Variables:
+ * @var $sColumns - Columns HTML
+ * @var $sHeaders - Headers HTML
+ * @var $sRows - Rows HTML
+ * @var $answerwidth - Width percentage
+ */
+#}
+
+<!-- DSFR Array 5-Point Table -->
+<div class="ls-table-wrapper fr-table--responsive" role="group" aria-labelledby="ls-question-text-{{ basename }}">
+    <table class="{{ coreClass }} fr-table fr-table--bordered" role="group" aria-labelledby="ls-question-text-{{ basename }}">
+        <!-- Columns -->
+        <colgroup class="col-responses">
+            <col class="col-answers" style='width: {{ answerwidth }}%;' />
+            {{ sColumns }}
+        </colgroup>
+
+        <!-- Table headers -->
+        <thead>
+            <tr class="ls-heading">
+                {{ sHeaders }}
+            </tr>
+        </thead>
+
+        <!-- Table Body -->
+        <tbody>
+            {{ sRows }}
+        </tbody>
+    </table>
+</div>
+
+<!-- end of answer -->

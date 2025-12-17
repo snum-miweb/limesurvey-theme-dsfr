@@ -1,0 +1,16 @@
+{#
+/**
+ * List Dropdown - OptGroup - DSFR Theme
+ * Generate an <optgroup> element for categorized options
+ *
+ * @var $sOptGroupOptions   Pre-rendered options for this group (HTML)
+ * @var $categoryname       Category label
+ */
+#}
+
+<!-- optgroup -->
+<optgroup class="dropdowncategory" label="{{ flattenText(categoryname) }}">
+    {# Options for this category (rendered by option.twig) #}
+    {{ sOptGroupOptions|raw }}
+</optgroup>
+<!-- end of optgroup -->

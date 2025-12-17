@@ -1,0 +1,3167 @@
+/**
+ * CSS personnalisé pour le thème DSFR
+ *
+ * Ce fichier contient les styles personnalisés qui complètent
+ * le DSFR pour des besoins spécifiques de LimeSurvey.
+ */
+
+/* ============================================
+   LAYOUT FIXES
+   ============================================ */
+
+/* Ajustements pour le layout global */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+body > article {
+    flex: 1;
+}
+
+/* ============================================
+   COMPATIBILITÉ LIMESURVEY
+   ============================================ */
+
+/* Assurer que les classes Bootstrap ne cassent pas le DSFR */
+.container-fluid {
+    max-width: 100%;
+}
+
+/* Utilitaires d'alignement de texte DSFR-compatible */
+.fr-text-left {
+    text-align: left;
+}
+
+.fr-text-right {
+    text-align: right;
+}
+
+.fr-text-center,
+.text-center {
+    text-align: center;
+}
+
+/* Utilitaires de couleur de texte DSFR-compatible */
+.text-danger {
+    color: var(--text-default-error) !important;
+}
+
+.text-info {
+    color: var(--text-action-high-blue-france) !important;
+}
+
+.text-warning {
+    color: var(--warning-425) !important;
+}
+
+.text-muted {
+    color: var(--text-mention-grey) !important;
+}
+
+/* Navigation responsive */
+@media (max-width: 768px) {
+    .fr-text-right {
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    /* Navigation mobile en colonne */
+    .fr-grid-row--center .fr-col-sm-6 {
+        text-align: center !important;
+    }
+}
+
+/* ============================================
+   STEPPER DSFR - Fallback visuel
+   ============================================ */
+
+/* DSFR gère le stepper - minimal override */
+.fr-stepper__steps {
+    position: relative;
+    overflow: hidden;
+}
+
+.fr-stepper__steps::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: var(--background-action-high-blue-france);
+    transition: width 0.3s ease;
+}
+
+/* Calcul de la largeur basé sur les data attributes */
+.fr-stepper__steps[data-fr-current-step="1"][data-fr-steps="1"]::after { width: 100%; }
+.fr-stepper__steps[data-fr-current-step="1"][data-fr-steps="2"]::after { width: 50%; }
+.fr-stepper__steps[data-fr-current-step="2"][data-fr-steps="2"]::after { width: 100%; }
+.fr-stepper__steps[data-fr-current-step="1"][data-fr-steps="3"]::after { width: 33.33%; }
+.fr-stepper__steps[data-fr-current-step="2"][data-fr-steps="3"]::after { width: 66.66%; }
+.fr-stepper__steps[data-fr-current-step="3"][data-fr-steps="3"]::after { width: 100%; }
+.fr-stepper__steps[data-fr-current-step="1"][data-fr-steps="4"]::after { width: 25%; }
+.fr-stepper__steps[data-fr-current-step="2"][data-fr-steps="4"]::after { width: 50%; }
+.fr-stepper__steps[data-fr-current-step="3"][data-fr-steps="4"]::after { width: 75%; }
+.fr-stepper__steps[data-fr-current-step="4"][data-fr-steps="4"]::after { width: 100%; }
+.fr-stepper__steps[data-fr-current-step="1"][data-fr-steps="5"]::after { width: 20%; }
+.fr-stepper__steps[data-fr-current-step="2"][data-fr-steps="5"]::after { width: 40%; }
+.fr-stepper__steps[data-fr-current-step="3"][data-fr-steps="5"]::after { width: 60%; }
+.fr-stepper__steps[data-fr-current-step="4"][data-fr-steps="5"]::after { width: 80%; }
+.fr-stepper__steps[data-fr-current-step="5"][data-fr-steps="5"]::after { width: 100%; }
+
+/* ============================================
+   COMPOSANTS LIMESURVEY SPÉCIFIQUES
+   ============================================ */
+
+/* ============================================
+   FIX SCROLL TABLEAUX + VISIBILITÉ
+   ============================================ */
+
+/* Désactiver scroll anchoring */
+html, body {
+    overflow-anchor: none !important;
+}
+
+/* Supprimer padding-top excessif */
+#outerframeContainer {
+    padding-top: 0 !important;
+}
+
+/* Masquer les labels xs-visibility sur desktop uniquement */
+/* Sur mobile (< 768px), ils seront visibles grâce à la media query dans theme.css */
+@media (min-width: 768px) {
+    table .ls-label-xs-visibility {
+        position: absolute;
+        left: -10000px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+    }
+}
+
+/* Centrer radios/checkbox dans cellules */
+table td {
+    text-align: center;
+}
+
+table td input[type="radio"],
+table td input[type="checkbox"] {
+    display: inline-block;
+    margin: 0 auto;
+}
+
+/* ============================================
+   CHECKBOXES DSFR DANS TABLEAUX
+   Style custom pour checkbox-array et multiflexi
+   Sélecteurs très spécifiques pour override DSFR
+   ============================================ */
+
+/* Container de la cellule checkbox */
+td.checkbox-item-item {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+/* Checkbox DSFR custom dans tableaux - sélecteurs très spécifiques */
+.fr-table table.checkbox-array td.checkbox-item-item input[type="checkbox"],
+table.checkbox-array td.checkbox-item-item input[type="checkbox"],
+.answer-container table td input[type="checkbox"][id^="cbox"] {
+    /* Masquer le checkbox natif mais garder accessible */
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    /* Dimensions DSFR */
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+    min-width: 1.5rem !important;
+    min-height: 1.5rem !important;
+    /* Style DSFR */
+    border: 1px solid var(--border-action-high-blue-france) !important;
+    border-radius: 0.25rem !important;
+    background-color: var(--background-default-grey) !important;
+    /* Centrage */
+    display: inline-block !important;
+    vertical-align: middle !important;
+    margin: 0 auto !important;
+    /* Curseur */
+    cursor: pointer !important;
+    /* Position relative pour le checkmark */
+    position: relative !important;
+    /* Transition */
+    transition: background-color 0.1s ease, border-color 0.1s ease !important;
+    /* Reset flex qui pourrait interférer */
+    flex: none !important;
+}
+
+/* Hover sur checkbox */
+.fr-table table.checkbox-array td.checkbox-item-item input[type="checkbox"]:hover,
+table.checkbox-array td.checkbox-item-item input[type="checkbox"]:hover,
+.answer-container table td input[type="checkbox"][id^="cbox"]:hover {
+    background-color: var(--background-alt-blue-france) !important;
+}
+
+/* Focus visible pour accessibilité */
+.fr-table table.checkbox-array td.checkbox-item-item input[type="checkbox"]:focus-visible,
+table.checkbox-array td.checkbox-item-item input[type="checkbox"]:focus-visible,
+.answer-container table td input[type="checkbox"][id^="cbox"]:focus-visible {
+    outline: 2px solid var(--border-action-high-blue-france) !important;
+    outline-offset: 2px !important;
+}
+
+/* État coché - fond bleu */
+.fr-table table.checkbox-array td.checkbox-item-item input[type="checkbox"]:checked,
+table.checkbox-array td.checkbox-item-item input[type="checkbox"]:checked,
+.answer-container table td input[type="checkbox"][id^="cbox"]:checked {
+    background-color: var(--background-action-high-blue-france) !important;
+    border-color: var(--background-action-high-blue-france) !important;
+}
+
+/* Checkmark via pseudo-element */
+.fr-table table.checkbox-array td.checkbox-item-item input[type="checkbox"]:checked::after,
+table.checkbox-array td.checkbox-item-item input[type="checkbox"]:checked::after,
+.answer-container table td input[type="checkbox"][id^="cbox"]:checked::after {
+    content: "" !important;
+    position: absolute !important;
+    left: 0.45rem !important;
+    top: 0.2rem !important;
+    width: 0.4rem !important;
+    height: 0.7rem !important;
+    border: solid white !important;
+    border-width: 0 2px 2px 0 !important;
+    transform: rotate(45deg) !important;
+}
+
+/* ============================================
+   BLOCS QUESTIONS - Style Card DSFR
+   ============================================ */
+
+.question-container,
+.group-description-card {
+    background-color: var(--background-raised-grey);
+    border: 1px solid var(--border-default-grey);
+    border-radius: 0;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--overlap-shadow);
+}
+
+/* Questions conditionnelles - EM ajoute ces classes */
+/* Issue #15: Affichage dynamique */
+.ls-hidden,
+.ls-irrelevant {
+    display: none !important;
+}
+
+/* Animation pour les questions conditionnelles qui apparaissent */
+.question-container {
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+}
+
+/* Quand une question devient visible (classe ls-irrelevant retirée) */
+.question-container:not(.ls-irrelevant):not(.ls-hidden) {
+    opacity: 1;
+}
+
+/* État initial avant animation (pour JS) */
+.question-container.ls-animating-in {
+    opacity: 0;
+}
+
+/* Assurer que les questions cachées ne prennent pas d'espace */
+.group-container .ls-irrelevant,
+.group-container .ls-hidden,
+[id^="question"] .ls-irrelevant,
+[id^="question"] .ls-hidden {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+/* ============================================
+   MESSAGES VALIDATION - Simple
+   ============================================ */
+
+/* Copier EXACTEMENT le style fr-message DSFR */
+.ls-questionhelp,
+.ls-question-message {
+    /* Base fr-message */
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+    margin-top: 0.25rem;
+    padding: 0;
+    display: block;
+}
+
+.question-valid-container {
+    margin-top: 0.5rem;
+}
+
+/* Info (bleu France DSFR) */
+.ls-em-success,
+.ls-em-tip:not(.ls-em-error):not(.em_num_answers) {
+    color: var(--text-action-high-blue-france) !important;
+}
+
+/* Erreur (rouge DSFR) */
+.ls-em-error {
+    color: var(--error-425) !important;
+}
+
+/* Warning (orange DSFR warning-main-525) */
+.em_num_answers,
+.em_validation_q,
+.em_commented_checkbox {
+    color: var(--warning-425) !important;
+}
+
+/* ============================================
+   SLIDERS - Couleurs DSFR (legacy Bootstrap)
+   ============================================ */
+
+.slider-track {
+    background-color: var(--background-disabled-grey);
+    height: 4px;
+}
+
+.slider-selection {
+    background-color: var(--background-action-high-blue-france) !important;
+}
+
+.slider-handle {
+    background-color: var(--background-action-high-blue-france) !important;
+    border: 2px solid var(--background-default-grey);
+    box-shadow: var(--raised-shadow);
+}
+
+.slider-handle:hover {
+    background-color: var(--background-action-high-blue-france-hover) !important;
+}
+
+/* ============================================
+   DSFR RANGE (HTML5 native sliders)
+   ============================================ */
+
+/* Reduce margin for range groups inside slider items */
+.ls-slider-item-row .fr-range-group {
+    margin-bottom: 0;
+}
+
+/* Style the range output value display */
+.fr-range__output {
+    font-weight: 700;
+    color: var(--text-action-high-blue-france);
+}
+
+/* Ensure text-end utility works for right-aligned labels */
+.text-end {
+    text-align: right !important;
+}
+
+/* ============================================
+   LABELS - Alignement gauche
+   ============================================ */
+
+/* Override base.css qui met text-align: right */
+.form-horizontal .control-label {
+    text-align: left !important;
+}
+
+/* ============================================
+   ALERTES - DSFR Style
+   ============================================ */
+
+.alert {
+    padding: 1rem 1.5rem;
+    border-left: 4px solid;
+    border-radius: 0;
+}
+
+.alert-warning {
+    background-color: var(--background-contrast-warning);
+    border-left-color: var(--warning-425);
+}
+
+.alert .h4,
+.alert strong {
+    color: var(--error-425) !important;
+}
+
+/* Cartes d'erreur Bootstrap → DSFR */
+.card {
+    border: 1px solid var(--border-default-grey);
+    border-radius: 0;
+    box-shadow: var(--raised-shadow);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-title {
+    margin-bottom: 1rem;
+}
+
+/* ============================================
+   INPUTS - Bordures DSFR
+   ============================================ */
+
+/*
+ * SUPPRIMÉ - Les styles des inputs sont maintenant gérés dans theme.css
+ * pour éviter les conflits avec Bootstrap et assurer la conformité DSFR
+ * Voir theme.css lignes 342-452 pour les styles DSFR complets
+ */
+
+/* ============================================
+   BOUTONS NAVIGATION - Secondary
+   ============================================ */
+
+.fr-btn--secondary {
+    background-color: transparent !important;
+    color: var(--text-action-high-blue-france) !important;
+    border: 1px solid var(--border-action-high-blue-france) !important;
+    box-shadow: inset 0 0 0 1px var(--border-action-high-blue-france) !important;
+}
+
+.fr-btn--secondary:hover {
+    background-color: var(--background-action-low-blue-france-hover) !important;
+}
+
+/* ============================================
+   QUESTION - Code/numéro de question
+   ============================================ */
+
+/* L'affichage du code/numéro est contrôlé par l'option du thème showquestioncode */
+/* dans question_container.twig */
+
+/* Style pour l'affichage du code de question (classe question-code-display) */
+.question-code-display {
+    color: #666666 !important; /* Gris foncé, fallback si variable non définie */
+    color: var(--text-mention-grey, #666666) !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    font-size: 0.75rem !important;
+}
+
+.question-code-display .question-code,
+.question-code-display .question-number {
+    font-weight: 500 !important;
+    display: inline !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: inherit !important;
+}
+
+/* ============================================
+   RANKING QUESTIONS - DSFR Styles
+   ============================================ */
+
+/* List group (Bootstrap classes used by vanilla ranking) */
+.list-group {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0.5rem;
+    background-color: var(--background-alt-grey);
+    border: 1px solid var(--border-default-grey);
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+}
+
+.list-group-item:hover {
+    background-color: var(--background-action-low-blue-france-hover);
+    border-color: var(--border-action-high-blue-france);
+}
+
+/* Focus visible pour accessibilité clavier */
+.list-group-item:focus {
+    outline: 2px solid var(--border-action-high-blue-france);
+    outline-offset: 2px;
+    background-color: var(--background-action-low-blue-france-hover);
+}
+
+/* Focus-visible moderne (navigateurs récents) */
+.list-group-item:focus-visible {
+    outline: 2px solid var(--border-action-high-blue-france);
+    outline-offset: 2px;
+    background-color: var(--background-action-low-blue-france-hover);
+}
+
+/* Retirer l'outline au clic (gardé au focus clavier) */
+.list-group-item:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Ranking items with drag handle */
+.sortable-item {
+    user-select: none;
+}
+
+.sortable-item.grabable:hover {
+    cursor: grab;
+}
+
+.sortable-item.grabable:active {
+    cursor: grabbing;
+}
+
+/* Drag handle icon */
+.selector__dragHandle {
+    color: #666;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+}
+
+.sortable-item:hover .selector__dragHandle {
+    opacity: 1;
+}
+
+/* Sortable placeholder during drag */
+.sortable-ghost {
+    opacity: 0.4;
+    background-color: var(--background-disabled-grey);
+}
+
+.sortable-chosen {
+    background-color: var(--background-action-low-blue-france-hover) !important;
+    border-color: var(--border-action-high-blue-france) !important;
+}
+
+/* Subtitles for lists */
+.sortable-subtitle {
+    display: block;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+/* Empty state */
+.ls-remove {
+    min-height: 50px;
+    border: 2px dashed var(--border-default-grey);
+    background-color: var(--background-alt-grey);
+}
+
+/* Ranking columns spacing */
+.ranking-available-items,
+.ranking-sorted-items {
+    min-height: 100px;
+}
+
+/* Hide elements in no-JS mode */
+.ls-no-js-hidden {
+    display: block;
+}
+
+.ls-js-hidden-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Float utility */
+.float-end {
+    float: right;
+}
+
+/* Hidden utility */
+.d-none {
+    display: none !important;
+}
+
+/* ============================================
+   ALERTES DSFR DE VALIDATION
+   ============================================ */
+
+/* Alerte de validation convertie depuis modale Bootstrap */
+.dsfr-validation-alert {
+    margin-bottom: 2rem;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animation de fade-out */
+.fr-alert--fade-out {
+    animation: fadeOut 0.5s ease-out forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+/* Espacement du bouton fermer dans l'alerte */
+.fr-alert .fr-btn--close {
+    margin-top: 1rem;
+}
+
+/* Groupe de boutons dans les alertes */
+.fr-alert .fr-btns-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.fr-alert .fr-btns-group button {
+    flex: 0 1 auto;
+}
+
+/* Responsive : boutons en colonne sur mobile */
+@media (max-width: 576px) {
+    .fr-alert .fr-btns-group {
+        flex-direction: column;
+    }
+
+    .fr-alert .fr-btns-group button {
+        width: 100%;
+    }
+}
+
+/* ============================================
+   MASQUER MODALES BOOTSTRAP VIDES
+   ============================================ */
+
+/* Masquer la modale Bootstrap par défaut */
+.modal {
+    display: none !important;
+}
+
+/* Ne l'afficher QUE si elle a du contenu valide ET la classe dsfr-show */
+.modal.dsfr-show {
+    display: block !important;
+}
+
+/* Supprimer le backdrop Bootstrap */
+.modal-backdrop {
+    display: none !important;
+}
+
+/* ============================================
+   VALIDATION DSFR - Questions en erreur
+   ============================================ */
+
+/* Les styles d'erreur sont DSFR natifs adaptés à l'architecture LimeSurvey :
+   - fr-input-group--error sur le conteneur fr-input-group
+   - fr-message--error dans fr-messages-group
+   - Liseret rouge sur tout le bloc question-container (au lieu de fr-input-group)
+   Voir custom.js pour la transformation automatique des erreurs LimeSurvey → DSFR
+*/
+
+/* Masquer les liserets DSFR natifs des fr-input-group (on les met sur question-container) */
+.question-container .fr-input-group--error::before,
+.question-container .fr-input-group--valid::before {
+    display: none !important;
+}
+
+/* Bordure transparente par défaut pour éviter le décalage lors des erreurs */
+.question-container {
+    border-left: 2px solid transparent;
+    padding-left: 1rem;
+    /* Transition douce ease-out pour le liseret rouge/vert */
+    transition: border-color 0.3s ease-out;
+}
+
+/* Liseret rouge DSFR sur tout le bloc question en erreur
+   Architecture LimeSurvey : le label est en dehors du fr-input-group,
+   donc on applique un seul liseret continu sur question-container.
+   La bordure existe déjà (transparente), on change juste sa couleur.
+*/
+.question-container.input-error,
+.question-container.fr-input-group--error {
+    border-left-color: var(--border-plain-error);
+}
+
+/* Liseret vert DSFR pour les champs valides */
+.question-container.input-valid,
+.question-container.fr-input-group--valid {
+    border-left-color: var(--border-plain-success);
+}
+
+/* Messages avec transition douce ease-out */
+.fr-messages-group {
+    transition: all 0.3s ease-out;
+}
+
+/* Message d'erreur */
+.fr-message--error {
+    color: var(--text-default-error);
+    transition: all 0.3s ease-out;
+}
+
+/* Message de succès/validation */
+.fr-message--valid {
+    color: var(--text-default-success);
+    transition: all 0.3s ease-out;
+}
+
+/* ============================================
+   RÉCAPITULATIF D'ERREURS PROGRESSIF
+   ============================================ */
+
+/* Transition douce pour le changement de type d'alerte */
+#dsfr-error-summary {
+    transition: all 0.3s ease-out;
+}
+
+/* Liste sans puces par défaut - Les icônes sont dans les liens DSFR */
+#dsfr-error-summary ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+/* Lignes d'erreur dans le récapitulatif - Utilisation des icônes DSFR natives */
+#dsfr-error-summary .error-item {
+    transition: all 0.3s ease-out;
+}
+
+/* Transition douce pour le changement d'icône dans les liens */
+#dsfr-error-summary .error-item a {
+    transition: all 0.3s ease-out;
+}
+
+/* Label de question obligatoire */
+.question-text-container .mandatory,
+.asterisk {
+    color: var(--text-default-error);
+    font-weight: bold;
+}
+
+/* Icône d'erreur (optionnel) */
+.fr-error-text::before {
+    content: "";
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ce0500'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z'/%3E%3C/svg%3E");
+    background-size: contain;
+    vertical-align: middle;
+}
+
+/* ============================================
+   MULTIPLE CHOICE WITH COMMENTS - Alignement
+   ============================================ */
+
+/* Aligner verticalement checkbox et champ de commentaire */
+.checkbox-text-item .fr-grid-row {
+    align-items: center;
+}
+
+/* Ajuster l'espacement du checkbox-group pour l'alignement */
+.checkbox-text-item .fr-checkbox-group {
+    margin-bottom: 0;
+}
+
+/* S'assurer que le champ input a la même hauteur visuelle */
+.checkbox-text-item .fr-input-group {
+    margin-bottom: 0;
+}
+
+/* Supprimer le ::after sur les labels des checkbox avec commentaires */
+.checkbox-text-item .fr-checkbox-group .fr-label::after {
+    content: none !important;
+    display: none !important;
+}
+
+/* ============================================
+   DATE PICKER - Alignement des séparateurs
+   ============================================ */
+
+/* Utilitaires Bootstrap manquants dans DSFR */
+.d-flex {
+    display: flex !important;
+}
+
+.align-items-center {
+    align-items: center !important;
+}
+
+.justify-content-center {
+    justify-content: center !important;
+}
+
+/* ============================================
+   INPUT TEXT - Alignement à gauche
+   ============================================ */
+
+/* Aligner le texte à gauche dans tous les champs texte */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+textarea,
+.fr-input {
+    text-align: left !important;
+}
+
+/* ============================================
+   QUESTIONS MULTIPLES - Masquer les puces de listes
+   ============================================ */
+
+/* Masquer les puces pour toutes les listes de sous-questions */
+.ls-answers.subquestion-list,
+.questions-list.text-list,
+.questions-list.number-list {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* S'assurer que les éléments <li> n'affichent pas de puces et sont collés à gauche */
+.ls-answers.subquestion-list li,
+.questions-list.text-list li,
+.questions-list.number-list li {
+    list-style-type: none !important;
+    margin: 0 0 1rem 0 !important;
+    padding: 0 !important;
+}
+
+/* Supprimer toutes les marges et padding sur les containers de questions */
+.ls-answers.subquestion-list .question-item,
+.ls-answers.subquestion-list .answer-item,
+.ls-answers.subquestion-list .text-item,
+.questions-list.text-list .question-item,
+.questions-list.text-list .answer-item,
+.questions-list.text-list .text-item,
+.questions-list.number-list .question-item,
+.questions-list.number-list .answer-item,
+.questions-list.number-list .text-item {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+}
+
+/* Supprimer les marges sur les labels dans les listes multiples */
+.ls-answers.subquestion-list .fr-label,
+.questions-list.text-list .fr-label,
+.questions-list.number-list .fr-label {
+    margin-left: 0 !important;
+}
+
+/* S'assurer que les grilles DSFR sont bien alignées à gauche */
+.ls-answers.subquestion-list .fr-grid-row,
+.questions-list.text-list .fr-grid-row,
+.questions-list.number-list .fr-grid-row {
+    margin-left: 0 !important;
+}
+
+/* Supprimer le padding du theme.css sur answer-container */
+.multiple-short-txt .ls-answers.subquestion-list,
+.multiple-short-txt .questions-list.text-list,
+.multiple-short-txt .questions-list.number-list {
+    padding: 0 !important;
+}
+
+.multiple-short-txt .ls-answers.subquestion-list ~ .answer-container,
+.multiple-short-txt .answer-container {
+    padding: 0 !important;
+}
+
+/* Supprimer les padding DSFR sur les colonnes dans les listes multiples */
+.ls-answers.subquestion-list .fr-grid-row--gutters > .fr-col,
+.ls-answers.subquestion-list .fr-grid-row--gutters > [class*=" fr-col-"],
+.ls-answers.subquestion-list .fr-grid-row--gutters > [class^="fr-col-"],
+.questions-list.text-list .fr-grid-row--gutters > .fr-col,
+.questions-list.text-list .fr-grid-row--gutters > [class*=" fr-col-"],
+.questions-list.text-list .fr-grid-row--gutters > [class^="fr-col-"],
+.questions-list.number-list .fr-grid-row--gutters > .fr-col,
+.questions-list.number-list .fr-grid-row--gutters > [class*=" fr-col-"],
+.questions-list.number-list .fr-grid-row--gutters > [class^="fr-col-"] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+/* ============================================
+   RADIO BUTTONS - DSFR Conformité
+   ============================================ */
+
+/* Masquer les puces sur les listes de radios (si elles existent encore) */
+.radio-list,
+.answers-list.radio-list {
+    list-style: none !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+}
+
+.radio-list li,
+.answers-list.radio-list li {
+    list-style-type: none !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+}
+
+/* S'assurer que les fr-fieldset__element sont bien espacés */
+.fr-fieldset__element {
+    margin-bottom: 1rem;
+}
+
+/* Inline variant pour radios en ligne */
+.fr-fieldset__element--inline {
+    display: inline-block;
+    margin-right: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+/* ============================================
+   VALIDATION MESSAGES
+   ============================================ */
+
+/* Masquer les messages de succès par défaut - ils ne s'affichent qu'après correction d'erreur */
+.dsfr-valid-message,
+.dsfr-file-valid-message {
+    display: none !important;
+}
+
+/* Afficher les messages de succès uniquement après correction d'erreur (géré par JS) */
+.question-container[data-had-error="true"] .dsfr-valid-message[style*="display: block"],
+.question-container[data-had-error="true"] .dsfr-file-valid-message[style*="display: block"] {
+    display: block !important;
+}
+
+/* Réserver l'espace pour les messages d'erreur (évite le layout shift) */
+.fr-messages-group {
+    min-height: 2rem; /* Hauteur approximative d'un message fr-message */
+}
+
+/* Quand il y a effectivement un message, le min-height s'ajuste naturellement */
+.fr-messages-group:empty {
+    min-height: 1.5rem; /* Plus petit quand vide pour ne pas prendre trop d'espace */
+}
+
+/* Masquer les messages d'erreur natifs LimeSurvey quand on a des fr-messages-group DSFR */
+.fr-input-group .error-message,
+.fr-input-group + .error-message {
+    display: none !important;
+}
+
+/* ============================================
+   CHAMPS OBLIGATOIRES - Astérisque rouge
+   ============================================ */
+
+/* Masquer les badges "Obligatoire" (tous types : info, warning, etc.) */
+.fr-badge[aria-label*="Mandatory"],
+.fr-badge[aria-label*="Obligatoire"] {
+    display: none !important;
+}
+
+/* Astérisque rouge pour les champs obligatoires (classe ajoutée par JavaScript)
+   NOTE: Pour les questions LimeSurvey, l'astérisque est injecté via DOM (span inline)
+   Ce CSS ::before sert de fallback pour d'autres cas (labels simples, captcha, etc.) */
+.has-required-field::before {
+    content: "* ";
+    color: var(--text-default-error);
+    font-weight: 700;
+    margin-right: 0.25rem;
+}
+
+/* TODO: Ajouter les styles spécifiques ici au fur et à mesure */
+
+/* ============================================
+   LOGO MARIANNE (DRAPEAU + BLOC)
+   ============================================ */
+
+/* Drapeau tricolore */
+.fr-logo:before {
+    background-image: url(../files/logos/marianne-flag.svg), linear-gradient(90deg, #000091, #000091 50%, #e1000f 0, #e1000f), linear-gradient(90deg, #000, #000);
+    background-position: 0 -0.0625rem, 0 0, 0 0;
+    background-repeat: no-repeat, no-repeat, no-repeat;
+    background-size: 2.75rem 1.125rem, 2.75rem 1rem, 0;
+    content: "";
+    display: block !important;
+    height: 1rem;
+    margin-bottom: 0.333rem;
+    width: 2.75rem;
+    box-shadow: 0 0 0 1px #fff;
+}
+
+/* Bloc graphique Marianne (Liberté Égalité Fraternité) */
+.fr-logo:after {
+    background-image: url(../files/logos/marianne-block.svg);
+    background-position: 0 calc(100% + 1.875rem);
+    background-repeat: no-repeat;
+    background-size: 5.25rem 3.75rem;
+    content: "";
+    display: block !important;
+    min-width: 2.625rem;
+    padding-top: 2.2083333333rem;
+}
+
+@media (min-width: 62em) {
+    .fr-logo:after {
+        background-position: -2.625rem 100%;
+    }
+}
+
+/* ============================================
+   PROTECTION ANTI-BOT (Alternative au CAPTCHA)
+   ============================================ */
+
+/* Conteneur principal de la page anti-bot */
+#antibot-challenge-container {
+    min-height: 50vh;
+}
+
+#antibot-challenge-container > div {
+    width: 100%;
+}
+
+/* Boutons anti-bot - s'assurer qu'ils ne sont pas coupés */
+#antibot-challenge-container .fr-btns-group {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#antibot-challenge-container .fr-btn {
+    white-space: normal;
+    text-align: center;
+}
+
+/* Champs honeypot - invisibles pour les humains */
+.antibot-honeypot {
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Bouton désactivé pendant le timer */
+#antibot-submit-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Transitions pour le basculement entre pages */
+#antibot-page-wrapper,
+#welcome-page-wrapper {
+    transition: opacity 0.3s ease;
+}
+
+/* Animation de succès sur la réponse */
+#antibot-question-group.fr-input-group--valid .fr-input {
+    animation: validPulse 0.3s ease;
+}
+
+@keyframes validPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+/* Style du compteur */
+#antibot-countdown {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ============================================
+   CHECKBOX CHECKMARK - Version sans data-uri
+   ============================================ */
+
+/* Le DSFR no-datauri met --data-uri-svg: none; sur les checkboxes.
+   On référence le fichier SVG externe pour compatibilité CSP */
+.fr-checkbox-group input[type="checkbox"]:checked + label::before {
+    --data-uri-svg: url("../files/icons/system/checkbox-checkmark.svg");
+}
+
+/* ============================================
+   RADIO BUTTONS DSFR DANS TABLEAUX
+   ============================================ */
+
+/* Style des radio buttons UNIQUEMENT dans les cellules de tableaux (td/th) */
+/* Les radios listradio sont dans des <div>, pas des <table>, donc non affectés */
+/* IMPORTANT: Cibler UNIQUEMENT td et th pour éviter tout conflit */
+table td > input[type="radio"],
+table th > input[type="radio"],
+td.answer-item input[type="radio"],
+td.radio-item input[type="radio"],
+.dsfr-radio-table {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+    min-width: 1.5rem !important;
+    min-height: 1.5rem !important;
+    border: 1px solid var(--border-action-high-blue-france) !important;
+    border-radius: 50% !important;
+    background-color: var(--background-default-grey) !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    vertical-align: middle;
+    /* Surcharge DSFR qui masque les inputs */
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 1;
+    margin: 0 auto;
+    display: block;
+}
+
+table td > input[type="radio"]:hover,
+table th > input[type="radio"]:hover,
+td.answer-item input[type="radio"]:hover,
+td.radio-item input[type="radio"]:hover,
+.dsfr-radio-table:hover {
+    border-color: var(--border-action-high-blue-france-hover) !important;
+    background-color: var(--background-alt-grey) !important;
+}
+
+table td > input[type="radio"]:focus,
+table th > input[type="radio"]:focus,
+td.answer-item input[type="radio"]:focus,
+td.radio-item input[type="radio"]:focus,
+.dsfr-radio-table:focus {
+    outline: 2px solid var(--focus) !important;
+    outline-offset: 2px !important;
+}
+
+table td > input[type="radio"]:checked,
+table th > input[type="radio"]:checked,
+td.answer-item input[type="radio"]:checked,
+td.radio-item input[type="radio"]:checked,
+.dsfr-radio-table:checked {
+    border-color: #000091 !important;
+    background-color: #000091 !important;
+    box-shadow: inset 0 0 0 5px #FFF !important;
+}
+
+table td > input[type="radio"]:checked:hover,
+table th > input[type="radio"]:checked:hover,
+td.answer-item input[type="radio"]:checked:hover,
+td.radio-item input[type="radio"]:checked:hover,
+.dsfr-radio-table:checked:hover {
+    background-color: #1212FF !important;
+    border-color: #1212FF !important;
+}
+
+/* Centrage dans les cellules de tableau */
+td.answer-item.radio-item {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Ligne en erreur */
+.ls-error-mandatory table td > input[type="radio"],
+.ls-error-mandatory table th > input[type="radio"],
+.ls-error-mandatory td.answer-item input[type="radio"],
+.ls-error-mandatory td.radio-item input[type="radio"],
+.ls-error-mandatory .dsfr-radio-table {
+    border-color: var(--border-plain-error) !important;
+}
+
+.ls-error-mandatory table td > input[type="radio"]:checked,
+.ls-error-mandatory table th > input[type="radio"]:checked,
+.ls-error-mandatory td.answer-item input[type="radio"]:checked,
+.ls-error-mandatory td.radio-item input[type="radio"]:checked,
+.ls-error-mandatory .dsfr-radio-table:checked {
+    background-color: var(--border-plain-error) !important;
+}
+
+/* ============================================
+   LINÉARISATION TABLEAUX MOBILE - PRIORITÉ ABSOLUE
+   ============================================ */
+
+/*
+ * IMPORTANT : Cette section doit rester dans custom.css (chargé en dernier)
+ * pour garantir la priorité absolue sur les règles DSFR natives.
+ *
+ * Déplacé depuis theme.css pour corriger le problème d'ordre de cascade
+ * où les règles DSFR écrasaient la linéarisation mobile.
+ */
+
+@media (max-width: 767px) {
+    /* ============================================
+       LINÉARISATION TABLEAUX EN VUE MOBILE
+       Force l'affichage en cartes verticales
+       ============================================ */
+
+    /* Masquer le tableau natif et forcer le mode bloc */
+    .fr-table table,
+    .fr-table--bordered table,
+    div[class*="fr-table"] table,
+    table.radio-array,
+    table.questions-list,
+    table.dropdown-array,
+    table.table {
+        border: 0 !important;
+        display: block !important;
+    }
+
+    /* Cacher complètement les en-têtes de colonnes */
+    .fr-table table thead,
+    .fr-table--bordered table thead,
+    div[class*="fr-table"] table thead,
+    table.radio-array thead,
+    table.questions-list thead,
+    table.dropdown-array thead,
+    table.table thead {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    /* Tbody en mode bloc */
+    .fr-table table tbody,
+    .fr-table--bordered table tbody,
+    div[class*="fr-table"] table tbody,
+    table.radio-array tbody,
+    table.questions-list tbody,
+    table.dropdown-array tbody,
+    table.table tbody {
+        display: block !important;
+    }
+
+    /* Chaque ligne devient une carte */
+    .fr-table table tbody tr,
+    .fr-table--bordered table tbody tr,
+    div[class*="fr-table"] table tbody tr,
+    table.radio-array tbody tr,
+    table.questions-list tbody tr,
+    table.dropdown-array tbody tr,
+    table.table tbody tr {
+        display: block !important;
+        margin-bottom: 1.5rem !important;
+        padding: 0.75rem !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Fix padding-left pour les TR avec class radio-list/answers-list */
+    .fr-table table tbody tr.radio-list,
+    .fr-table table tbody tr.answers-list,
+    .fr-table--bordered table tbody tr.radio-list,
+    .fr-table--bordered table tbody tr.answers-list,
+    table.radio-array tbody tr.radio-list,
+    table.radio-array tbody tr.answers-list,
+    table.questions-list tbody tr.radio-list,
+    table.questions-list tbody tr.answers-list {
+        padding-left: 0.75rem !important;
+    }
+
+    /* Toutes les cellules en mode bloc vertical */
+    .fr-table table tbody tr th,
+    .fr-table--bordered table tbody tr th,
+    .fr-table table tbody tr td,
+    .fr-table--bordered table tbody tr td,
+    div[class*="fr-table"] table tbody tr th,
+    div[class*="fr-table"] table tbody tr td,
+    table.radio-array tbody tr th,
+    table.radio-array tbody tr td,
+    table.questions-list tbody tr th,
+    table.questions-list tbody tr td,
+    table.dropdown-array tbody tr th,
+    table.dropdown-array tbody tr td,
+    table.table tbody tr th,
+    table.table tbody tr td {
+        display: block !important;
+        text-align: left !important;
+        border: none !important;
+        padding: 0.25rem 0 !important;
+        margin: 0 !important;
+        background-color: transparent !important;
+        width: 100% !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        box-sizing: border-box !important;
+    }
+
+    /* ACCESSIBILITÉ : Afficher les labels fr-sr-only ET visually-hidden INLINE dans les CELLULES (td) des tableaux linéarisés */
+    .fr-table table tbody tr td .fr-sr-only,
+    .fr-table--bordered table tbody tr td .fr-sr-only,
+    table.radio-array tbody tr td .fr-sr-only,
+    table.questions-list tbody tr td .fr-sr-only,
+    table.dropdown-array tbody tr td .fr-sr-only,
+    table.table tbody tr td .fr-sr-only,
+    .fr-table table tbody tr td .visually-hidden,
+    .fr-table--bordered table tbody tr td .visually-hidden,
+    table.radio-array tbody tr td .visually-hidden,
+    table.questions-list tbody tr td .visually-hidden,
+    table.dropdown-array tbody tr td .visually-hidden,
+    table.table tbody tr td .visually-hidden,
+    .fr-table table tbody tr td .ls-label-xs-visibility,
+    .fr-table--bordered table tbody tr td .ls-label-xs-visibility,
+    table.radio-array tbody tr td .ls-label-xs-visibility,
+    table.questions-list tbody tr td .ls-label-xs-visibility,
+    table.dropdown-array tbody tr td .ls-label-xs-visibility,
+    table.table tbody tr td .ls-label-xs-visibility {
+        position: static !important;
+        width: auto !important;
+        height: auto !important;
+        padding: 0 !important;
+        margin: 0 0 0 0.5rem !important; /* Marge à gauche pour espace après le radio */
+        overflow: visible !important;
+        clip: auto !important;
+        white-space: normal !important;
+        border: 0 !important;
+        display: inline-block !important; /* INLINE au lieu de BLOCK pour alignement horizontal */
+        font-size: 0.875rem !important;
+        font-weight: 500 !important; /* Un peu plus gras pour visibilité */
+        color: var(--text-label-grey) !important;
+        line-height: 1.5rem !important;
+        vertical-align: middle !important; /* Alignement vertical avec le radio */
+    }
+
+    /* Cellules radio-item en mode flex pour alignement horizontal label + radio */
+    .fr-table table tbody tr td.answer-item.radio-item,
+    .fr-table table tbody tr td.answer_cell_I,
+    .fr-table table tbody tr td.answer_cell_S,
+    .fr-table table tbody tr td.answer_cell_D,
+    .fr-table table tbody tr td[class*="answer_cell_"],
+    .fr-table--bordered table tbody tr td.answer-item.radio-item,
+    .fr-table--bordered table tbody tr td[class*="answer_cell_"],
+    table.radio-array tbody tr td.answer-item.radio-item,
+    table.radio-array tbody tr td[class*="answer_cell_"],
+    table.questions-list tbody tr td.answer-item.radio-item,
+    table.questions-list tbody tr td[class*="answer_cell_"],
+    table.dropdown-array tbody tr td.answer-item.radio-item,
+    table.dropdown-array tbody tr td[class*="answer_cell_"],
+    table.table tbody tr td.answer-item.radio-item,
+    table.table tbody tr td[class*="answer_cell_"] {
+        display: flex !important;
+        align-items: center !important;
+        gap: 0 !important; /* Pas de gap, la marge du label suffit */
+        padding: 0.5rem 0 !important;
+    }
+
+    /* Radio avant le label dans l'ordre visuel (flexbox order) */
+    .fr-table table tbody tr td.answer-item.radio-item input[type="radio"],
+    .fr-table table tbody tr td.answer-item.radio-item input[type="checkbox"],
+    .fr-table table tbody tr td[class*="answer_cell_"] input[type="radio"],
+    .fr-table table tbody tr td[class*="answer_cell_"] input[type="checkbox"],
+    .fr-table--bordered table tbody tr td.answer-item.radio-item input[type="radio"],
+    .fr-table--bordered table tbody tr td.answer-item.radio-item input[type="checkbox"],
+    .fr-table--bordered table tbody tr td[class*="answer_cell_"] input[type="radio"],
+    .fr-table--bordered table tbody tr td[class*="answer_cell_"] input[type="checkbox"],
+    table.radio-array tbody tr td.answer-item.radio-item input[type="radio"],
+    table.radio-array tbody tr td.answer-item.radio-item input[type="checkbox"],
+    table.radio-array tbody tr td[class*="answer_cell_"] input[type="radio"],
+    table.radio-array tbody tr td[class*="answer_cell_"] input[type="checkbox"],
+    table.questions-list tbody tr td.answer-item.radio-item input[type="radio"],
+    table.questions-list tbody tr td.answer-item.radio-item input[type="checkbox"],
+    table.questions-list tbody tr td[class*="answer_cell_"] input[type="radio"],
+    table.questions-list tbody tr td[class*="answer_cell_"] input[type="checkbox"] {
+        order: -1 !important; /* Mettre le radio/checkbox en premier */
+    }
+
+    /* Label après le radio */
+    .fr-table table tbody tr td.answer-item.radio-item label,
+    .fr-table table tbody tr td[class*="answer_cell_"] label,
+    .fr-table--bordered table tbody tr td.answer-item.radio-item label,
+    .fr-table--bordered table tbody tr td[class*="answer_cell_"] label,
+    table.radio-array tbody tr td.answer-item.radio-item label,
+    table.radio-array tbody tr td[class*="answer_cell_"] label,
+    table.questions-list tbody tr td.answer-item.radio-item label,
+    table.questions-list tbody tr td[class*="answer_cell_"] label {
+        order: 1 !important; /* Label après le radio */
+        flex-shrink: 1 !important; /* Permettre au label de rétrécir si nécessaire */
+    }
+
+    /* Radio qui ne rétrécit pas */
+    .fr-table table tbody tr td.answer-item.radio-item input[type="radio"],
+    .fr-table table tbody tr td[class*="answer_cell_"] input[type="radio"],
+    .fr-table table tbody tr td.answer-item.radio-item input[type="checkbox"],
+    .fr-table table tbody tr td[class*="answer_cell_"] input[type="checkbox"],
+    .fr-table--bordered table tbody tr td.answer-item.radio-item input[type="radio"],
+    .fr-table--bordered table tbody tr td[class*="answer_cell_"] input[type="radio"],
+    .fr-table--bordered table tbody tr td.answer-item.radio-item input[type="checkbox"],
+    .fr-table--bordered table tbody tr td[class*="answer_cell_"] input[type="checkbox"],
+    table.radio-array tbody tr td.answer-item.radio-item input[type="radio"],
+    table.radio-array tbody tr td[class*="answer_cell_"] input[type="radio"],
+    table.radio-array tbody tr td.answer-item.radio-item input[type="checkbox"],
+    table.radio-array tbody tr td[class*="answer_cell_"] input[type="checkbox"],
+    table.questions-list tbody tr td.answer-item.radio-item input[type="radio"],
+    table.questions-list tbody tr td[class*="answer_cell_"] input[type="radio"],
+    table.questions-list tbody tr td.answer-item.radio-item input[type="checkbox"],
+    table.questions-list tbody tr td[class*="answer_cell_"] input[type="checkbox"] {
+        flex-shrink: 0 !important; /* Ne pas rétrécir le radio */
+        margin: 0 !important;
+        vertical-align: middle !important;
+    }
+
+    /* ============================================
+       ORDRE SPÉCIFIQUE POUR SELECT/TEXT INPUTS
+       Label AVANT input (ordre naturel de formulaire)
+       Largeurs normalisées : label 35%, input 65%
+       ============================================ */
+
+    /* Cellules dropdown/select ET text-item : label en premier, input après */
+    .fr-table table tbody tr td.select-item,
+    .fr-table table tbody tr td.ls-dropdown-item,
+    .fr-table table tbody tr td.text-item,
+    .fr-table--bordered table tbody tr td.select-item,
+    .fr-table--bordered table tbody tr td.ls-dropdown-item,
+    .fr-table--bordered table tbody tr td.text-item,
+    table.dropdown-array tbody tr td.select-item,
+    table.dropdown-array tbody tr td.ls-dropdown-item,
+    table.dropdown-array tbody tr td.text-item,
+    table.subquestion-list tbody tr td.text-item {
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+    }
+
+    /* Label en premier pour les dropdowns et text-item - largeur fixe 35% */
+    .fr-table table tbody tr td.select-item label,
+    .fr-table table tbody tr td.ls-dropdown-item label,
+    .fr-table table tbody tr td.text-item > label,
+    .fr-table--bordered table tbody tr td.select-item label,
+    .fr-table--bordered table tbody tr td.ls-dropdown-item label,
+    .fr-table--bordered table tbody tr td.text-item > label,
+    table.dropdown-array tbody tr td.select-item label,
+    table.dropdown-array tbody tr td.ls-dropdown-item label,
+    table.dropdown-array tbody tr td.text-item > label,
+    table.subquestion-list tbody tr td.text-item > label {
+        order: -1 !important; /* Label en premier */
+        margin-right: 0.5rem !important;
+        margin-left: 0 !important;
+        width: 35% !important;
+        min-width: 35% !important;
+        max-width: 35% !important;
+        flex: 0 0 35% !important;
+    }
+
+    /* Select/Input-group après le label - largeur 65% */
+    .fr-table table tbody tr td.select-item .fr-select-group,
+    .fr-table table tbody tr td.ls-dropdown-item .fr-select-group,
+    .fr-table table tbody tr td.text-item .fr-input-group,
+    .fr-table--bordered table tbody tr td.select-item .fr-select-group,
+    .fr-table--bordered table tbody tr td.ls-dropdown-item .fr-select-group,
+    .fr-table--bordered table tbody tr td.text-item .fr-input-group,
+    table.dropdown-array tbody tr td.select-item .fr-select-group,
+    table.dropdown-array tbody tr td.ls-dropdown-item .fr-select-group,
+    table.dropdown-array tbody tr td.text-item .fr-input-group,
+    table.subquestion-list tbody tr td.text-item .fr-input-group {
+        order: 1 !important;
+        width: 65% !important;
+        flex: 0 0 65% !important;
+    }
+
+    .fr-table table tbody tr td.select-item select,
+    .fr-table table tbody tr td.ls-dropdown-item select,
+    .fr-table--bordered table tbody tr td.select-item select,
+    .fr-table--bordered table tbody tr td.ls-dropdown-item select,
+    table.dropdown-array tbody tr td.select-item select,
+    table.dropdown-array tbody tr td.ls-dropdown-item select {
+        width: 100% !important;
+    }
+
+    /* Input dans text-item prend toute la largeur du fr-input-group */
+    .fr-table table tbody tr td.text-item .fr-input-group input.fr-input,
+    .fr-table--bordered table tbody tr td.text-item .fr-input-group input.fr-input,
+    table.dropdown-array tbody tr td.text-item .fr-input-group input.fr-input,
+    table.subquestion-list tbody tr td.text-item .fr-input-group input.fr-input {
+        width: 100% !important;
+    }
+
+    /* Cellules avec inputs texte (hors text-item) : label en premier */
+    .fr-table table tbody tr td:not(.text-item) .fr-input-group,
+    .fr-table--bordered table tbody tr td:not(.text-item) .fr-input-group,
+    table.dropdown-array tbody tr td:not(.text-item) .fr-input-group {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        flex-wrap: nowrap !important;
+    }
+
+    /* Label texte (hors text-item) - largeur fixe 35% */
+    .fr-table table tbody tr td:not(.text-item) .fr-input-group label,
+    .fr-table--bordered table tbody tr td:not(.text-item) .fr-input-group label,
+    table.dropdown-array tbody tr td:not(.text-item) .fr-input-group label {
+        order: -1 !important;
+        width: 35% !important;
+        min-width: 35% !important;
+        max-width: 35% !important;
+        flex: 0 0 35% !important;
+        margin: 0 !important;
+    }
+
+    /* Input texte (hors text-item) - largeur 65% */
+    .fr-table table tbody tr td:not(.text-item) .fr-input-group input.fr-input,
+    .fr-table--bordered table tbody tr td:not(.text-item) .fr-input-group input.fr-input,
+    table.dropdown-array tbody tr td:not(.text-item) .fr-input-group input.fr-input {
+        order: 1 !important;
+        width: 65% !important;
+        flex: 0 0 65% !important;
+    }
+
+    /* Header de ligne (th) mis en évidence */
+    .fr-table table tbody tr th,
+    .fr-table--bordered table tbody tr th,
+    div[class*="fr-table"] table tbody tr th,
+    table.radio-array tbody tr th,
+    table.questions-list tbody tr th,
+    table.dropdown-array tbody tr th,
+    table.table tbody tr th {
+        font-size: 1.125rem !important;
+        font-weight: 700 !important;
+        margin-bottom: 0.75rem !important;
+        padding-top: 0 !important;
+        padding-bottom: 0.75rem !important;
+        border-bottom: 1px solid var(--border-default-grey, #ddd) !important;
+        overflow-wrap: break-word !important;
+        word-break: break-word !important;
+    }
+
+    /* Les fr-input-group et fr-select-group doivent rester en bloc */
+    .fr-table table tbody tr td .fr-input-group,
+    .fr-table--bordered table tbody tr td .fr-input-group,
+    div[class*="fr-table"] table tbody tr td .fr-input-group,
+    table.radio-array tbody tr td .fr-input-group,
+    table.questions-list tbody tr td .fr-input-group,
+    table.dropdown-array tbody tr td .fr-input-group,
+    table.dropdown-array tbody tr td .fr-select-group,
+    table.table tbody tr td .fr-input-group {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    /* Les inputs doivent prendre toute la largeur */
+    .fr-table table tbody tr td .fr-input,
+    .fr-table--bordered table tbody tr td .fr-input,
+    div[class*="fr-table"] table tbody tr td .fr-input,
+    table.radio-array tbody tr td .fr-input,
+    table.questions-list tbody tr td .fr-input,
+    table.dropdown-array tbody tr td .fr-input,
+    table.table tbody tr td .fr-input {
+        width: 100% !important;
+    }
+
+    /* Les selects doivent aussi prendre toute la largeur */
+    .fr-table table tbody tr td select,
+    .fr-table--bordered table tbody tr td select,
+    div[class*="fr-table"] table tbody tr td select,
+    table.radio-array tbody tr td select,
+    table.questions-list tbody tr td select,
+    table.dropdown-array tbody tr td select,
+    table.table tbody tr td select,
+    .fr-table table tbody tr td .fr-select,
+    .fr-table--bordered table tbody tr td .fr-select,
+    div[class*="fr-table"] table tbody tr td .fr-select,
+    table.radio-array tbody tr td .fr-select,
+    table.questions-list tbody tr td .fr-select,
+    table.dropdown-array tbody tr td .fr-select,
+    table.table tbody tr td .fr-select {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ============================================
+   BOOTSTRAP SELECT - ÉTATS DE SÉLECTION
+   Issue #07: Sélection invisible dans les listes déroulantes
+   ============================================ */
+
+/* État survolé dans les dropdowns Bootstrap */
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus,
+.bootstrap-select .dropdown-menu li:hover a,
+.bootstrap-select .dropdown-menu li:focus a {
+    background-color: var(--background-action-low-blue-france, #e3e3fd);
+    color: var(--text-action-high-blue-france, #000091);
+}
+
+/* État sélectionné dans les dropdowns Bootstrap */
+.dropdown-menu .dropdown-item.selected,
+.dropdown-menu .dropdown-item.active,
+.dropdown-menu .dropdown-item:active,
+.bootstrap-select .dropdown-menu li.selected a,
+.bootstrap-select .dropdown-menu li.active a {
+    background-color: var(--background-action-high-blue-france, #000091);
+    color: var(--text-inverted-blue-france, #fff);
+}
+
+/* Style pour l'option sélectionnée dans select natif DSFR */
+select.fr-select option:checked,
+.fr-select-group select option:checked {
+    background-color: var(--background-action-low-blue-france, #e3e3fd);
+}
+
+/* Assurer la visibilité du texte sélectionné */
+.bootstrap-select .filter-option-inner-inner {
+    color: var(--text-default-grey, #161616);
+}
+
+/* Focus visible sur les selects */
+select.fr-select:focus,
+.fr-select-group select:focus {
+    outline: 2px solid var(--border-action-high-blue-france, #000091);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   COLONNES POUR LES OPTIONS (RADIO/CHECKBOX)
+   Issue #11: Affichage colonnes non respecté
+   ============================================ */
+
+/* Layout en colonnes via CSS Grid */
+.ls-columns {
+    display: grid;
+    gap: 0.5rem 1.5rem;
+}
+
+/* 2 colonnes */
+.ls-columns-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* 3 colonnes */
+.ls-columns-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* 4 colonnes */
+.ls-columns-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* 5 colonnes */
+.ls-columns-5 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+/* Responsive: une seule colonne sur mobile */
+@media (max-width: 576px) {
+    .ls-columns,
+    .ls-columns-2,
+    .ls-columns-3,
+    .ls-columns-4,
+    .ls-columns-5 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tablette: maximum 2 colonnes */
+@media (min-width: 577px) and (max-width: 768px) {
+    .ls-columns-3,
+    .ls-columns-4,
+    .ls-columns-5 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Les éléments dans la grille doivent être alignés */
+.ls-columns > .fr-fieldset__element,
+.ls-columns > .fr-checkbox-group,
+.ls-columns > .fr-radio-group,
+.ls-columns > div {
+    margin: 0;
+}
+
+/* ============================================
+   OUI/NON - ALIGNEMENT DES LABELS
+   Issue #13: Oui/Non alignement
+   ============================================ */
+
+/* Alignement vertical des icônes et texte dans les labels Oui/Non */
+.question-yesno .fr-radio-group .fr-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Style des icônes Oui/Non */
+.question-yesno .fr-label [class^="ri-"],
+.question-yesno .fr-label .ri-checkbox-circle-line,
+.question-yesno .fr-label .ri-close-circle-line {
+    font-size: 1.25rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+/* Couleurs des icônes */
+.question-yesno .fr-label .ri-checkbox-circle-line {
+    color: var(--text-default-success, #18753C);
+}
+
+.question-yesno .fr-label .ri-close-circle-line {
+    color: var(--text-default-error, #CE0500);
+}
+
+/* Assurer l'alignement des radio-group dans la grille */
+.question-yesno .fr-grid-row .fr-radio-group {
+    display: flex;
+    align-items: flex-start;
+}
+
+/* Espacement égal entre les options */
+.question-yesno .fr-grid-row--gutters > [class*="fr-col"] {
+    margin-bottom: 1rem;
+}
+
+/* ============================================
+   BOOTSTRAP BUTTONS → DSFR STYLE
+   Question theme "Bootstrap buttons" avec apparence DSFR
+   ============================================ */
+
+/* Conteneur des boutons - grille responsive */
+.bootstrap-buttons-div {
+    padding: 0.25rem;
+}
+
+/* Label bouton - transformer btn-primary Bootstrap en style DSFR */
+.bootstrap-buttons-div label.btn {
+    /* Base DSFR */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.5rem;
+    min-height: 2.5rem;
+    border-radius: 0;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+
+    /* Style DSFR secondaire par défaut (non sélectionné) */
+    background-color: transparent !important;
+    color: var(--text-action-high-blue-france, #000091) !important;
+    border: 1px solid var(--border-action-high-blue-france, #000091) !important;
+    box-shadow: inset 0 0 0 1px var(--border-action-high-blue-france, #000091) !important;
+}
+
+/* Hover - style DSFR secondaire */
+.bootstrap-buttons-div label.btn:hover {
+    background-color: var(--background-action-low-blue-france-hover, #e3e3fd) !important;
+}
+
+/* Focus - outline DSFR */
+.bootstrap-buttons-div input.btn-check:focus + label.btn,
+.bootstrap-buttons-div input.button-item:focus + label.btn {
+    outline: 2px solid var(--border-action-high-blue-france, #000091);
+    outline-offset: 2px;
+}
+
+/* État sélectionné - style DSFR primaire (bleu plein) */
+.bootstrap-buttons-div .form-check.active label.btn,
+.bootstrap-buttons-div input.btn-check:checked + label.btn,
+.bootstrap-buttons-div input.button-item:checked + label.btn {
+    background-color: var(--background-action-high-blue-france, #000091) !important;
+    color: var(--text-inverted-blue-france, #fff) !important;
+    border-color: var(--background-action-high-blue-france, #000091) !important;
+    box-shadow: none !important;
+}
+
+/* Hover sur état sélectionné */
+.bootstrap-buttons-div .form-check.active label.btn:hover,
+.bootstrap-buttons-div input.btn-check:checked + label.btn:hover,
+.bootstrap-buttons-div input.button-item:checked + label.btn:hover {
+    background-color: var(--background-action-high-blue-france-hover, #1212ff) !important;
+}
+
+/* Supprimer les classes Bootstrap résiduelles */
+.bootstrap-buttons-div label.btn-primary,
+.bootstrap-buttons-div label.btn-secondary,
+.bootstrap-buttons-div label.btn-outline-primary {
+    /* Les styles ci-dessus prennent le relais */
+}
+
+/* Responsive - pleine largeur sur mobile */
+@media (max-width: 576px) {
+    .bootstrap-buttons-div {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+/* ============================================
+   BOOTSTRAP BUTTONS MULTI → DSFR STYLE
+   Question theme "Bootstrap buttons" pour choix multiples
+   ============================================ */
+
+/* Les mêmes styles s'appliquent, avec indicateur visuel de sélection multiple */
+.bootstrap-buttons-div input[type="checkbox"]:checked + label.btn::before {
+    content: "";
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem;
+    background-color: currentColor;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+}
+
+/* ============================================
+   BOOTSTRAP DROPDOWN → DSFR SELECT STYLE
+   Question theme "Bootstrap dropdown" avec apparence DSFR
+   ============================================ */
+
+/* Transformer le select Bootstrap en style DSFR */
+.bootstrap-select .dropdown-toggle,
+.bootstrap-select > .btn,
+select.list-question-select {
+    /* Base DSFR select */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    padding: 0.5rem 2.5rem 0.5rem 1rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: var(--text-default-grey, #161616);
+    background-color: var(--background-contrast-grey, #eee);
+    border: none;
+    border-radius: 0.25rem 0.25rem 0 0;
+    box-shadow: inset 0 -2px 0 0 var(--border-plain-grey, #666);
+
+    /* Flèche DSFR */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23161616' d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.5rem;
+
+    cursor: pointer;
+    transition: box-shadow 0.2s ease;
+}
+
+/* Focus état DSFR */
+.bootstrap-select .dropdown-toggle:focus,
+.bootstrap-select > .btn:focus,
+select.list-question-select:focus {
+    outline: 2px solid var(--border-action-high-blue-france, #000091);
+    outline-offset: 2px;
+    box-shadow: inset 0 -2px 0 0 var(--border-action-high-blue-france, #000091);
+}
+
+/* Hover état */
+.bootstrap-select .dropdown-toggle:hover,
+.bootstrap-select > .btn:hover,
+select.list-question-select:hover {
+    box-shadow: inset 0 -2px 0 0 var(--border-action-high-blue-france, #000091);
+}
+
+/* Menu déroulant Bootstrap - style DSFR */
+.bootstrap-select .dropdown-menu {
+    border: 1px solid var(--border-default-grey, #ddd);
+    border-radius: 0;
+    box-shadow: var(--raised-shadow);
+    padding: 0;
+    margin-top: 0;
+}
+
+.bootstrap-select .dropdown-menu .dropdown-item,
+.bootstrap-select .dropdown-menu li a {
+    padding: 0.75rem 1rem;
+    color: var(--text-default-grey, #161616);
+    transition: background-color 0.2s ease;
+}
+
+/* Masquer les éléments de style Bootstrap non nécessaires */
+.bootstrap-select .dropdown-toggle::after {
+    display: none !important;
+}
+
+.bootstrap-select .filter-option {
+    display: flex;
+    align-items: center;
+}
+
+/* ============================================
+   TABLEAUX DSFR - 100% LARGEUR EN DESKTOP
+   ============================================ */
+
+/* Force tous les wrappers et tableaux DSFR à 100% de largeur */
+.ls-table-wrapper,
+.fr-table--responsive {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto; /* Scroll horizontal si tableau trop large */
+}
+
+.fr-table table,
+.fr-table--bordered table,
+table.fr-table,
+table.fr-table--bordered {
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: auto; /* Permet aux colonnes de s'adapter */
+}
+
+/* Tableaux avec colgroup défini - utiliser table-layout fixed pour respecter les largeurs */
+.array-flexible-dual-scale .fr-table table,
+.array-flexible-dual-scale table.ls-answers,
+.array-increase-same-decrease .fr-table table,
+.array-increase-same-decrease table.ls-answers,
+.array-multi-flexi .fr-table table,
+.array-multi-flexi table.ls-answers,
+[class*="array-"] .fr-table table,
+[class*="array-"] table.ls-answers {
+    table-layout: fixed !important;
+}
+
+/* Desktop uniquement - préserver l'affichage tableau normal */
+@media (min-width: 768px) {
+    .fr-table table,
+    .fr-table--bordered table,
+    table.fr-table,
+    table.fr-table--bordered {
+        display: table !important;
+    }
+
+    .fr-table table thead,
+    .fr-table--bordered table thead {
+        display: table-header-group !important;
+    }
+
+    .fr-table table tbody,
+    .fr-table--bordered table tbody {
+        display: table-row-group !important;
+    }
+
+    .fr-table table tbody tr,
+    .fr-table--bordered table tbody tr {
+        display: table-row !important;
+    }
+
+    .fr-table table tbody tr th,
+    .fr-table table tbody tr td,
+    .fr-table--bordered table tbody tr th,
+    .fr-table--bordered table tbody tr td {
+        display: table-cell !important;
+    }
+}
+
+/* ============================================
+   INPUT ON DEMAND - Saisie à la demande
+   ============================================ */
+
+/* Container principal */
+.selector--inputondemand-list {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Chaque ligne de saisie */
+.selector--inputondemand-list-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+/* Respecter d-none pour les éléments cachés (input on demand) */
+.selector--inputondemand-list-item.d-none {
+    display: none !important;
+}
+
+/* Label DSFR */
+.selector--inputondemand-list-item > label {
+    flex: 0 0 auto;
+    min-width: 120px;
+    font-weight: 500;
+    color: var(--text-label-grey);
+    text-align: left !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Container input */
+.selector--inputondemand-list-item > div {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Input DSFR */
+.selector--inputondemand-list-input {
+    width: 100% !important;
+    padding: 0.5rem 1rem !important;
+    font-size: 1rem !important;
+    line-height: 1.5rem !important;
+    color: var(--text-default-grey) !important;
+    background-color: var(--background-contrast-grey) !important;
+    border: none !important;
+    border-radius: 0.25rem 0.25rem 0 0 !important;
+    box-shadow: inset 0 -2px 0 0 var(--border-plain-grey) !important;
+    transition: box-shadow 0.2s ease !important;
+}
+
+.selector--inputondemand-list-input:focus {
+    outline: none !important;
+    box-shadow: inset 0 -2px 0 0 var(--border-plain-info), 0 0 0 2px var(--focus) !important;
+}
+
+/* Bouton Ajouter une ligne - DSFR secondary */
+.selector--inputondemand-addlinebutton {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    padding: 0.5rem 1rem !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    color: var(--text-action-high-blue-france) !important;
+    background-color: transparent !important;
+    border: 1px solid var(--border-action-high-blue-france) !important;
+    border-radius: 0 !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease, color 0.2s ease !important;
+}
+
+.selector--inputondemand-addlinebutton:hover {
+    background-color: var(--background-action-low-blue-france-hover) !important;
+}
+
+.selector--inputondemand-addlinebutton:focus {
+    outline: 2px solid var(--focus) !important;
+    outline-offset: 2px !important;
+}
+
+/* Icône dans le bouton */
+.selector--inputondemand-addlinebutton i {
+    font-size: 1rem;
+}
+
+/* ============================================
+   IMAGES DANS LES RÉPONSES DE QUESTIONS
+   ============================================ */
+
+/* Style de base pour toutes les images dans les réponses */
+.answer-item img,
+.fr-fieldset__content img,
+.answertext img,
+.fr-checkbox-group img,
+.fr-radio-group img,
+.question-text-container img,
+.ls-question-text img,
+.ls-question-help img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0.5rem 0;
+    border-radius: var(--border-radius, 0.25rem); /* Border radius DSFR */
+    box-shadow: var(--overlap-shadow, 0 8px 16px rgba(0,0,0,0.1)); /* Ombre légère DSFR */
+}
+
+/* Images dans les labels de checkbox/radio */
+.fr-checkbox-group .fr-label img,
+.fr-radio-group .fr-label img {
+    margin: 0.5rem 0 1rem 0;
+}
+
+/* ============================================
+   5-POINT CHOICE DISPLAY MODES
+   ============================================ */
+
+/* Hide default LimeSurvey star/emoji markup when DSFR theme is used */
+.choice-5-pt-radio .stars-list,
+.choice-5-pt-radio .emoji-list,
+.choice-5-pt-radio .ls-emojislider {
+    display: none !important;
+}
+
+/* Force display of DSFR fieldset even when LimeSurvey adds visually-hidden class */
+.choice-5-pt-radio .fr-fieldset[data-display-mode="1"].visually-hidden,
+.choice-5-pt-radio .fr-fieldset[data-display-mode="2"].visually-hidden {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    clip: auto !important;
+    white-space: normal !important;
+    clip-path: none !important;
+}
+
+/* Star rating mode (slider_rating == 1) - Progressive fill system CSS-only */
+.star-rating-container {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+/* Star item wrapper */
+.star-rating-item {
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Hide radio inputs */
+.star-rating-input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+
+/* Star label styling */
+.star-rating-label {
+    cursor: pointer;
+    font-size: 2rem;
+    line-height: 1;
+    transition: transform 0.2s ease;
+}
+
+.star-rating-label:hover {
+    transform: scale(1.15);
+}
+
+/* Star icon wrapper - superpose two icons */
+.star-icon-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+}
+
+.star-icon-wrapper .star-empty,
+.star-icon-wrapper .star-filled {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity 0.2s ease;
+}
+
+/* Override DSFR icon size with more specific selector */
+.fr-fieldset[data-display-mode="1"] .star-rating-container .star-icon-wrapper .fr-icon-star-line::before,
+.fr-fieldset[data-display-mode="1"] .star-rating-container .star-icon-wrapper .fr-icon-star-fill::before {
+    --icon-size: 3rem !important;
+}
+
+/* Default state: show empty star (grey), hide filled star */
+.star-icon-wrapper .star-empty {
+    opacity: 1;
+    color: var(--border-default-grey);
+}
+
+.star-icon-wrapper .star-filled {
+    opacity: 0;
+    color: var(--text-default-warning);
+}
+
+/* Hover effects - fill hovered star and all previous ones using :has() */
+.star-rating-container:has([data-star="1"]:hover) [data-star="1"] .star-filled {
+    opacity: 1;
+}
+
+.star-rating-container:has([data-star="2"]:hover) [data-star="1"] .star-filled,
+.star-rating-container:has([data-star="2"]:hover) [data-star="2"] .star-filled {
+    opacity: 1;
+}
+
+.star-rating-container:has([data-star="3"]:hover) [data-star="1"] .star-filled,
+.star-rating-container:has([data-star="3"]:hover) [data-star="2"] .star-filled,
+.star-rating-container:has([data-star="3"]:hover) [data-star="3"] .star-filled {
+    opacity: 1;
+}
+
+.star-rating-container:has([data-star="4"]:hover) [data-star="1"] .star-filled,
+.star-rating-container:has([data-star="4"]:hover) [data-star="2"] .star-filled,
+.star-rating-container:has([data-star="4"]:hover) [data-star="3"] .star-filled,
+.star-rating-container:has([data-star="4"]:hover) [data-star="4"] .star-filled {
+    opacity: 1;
+}
+
+.star-rating-container:has([data-star="5"]:hover) [data-star="1"] .star-filled,
+.star-rating-container:has([data-star="5"]:hover) [data-star="2"] .star-filled,
+.star-rating-container:has([data-star="5"]:hover) [data-star="3"] .star-filled,
+.star-rating-container:has([data-star="5"]:hover) [data-star="4"] .star-filled,
+.star-rating-container:has([data-star="5"]:hover) [data-star="5"] .star-filled {
+    opacity: 1;
+}
+
+/* Checked state using :has() - fill checked star and all previous ones */
+.star-rating-container:has([data-star="1"] .star-rating-input:checked) [data-star="1"] .star-filled {
+    opacity: 1;
+}
+
+.star-rating-container:has([data-star="2"] .star-rating-input:checked) [data-star="1"] .star-filled,
+.star-rating-container:has([data-star="2"] .star-rating-input:checked) [data-star="2"] .star-filled {
+    opacity: 1;
+}
+
+.star-rating-container:has([data-star="3"] .star-rating-input:checked) [data-star="1"] .star-filled,
+.star-rating-container:has([data-star="3"] .star-rating-input:checked) [data-star="2"] .star-filled,
+.star-rating-container:has([data-star="3"] .star-rating-input:checked) [data-star="3"] .star-filled {
+    opacity: 1;
+}
+
+.star-rating-container:has([data-star="4"] .star-rating-input:checked) [data-star="1"] .star-filled,
+.star-rating-container:has([data-star="4"] .star-rating-input:checked) [data-star="2"] .star-filled,
+.star-rating-container:has([data-star="4"] .star-rating-input:checked) [data-star="3"] .star-filled,
+.star-rating-container:has([data-star="4"] .star-rating-input:checked) [data-star="4"] .star-filled {
+    opacity: 1;
+}
+
+.star-rating-container:has([data-star="5"] .star-rating-input:checked) [data-star="1"] .star-filled,
+.star-rating-container:has([data-star="5"] .star-rating-input:checked) [data-star="2"] .star-filled,
+.star-rating-container:has([data-star="5"] .star-rating-input:checked) [data-star="3"] .star-filled,
+.star-rating-container:has([data-star="5"] .star-rating-input:checked) [data-star="4"] .star-filled,
+.star-rating-container:has([data-star="5"] .star-rating-input:checked) [data-star="5"] .star-filled {
+    opacity: 1;
+}
+
+/* No answer option styling */
+.star-rating-no-answer .star-rating-input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+
+/* Style as DSFR tertiary button */
+.star-rating-no-answer .fr-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    /* DSFR button base styles */
+    font-size: 1rem;
+    line-height: 1.5rem;
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    color: var(--text-action-high-blue-france);
+    border: none;
+    box-shadow: inset 0 0 0 1px var(--border-action-high-blue-france);
+    transition: all 0.2s ease;
+}
+
+.star-rating-no-answer .fr-label:hover {
+    background-color: var(--background-action-high-blue-france-hover);
+}
+
+.star-rating-no-answer .star-rating-input:checked + .fr-label {
+    background-color: var(--background-action-high-blue-france);
+    color: var(--text-inverted-grey);
+    box-shadow: inset 0 0 0 1px var(--border-action-high-blue-france);
+}
+
+/* Mobile: responsive adjustments for star rating */
+@media (max-width: 767px) {
+    /* Étoiles plus grandes sur mobile pour faciliter le touch */
+    .star-rating-container {
+        gap: 0.75rem !important;
+    }
+
+    .star-rating-label {
+        font-size: 2.5rem !important;
+    }
+
+    .fr-fieldset[data-display-mode="1"] .star-rating-container .star-icon-wrapper .fr-icon-star-line::before,
+    .fr-fieldset[data-display-mode="1"] .star-rating-container .star-icon-wrapper .fr-icon-star-fill::before {
+        --icon-size: 2.5rem !important;
+    }
+
+    /* Option sans réponse en bloc sous les étoiles */
+    .star-rating-no-answer-wrapper {
+        display: block;
+        width: 100%;
+        margin-top: 1rem;
+    }
+}
+
+/* Emoji rating mode (slider_rating == 2) */
+/* Hide radio input in emoji mode */
+.fr-fieldset[data-display-mode="2"] .fr-radio-group input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+
+/* Hide DSFR radio button pseudo-element in emoji mode */
+.fr-fieldset[data-display-mode="2"] .fr-radio-group input[type="radio"] + label::before {
+    display: none !important;
+}
+
+/* Center emoji in fr-radio-rich box */
+.fr-fieldset[data-display-mode="2"] .fr-radio-group.fr-radio-rich {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fr-label--emoji-rating {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-width: 80px;
+    min-height: 80px;
+    cursor: pointer;
+    padding: 1rem !important; /* Uniform padding */
+    margin: 0 !important;
+}
+
+.fr-label--emoji-rating .emoji-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+    text-align: center;
+    display: block;
+}
+
+/* Responsive adjustments for 5-point choice */
+@media (max-width: 767px) {
+    /* Stack radio buttons vertically on mobile */
+    .fr-fieldset[data-display-mode] .fr-grid-row {
+        flex-direction: column;
+    }
+
+    .fr-fieldset[data-display-mode] .fr-col-auto {
+        width: 100%;
+    }
+
+    .fr-fieldset[data-display-mode] .fr-radio-group.fr-radio-rich {
+        width: 100%;
+    }
+
+    /* Larger touch targets for mobile */
+    .fr-label--star-rating,
+    .fr-label--emoji-rating {
+        min-height: 3.5rem;
+    }
+
+    .fr-label--emoji-rating .emoji-icon {
+        font-size: 3rem;
+    }
+}
+
+/* ============================================
+   QUESTIONS AVEC IMAGES (Image Select)
+   Style élégant sans radio/checkbox visible
+   Couvre deux structures HTML:
+   1. ul.imageselect-list > li.imageselect-container (radio)
+   2. ul.checkbox-list > li.imageselect-listitem (checkbox)
+   ============================================ */
+
+/* Container liste - affichage flex inline */
+ul.imageselect-list,
+ul.checkbox-list.answers-list {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 1rem !important;
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Chaque élément image - structure 1 (radio) */
+li.imageselect-container {
+    flex: 0 0 auto !important;
+    list-style: none !important;
+    position: relative !important;
+}
+
+/* Chaque élément image - structure 2 (checkbox) */
+li.imageselect-listitem {
+    flex: 0 0 auto !important;
+    list-style: none !important;
+    position: relative !important;
+}
+
+/* Container interne pour structure 2 */
+li.imageselect-listitem > .imageselect-container {
+    position: relative !important;
+}
+
+/* Masquer visuellement le radio/checkbox mais garder accessible */
+li.imageselect-container > input[type="radio"],
+li.imageselect-container > input[type="checkbox"],
+li.imageselect-listitem .imageselect-checkbox,
+li.imageselect-listitem .imageselect-radiobutton {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Label avec image - style carte cliquable (structure 1) */
+li.imageselect-container > label.imageselect-radiobutton {
+    display: block !important;
+    cursor: pointer !important;
+    padding: 0.5rem !important;
+    border: 2px solid var(--border-default-grey) !important;
+    border-radius: 0.5rem !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    background: var(--background-default-grey) !important;
+}
+
+/* Label avec image - style carte cliquable (structure 2) */
+li.imageselect-listitem .imageselect-label {
+    display: block !important;
+    cursor: pointer !important;
+    padding: 0.5rem !important;
+    border: 2px solid var(--border-default-grey) !important;
+    border-radius: 0.5rem !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    background: var(--background-default-grey) !important;
+}
+
+/* Hover sur la carte image */
+li.imageselect-container > label.imageselect-radiobutton:hover,
+li.imageselect-listitem .imageselect-label:hover {
+    border-color: var(--border-action-high-blue-france) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 145, 0.15) !important;
+}
+
+/* Focus visible pour accessibilité */
+li.imageselect-container > input:focus-visible + label.imageselect-radiobutton,
+li.imageselect-listitem .imageselect-checkbox:focus-visible ~ .imageselect-label {
+    outline: 2px solid var(--border-action-high-blue-france) !important;
+    outline-offset: 2px !important;
+}
+
+/* État sélectionné - bordure bleue épaisse (structure 1) */
+li.imageselect-container > input:checked + label.imageselect-radiobutton {
+    border-color: var(--border-action-high-blue-france) !important;
+    border-width: 3px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 145, 0.25) !important;
+    background: var(--background-alt-blue-france) !important;
+}
+
+/* État sélectionné - bordure bleue épaisse (structure 2) */
+li.imageselect-listitem .imageselect-checkbox:checked ~ .imageselect-label {
+    border-color: var(--border-action-high-blue-france) !important;
+    border-width: 3px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 145, 0.25) !important;
+    background: var(--background-alt-blue-france) !important;
+}
+
+/* Image dans la carte - retirer les styles inline */
+li.imageselect-container > label.imageselect-radiobutton img,
+li.imageselect-listitem .imageselect-label img {
+    display: block !important;
+    max-width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    border-radius: 0.25rem !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* Indicateur de sélection (checkmark) pour les images sélectionnées (structure 1) */
+li.imageselect-container > input:checked + label.imageselect-radiobutton::after {
+    content: "✓";
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: var(--background-action-high-blue-france);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: bold;
+    z-index: 1;
+}
+
+/* Indicateur de sélection (checkmark) pour les images sélectionnées (structure 2) */
+li.imageselect-listitem .imageselect-checkbox:checked ~ .imageselect-label::after {
+    content: "✓";
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: var(--background-action-high-blue-france);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: bold;
+    z-index: 1;
+}
+
+/* Position relative sur le label pour le checkmark */
+li.imageselect-listitem .imageselect-label {
+    position: relative !important;
+}
+
+/* Option "Sans réponse" - style radio DSFR */
+ul.imageselect-list > li.no-anwser-item {
+    flex: 0 0 100% !important;
+    margin-top: 1rem !important;
+    padding-top: 1rem !important;
+    border-top: 1px solid var(--border-default-grey) !important;
+}
+
+/* Wrapper DSFR-like pour le radio */
+ul.imageselect-list > li.no-anwser-item {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 0 !important;
+}
+
+/* Radio DSFR custom */
+ul.imageselect-list > li.no-anwser-item > input[type="radio"] {
+    position: absolute !important;
+    opacity: 0 !important;
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+}
+
+/* Label avec pseudo-element pour le radio DSFR */
+ul.imageselect-list > li.no-anwser-item > label {
+    display: inline-flex !important;
+    align-items: center !important;
+    cursor: pointer !important;
+    padding-left: 2rem !important;
+    position: relative !important;
+    min-height: 1.5rem !important;
+    line-height: 1.5rem !important;
+}
+
+/* Cercle externe du radio */
+ul.imageselect-list > li.no-anwser-item > label::before {
+    content: "" !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+    border: 1px solid var(--border-action-high-blue-france) !important;
+    border-radius: 50% !important;
+    background: var(--background-default-grey) !important;
+    box-sizing: border-box !important;
+}
+
+/* Point interne du radio (sélectionné) */
+ul.imageselect-list > li.no-anwser-item > label::after {
+    content: "" !important;
+    position: absolute !important;
+    left: 0.375rem !important;
+    top: 0.375rem !important;
+    width: 0.75rem !important;
+    height: 0.75rem !important;
+    border-radius: 50% !important;
+    background: var(--background-action-high-blue-france) !important;
+    transform: scale(0) !important;
+    transition: transform 0.1s ease-in-out !important;
+}
+
+/* État sélectionné */
+ul.imageselect-list > li.no-anwser-item > input[type="radio"]:checked + label::after {
+    transform: scale(1) !important;
+}
+
+/* Focus visible */
+ul.imageselect-list > li.no-anwser-item > input[type="radio"]:focus-visible + label::before {
+    outline: 2px solid var(--border-action-high-blue-france) !important;
+    outline-offset: 2px !important;
+}
+
+/* Hover */
+ul.imageselect-list > li.no-anwser-item > label:hover::before {
+    border-color: var(--border-action-high-blue-france) !important;
+    background: var(--background-alt-blue-france) !important;
+}
+
+/* Responsive - images 2 colonnes sur mobile */
+@media (max-width: 767px) {
+    li.imageselect-container {
+        flex: 1 1 calc(50% - 0.5rem) !important;
+        max-width: calc(50% - 0.5rem) !important;
+    }
+}
+
+/* Images dans le contenu généré par RichTextEditor */
+.question-text-container img,
+.ls-question-text img {
+    max-width: 100%;
+}
+
+/* Responsive - Images sur mobile */
+@media (max-width: 767px) {
+    .answer-item img,
+    .fr-fieldset__content img,
+    .answertext img {
+        max-width: 100%;
+        max-height: 300px;
+        object-fit: contain;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* ============================================
+   BOOTSTRAP BUTTONS → DSFR BUTTONS
+   Surcharge du style des thèmes de questions
+   Bootstrap pour un rendu DSFR
+   ============================================ */
+
+/* Container des boutons Bootstrap */
+.bootstrap-buttons-div {
+    margin-bottom: 0.5rem !important;
+}
+
+/* Masquer le radio Bootstrap */
+.bootstrap-buttons-div .btn-check {
+    position: absolute !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Transformer les boutons Bootstrap en boutons DSFR */
+.bootstrap-buttons-div .btn,
+.bootstrap-buttons-div .btn-primary,
+.bootstrap-buttons-div .btn-secondary {
+    /* Reset Bootstrap */
+    all: unset !important;
+    box-sizing: border-box !important;
+
+    /* Style DSFR button secondary */
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.5rem 1rem !important;
+    min-height: 2.5rem !important;
+
+    /* Couleurs DSFR secondary */
+    background-color: transparent !important;
+    color: var(--text-action-high-blue-france) !important;
+    border: 1px solid var(--border-action-high-blue-france) !important;
+    border-radius: 0 !important;
+
+    /* Typographie */
+    font-family: Marianne, arial, sans-serif !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    line-height: 1.5rem !important;
+    text-align: center !important;
+
+    /* Interactions */
+    cursor: pointer !important;
+    transition: background-color 0.1s, color 0.1s !important;
+}
+
+/* État hover */
+.bootstrap-buttons-div .btn:hover,
+.bootstrap-buttons-div .btn-primary:hover {
+    background-color: var(--background-action-high-blue-france-hover) !important;
+    color: var(--text-inverted-blue-france) !important;
+}
+
+/* État focus */
+.bootstrap-buttons-div .btn:focus,
+.bootstrap-buttons-div .btn-primary:focus,
+.bootstrap-buttons-div .btn-check:focus + .btn {
+    outline: 2px solid var(--border-action-high-blue-france) !important;
+    outline-offset: 2px !important;
+}
+
+/* État sélectionné (checked) */
+.bootstrap-buttons-div .btn-check:checked + .btn,
+.bootstrap-buttons-div .btn-check:checked + .btn-primary,
+.bootstrap-buttons-div .form-check.active .btn {
+    background-color: var(--background-action-high-blue-france) !important;
+    color: var(--text-inverted-blue-france) !important;
+    border-color: var(--border-action-high-blue-france) !important;
+}
+
+/* État sélectionné + hover */
+.bootstrap-buttons-div .btn-check:checked + .btn:hover,
+.bootstrap-buttons-div .form-check.active .btn:hover {
+    background-color: var(--background-action-high-blue-france-hover) !important;
+}
+
+/* Bouton "Sans réponse" - style tertiaire */
+.bootstrap-buttons-div .noanswer-item .btn,
+.bootstrap-buttons-div[class*="noanswer"] .btn {
+    background-color: transparent !important;
+    color: var(--text-mention-grey) !important;
+    border-color: var(--border-default-grey) !important;
+}
+
+.bootstrap-buttons-div .noanswer-item .btn:hover {
+    background-color: var(--background-alt-grey) !important;
+    color: var(--text-default-grey) !important;
+}
+
+/* Layout du container de boutons */
+[data-bs-toggle="buttons"],
+.btn-toolbar {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+}
+
+/* Responsive - colonnes sur mobile */
+@media (max-width: 767px) {
+    .bootstrap-buttons-div {
+        flex: 1 1 100% !important;
+        max-width: 100% !important;
+    }
+
+    .bootstrap-buttons-div .btn {
+        width: 100% !important;
+    }
+}
+
+/* Champ "Autre" pour bootstrap_buttons - déjà stylé DSFR dans le template */
+#div{{ name }}other .fr-input,
+[id$="other"] .fr-input {
+    /* Les champs "Autre" utilisent déjà fr-input */
+}
+
+/* ============================================
+   BOOTSTRAP DROPDOWN → DSFR SELECT
+   Normalise l'affichage des selects Bootstrap
+   pour qu'ils ressemblent aux selects DSFR
+   ============================================ */
+
+/* Select Bootstrap standard - style DSFR */
+select.form-control,
+select.form-select,
+.list-question-select {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+
+    /* Style DSFR */
+    display: block !important;
+    width: 100% !important;
+    padding: 0.5rem 2.5rem 0.5rem 1rem !important;
+    font-family: Marianne, arial, sans-serif !important;
+    font-size: 1rem !important;
+    line-height: 1.5rem !important;
+    color: var(--text-default-grey) !important;
+    background-color: var(--background-contrast-grey) !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23161616' d='m12 13.1 5-4.9 1.4 1.4-6.4 6.3-6.4-6.4L7 8.1l5 5z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 0.75rem center !important;
+    background-size: 1rem !important;
+    border: none !important;
+    border-radius: 0.25rem 0.25rem 0 0 !important;
+    box-shadow: inset 0 -2px 0 0 var(--border-plain-grey) !important;
+    cursor: pointer !important;
+}
+
+select.form-control:focus,
+select.form-select:focus,
+.list-question-select:focus {
+    outline: none !important;
+    box-shadow: inset 0 -2px 0 0 var(--border-plain-grey), 0 0 0 2px var(--border-action-high-blue-france) !important;
+}
+
+select.form-control:hover,
+select.form-select:hover,
+.list-question-select:hover {
+    background-color: var(--background-contrast-grey-hover) !important;
+}
+
+/* Options du select */
+select.form-control option,
+select.form-select option,
+.list-question-select option {
+    padding: 0.5rem 1rem !important;
+    background-color: var(--background-default-grey) !important;
+    color: var(--text-default-grey) !important;
+}
+
+/* Masquer le selectpicker Bootstrap s'il est généré */
+.bootstrap-select.btn-group {
+    display: none !important;
+}
+
+/* S'assurer que le select natif DSFR est visible */
+.fr-select-group .fr-select {
+    display: block !important;
+}
+
+/* Container du select Bootstrap */
+.select-item,
+.ls-dropdown-item {
+    width: 100% !important;
+    max-width: 400px !important;
+}
+
+/* Pour les tableaux multi-flexi avec colonnes fixes, pas de max-width */
+table[style*="table-layout: fixed"] td.select-item,
+table[style*="table-layout: fixed"] td.ls-dropdown-item {
+    max-width: none !important;
+}
+
+/* Tableaux avec colgroup (dual-scale, dropdown-array, etc.) - respecter les largeurs définies */
+.array-flexible-dual-scale td.select-item,
+.array-flexible-dual-scale td.dropdown-item,
+.array-flexible-dual-scale td.ls-dropdown-item,
+[class*="array-"] td.select-item,
+[class*="array-"] td.dropdown-item,
+[class*="array-"] td.ls-dropdown-item,
+.fr-table table td.select-item,
+.fr-table table td.dropdown-item,
+.fr-table--bordered table td.select-item,
+.fr-table--bordered table td.dropdown-item,
+table.ls-answers td.select-item,
+table.ls-answers td.dropdown-item,
+table.questions-list td.select-item,
+table.questions-list td.dropdown-item {
+    max-width: none !important;
+    width: auto !important;
+}
+
+/* S'assurer que les select prennent toute la largeur de leur cellule */
+.array-flexible-dual-scale td.select-item select,
+.array-flexible-dual-scale td.dropdown-item select,
+[class*="array-"] td.select-item select,
+[class*="array-"] td.dropdown-item select,
+.fr-table table td.select-item select,
+.fr-table table td.dropdown-item select,
+.fr-table--bordered table td.select-item select,
+.fr-table--bordered table td.dropdown-item select {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Séparateur dual-scale - garder visible mais discret */
+.array-flexible-dual-scale td.ddarrayseparator,
+[class*="array-"] td.ddarrayseparator {
+    min-width: 1rem !important;
+    background-color: transparent !important;
+}
+
+/* Dropdown menu Bootstrap - style DSFR */
+.dropdown-menu {
+    background-color: var(--background-default-grey) !important;
+    border: 1px solid var(--border-default-grey) !important;
+    border-radius: 0 !important;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1) !important;
+    padding: 0 !important;
+}
+
+.dropdown-menu .dropdown-item,
+.bootstrap-select .dropdown-menu li a {
+    padding: 0.75rem 1rem !important;
+    color: var(--text-default-grey) !important;
+    background-color: transparent !important;
+    font-family: Marianne, arial, sans-serif !important;
+    font-size: 1rem !important;
+    line-height: 1.5rem !important;
+    border: none !important;
+}
+
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus,
+.bootstrap-select .dropdown-menu li:hover a,
+.bootstrap-select .dropdown-menu li:focus a,
+.bootstrap-select .dropdown-menu li.selected a,
+.bootstrap-select .dropdown-menu li.active a {
+    background-color: var(--background-action-low-blue-france) !important;
+    color: var(--text-action-high-blue-france) !important;
+    outline: none !important;
+}
+
+.dropdown-menu .dropdown-item:active,
+.bootstrap-select .dropdown-menu li:active a {
+    background-color: var(--background-action-high-blue-france) !important;
+    color: var(--text-inverted-blue-france) !important;
+}
+
+/* Option sélectionnée */
+.dropdown-menu .dropdown-item.selected,
+.dropdown-menu .dropdown-item.active,
+.bootstrap-select .dropdown-menu li.selected a {
+    background-color: var(--background-action-low-blue-france) !important;
+    color: var(--text-action-high-blue-france) !important;
+    font-weight: 500 !important;
+}
+
+/* ============================================
+   BOOTSTRAP BUTTONS MULTI (CHECKBOXES)
+   ============================================ */
+
+/* Mêmes styles que pour les radio buttons */
+.bootstrap-buttons-div input[type="checkbox"].btn-check {
+    position: absolute !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* État sélectionné pour les checkboxes */
+.bootstrap-buttons-div input[type="checkbox"]:checked + .btn,
+.bootstrap-buttons-div input[type="checkbox"]:checked + label.btn {
+    background-color: var(--background-action-high-blue-france) !important;
+    color: var(--text-inverted-blue-france) !important;
+    border-color: var(--border-action-high-blue-france) !important;
+}
+
+/* ============================================
+   FILE UPLOAD - DSFR
+   ============================================ */
+
+/* Container principal */
+.upload-files .upload-button {
+    margin-bottom: 1rem;
+}
+
+/* Table des fichiers uploadés */
+.uploadedfiles {
+    width: 100%;
+}
+
+.uploadedfiles thead th {
+    font-weight: 500;
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-default-grey);
+}
+
+.uploadedfiles tbody td {
+    padding: 0.75rem;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-default-grey);
+}
+
+.uploadedfiles .upload.image img,
+.uploadedfiles img.uploaded {
+    max-width: 80px;
+    max-height: 80px;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.uploadedfiles .upload-placeholder {
+    width: 60px;
+    height: 60px;
+    background: var(--background-alt-grey);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modale DSFR pour file upload */
+.file-upload-modal .fr-modal__body {
+    max-width: 100%;
+}
+
+.file-upload-modal .fr-modal__content {
+    max-height: calc(100vh - 200px);
+    overflow: auto;
+}
+
+/* Iframe uploader */
+.uploader-frame {
+    width: 100%;
+    min-height: 400px;
+    background: var(--background-default-grey);
+    border-radius: 4px;
+}
+
+.uploader-frame iframe {
+    width: 100%;
+    height: 400px;
+    border: none;
+    border-radius: 4px;
+}
+
+/* Liste des fichiers dans l'iframe */
+.files-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.files-list .file-element {
+    background: var(--background-alt-grey);
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.files-list .file-preview {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.files-list .file-preview img.uploaded {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.files-list .file-name {
+    font-weight: 500;
+    word-break: break-all;
+}
+
+.files-list .file-info {
+    flex: 1;
+    min-width: 200px;
+}
+
+.files-list .file-info fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.files-list .file-info .mb-3 {
+    margin-bottom: 0.75rem !important;
+}
+
+.files-list .file-info label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.files-list .file-info input.form-control {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border-default-grey);
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+/* Zone de notice (succès/erreur dans l'iframe) */
+#notice {
+    margin-bottom: 1rem;
+}
+
+#notice .alert {
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    margin: 0;
+}
+
+#notice .alert-success {
+    background: var(--background-contrast-success);
+    color: var(--text-default-success);
+    border: 1px solid var(--border-plain-success);
+}
+
+#notice .alert-danger {
+    background: var(--background-contrast-error);
+    color: var(--text-default-error);
+    border: 1px solid var(--border-plain-error);
+}
+
+/* Bouton de suppression */
+.files-list .btn-danger {
+    background: var(--background-action-high-error) !important;
+    color: var(--text-inverted-error) !important;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.files-list .btn-danger:hover {
+    background: var(--background-action-high-error-hover) !important;
+}
+
+/* Status upload */
+#uploadstatus {
+    padding: 0.75rem;
+    background: var(--background-alt-grey);
+    border-radius: 4px;
+    margin-top: 1rem;
+    font-size: 0.875rem;
+}
+
+/* Bouton upload dans l'iframe */
+#button_ {
+    display: inline-block;
+}
+
+.ajaxupload-button,
+button[id^="button_"] {
+    background: var(--background-action-high-blue-france);
+    color: var(--text-inverted-blue-france);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.ajaxupload-button:hover,
+button[id^="button_"]:hover {
+    background: var(--background-action-high-blue-france-hover);
+}
+
+/* Loading spinner */
+#loading-icon-fielupload {
+    margin-left: 0.5rem;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Native dialog fallback styling (when DSFR JS not loaded) */
+dialog.file-upload-modal:not([class*="fr-modal--opened"]) {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    max-width: 90vw;
+    max-height: 90vh;
+    padding: 0;
+    overflow: hidden;
+}
+
+dialog.file-upload-modal::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Ensure DSFR dialog doesn't conflict with native dialog */
+dialog.fr-modal[open] {
+    display: block;
+}

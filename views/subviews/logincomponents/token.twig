@@ -1,0 +1,129 @@
+{% extends "./subviews/logincomponents/captcha.twig" %}
+
+    {% block formheading %}
+        {{ gT("To participate in this restricted survey, you need a valid access code.") }}
+    {% endblock %}
+
+    {% block description %}
+        <div class="fr-col-lg-8 fr-col-offset-2--lg">
+            <p class='{{ aSurveyInfo.class.maincoldivdivbp }} text-info' {{ aSurveyInfo.attr.maincoldivdivbp }}>
+                {% if aSurveyInfo.aForm.token == null %}
+                    {{ gT("If you have been issued an access code, please enter it in the box below and click continue.") }}
+                {% else %}
+                    {{ gT("Please confirm the access code by answering the security question below and click continue.") }}
+                {% endif %}
+            </p>
+        </div>
+    {% endblock %}
+
+
+    {% block formcontent %}
+        <div class="fr-col-lg-8 fr-col-offset-2--lg">
+            <div class='fr-input-group {{ aSurveyInfo.class.maincolform }} fr-mb-3w{% if aSurveyInfo.aForm.aEnterErrors is defined and aSurveyInfo.aForm.aEnterErrors is not empty %} fr-input-group--error{% endif %}' {{ aSurveyInfo.attr.maincolform }}>
+                <label class='{{ aSurveyInfo.class.maincolformlabel }} fr-label' {{ aSurveyInfo.attr.maincolformlabel }} for='token'>
+                    {{ gT("Access code:") }}
+                    <span class="{{ aSurveyInfo.class.maincolformlabelspan }} fr-hint-text" {{ aSurveyInfo.attr.maincolformlabelspan }}>{{ gT("Required") }}</span>
+                </label>
+
+                {% if aSurveyInfo.aForm.token == null %}
+                    <div class='fr-input-wrap fr-input-wrap--addon'>
+                        <input
+                            class='{{ aSurveyInfo.class.maincolformdivainput }} fr-input{% if aSurveyInfo.aForm.aEnterErrors is defined and aSurveyInfo.aForm.aEnterErrors is not empty %} fr-input--error{% endif %}'
+                            type='password'
+                            id='token'
+                            name='token'
+                            {{ aSurveyInfo.attr.maincolformdivainput }}
+                            aria-describedby="token-error-messages"
+                            required>
+                        <button type="button" class="fr-btn fr-btn--tertiary-no-outline fr-btn--sm ls-no-js-hidden" id="ls-toggle-token-show" data-passwordstate="hidden" title="{{ gT('Show/Hide code') }}">
+                            <span class="fr-icon-eye-line ls-password-hidden" aria-hidden="true"></span>
+                            <span class="fr-icon-eye-off-line fr-hidden ls-password-shown" aria-hidden="true"></span>
+                            <span class="fr-sr-only ls-password-hidden">{{ gT("Show code") }}</span>
+                            <span class="fr-sr-only fr-hidden ls-password-shown">{{ gT("Hide code") }}</span>
+                        </button>
+                    </div>
+                    {# Error messages under input #}
+                    <div class="fr-messages-group" id="token-error-messages" aria-live="polite">
+                        {% if aSurveyInfo.aForm.aEnterErrors is defined and aSurveyInfo.aForm.aEnterErrors is not empty %}
+                            {% for key, error in aSurveyInfo.aForm.aEnterErrors %}
+                                <p class="fr-message fr-message--error">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                        <script>
+                            $("#ls-toggle-token-show").on('click', function () {
+                                if ($(this).data('passwordstate') == "hidden") {
+                                    $(this).prev("input").attr('type', 'text');
+                                    $(this).find('.ls-password-hidden').addClass('fr-hidden');
+                                    $(this).find('.ls-password-shown').removeClass('fr-hidden');
+                                    $(this).data('passwordstate', 'shown');
+                                } else {
+                                    $(this).prev("input").attr('type', 'password');
+                                    $(this).find('.ls-password-hidden').removeClass('fr-hidden');
+                                    $(this).find('.ls-password-shown').addClass('fr-hidden');
+                                    $(this).data('passwordstate', 'hidden');
+                                }
+                            });
+                        </script>
+                    {% else %}
+                        {# token is OK, captcha not #}
+                        {% set passwordFieldHtmlOptions = {
+                            'id'       : 'token',
+                            'required' : true,
+                            'readonly' : true,
+                            'class'    : 'fr-input'
+                        } %}
+
+                        {{ C.Html.passwordField(
+                            'token',
+                            (( aSurveyInfo.aForm.token )),
+                        (passwordFieldHtmlOptions)
+                        ) }}
+                    {% endif %}
+                </div>
+            </div>
+
+            {# CAPTACHA INSIDE TOKEN FORM #}
+            {% if ( aSurveyInfo.aForm.bCaptchaEnabled == true ) %}
+                <div class="{{ aSurveyInfo.class.maincolformdivb }} fr-mb-3w" {{ aSurveyInfo.attr.maincolformdivb }}>
+                    <label
+                        class='{{ aSurveyInfo.class.maincolformdivblabel }} fr-label' {{ aSurveyInfo.attr.maincolformdivblabel }} >
+                        {{ gT("Please solve the following equation:") }}
+                        <small
+                            class="{{ aSurveyInfo.class.maincolformdivblabelsmall }} fr-text--error asterisk fa fa-asterisk fr-float-left small" {{ aSurveyInfo.attr.maincolformdivblabelsmall }} >&nbsp;</small>
+                        <span
+                            class="{{ aSurveyInfo.class.maincolformdivblabelspan }} fr-sr-only fr-text--error asterisk" {{ aSurveyInfo.attr.maincolformdivblabelspan }}>
+                        ( {{ gT("Mandatory") }} )
+                    </span>
+                    </label>
+                    <div class="fr-grid-row">
+                        <div class="fr-col-2">
+                            {{ renderCaptcha().renderOut() }}
+                        </div>
+                        <div class="fr-col-1 align-self-center">
+                            <a href="#" class="fr-btn fr-btn--sm fr-btn--tertiary" id="reloadCaptcha"
+                               title="{{ gT("Reload captcha") }}" data-fr-toggle="captcha"><i
+                                    class="fa fa-refresh"></i></a>
+                        </div>
+                        <div
+                            class="{{ aSurveyInfo.class.maincolformdivbdiv }} fr-col-9 align-self-center" {{ aSurveyInfo.attr.maincolformdivbdiv }}>
+                            <input
+                                class='fr-input {{ aSurveyInfo.class.maincolformdivbdivdivinput }}' {{ aSurveyInfo.attr.maincolformdivbdivdivinput }} >
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {{ aSurveyInfo.aForm.hiddenFields }}
+
+            <div class='{{ aSurveyInfo.class.maincolformdivc }} fr-mb-3w ' {{ aSurveyInfo.attr.maincolformdivc }}>
+                <div
+                    class='{{ aSurveyInfo.class.maincolformdivcdiv }} float-end ' {{ aSurveyInfo.attr.maincolformdivcdiv }}>
+                    <button type="submit"
+                            class='{{ aSurveyInfo.class.maincolformdivcdivbutton }} fr-btn fr-btn--secondary' {{ aSurveyInfo.attr.maincolformdivcdivbutton }}>
+                        {{ gT("Continue") }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    {% endblock %}

@@ -1,0 +1,72 @@
+{#
+/**
+ * Multiple choice with comments question, item Html
+ * @var $liclasses
+ * @var $liid
+ * @var $kpclass
+ * @var $title
+ * @var $sDisplayStyle
+ * @var $name                       $myfname
+ * @var $id                         answer$myfname
+ * @var $value                       Y
+ * @var $classes                    ''
+ * @var $checked                    ''
+ * @var $checkconditionFunction     $checkconditionFunction(this.value, this.name, this.type);
+ * @var $checkconditionFunctionComment
+ * @var $labeltext                  $ansrow['question']
+ * @var $javaname                   java$myfname
+ * @var $javavalue                  ''
+ * @var $checked                    if (isset($_SESSION['survey_'.Yii::app()->getConfig('surveyID')][$myfname]))  ...
+ * @var $inputCommentId             'answer'.$myfname2
+ * @var $commentLabelText           gT('Make a comment on your choice here:') }}
+ * @var $inputCommentName           $myfname2
+ * @var $inputCOmmentValue          if (isset($_SESSION['survey_'.Yii::app()->getConfig('surveyID')][$myfname2])) {$answer_main .= htmlspecialchars($_SESSION['survey_'.Yii::app()->getConfig('surveyID')][$myfname2],ENT_QUOTES);}
+ */
+#}
+<!-- answer_row -->
+<div class="fr-fieldset__element" id="javatbd{{ name }}">
+    <!-- Checkbox + label -->
+    <div class="fr-grid-row fr-grid-row--gutters">
+        <!-- checkbox-item et answer-item requis pour em_javascript.js -->
+        <div class="fr-col-12 fr-col-md-{{ sLabelWidth }} fr-mb-2w checkbox-item answer-item">
+            <div class="fr-checkbox-group">
+                <input
+                    {% if classes or kpclass %}class="{{ classes }} {{ kpclass }}"{% endif %}
+                    title="{{ title }}"
+                    type="checkbox"
+                    name="{{ name }}"
+                    id="{{ id }}"
+                    value="{{ value }}"
+                    {{ checked }}
+                  />
+
+                <label id="label-{{ id }}" for="{{ id }}" class="fr-label">{{ processString(labeltext) }}</label>
+                {# Value for expression manager javascript (use val()) ; no need to submit #}
+                {{ C.Html.hiddenField(javaname,javavalue,({
+                    'id' : javaname,
+                    'disabled' : true,
+                }))
+                }}
+            </div>
+        </div>
+
+        <!-- Comment -->
+        <div class="fr-col-12 fr-col-md-{{ sInputContainerWidth }} answer-item text-item comment-item fr-mb-2w">
+            <div class="fr-input-group">
+                <label class="fr-label fr-sr-only" for="{{ inputCommentId }}">
+                    Commentaire pour : {{ processString(labeltext) }}
+                </label>
+                <input
+                    class='fr-input {{ kpclass }}'
+                    type='text'
+                    id='{{ inputCommentId }}'
+                    name='{{ inputCommentName }}'
+                    value='{{ inputCOmmentValue }}'
+                    aria-labelledby='label-{{ id }}'
+                    placeholder="Votre commentaire..."
+                />
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end of answer_row -->

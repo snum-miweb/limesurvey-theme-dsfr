@@ -1,0 +1,51 @@
+{#
+/**
+ * Multiple Numerical - Slider Answer Row - DSFR Theme
+ *
+ * @var $myfname
+ * @var $labelText
+ * @var $extraclass
+ * @var $alert
+ * @var $sLabelWidth
+ * @var $sInputContainerWidth
+ * @var $slider_orientation
+ * @var $slider_min
+ * @var $slider_max
+ * @var $slider_step
+ * @var $slider_value
+ * @var $slider_handle
+ * @var $slider_reset
+ * @var $slider_reversed
+ * @var $slider_position
+ * @var $slider_default_set
+ * @var $slider_custom_handle
+ * @var $prefix
+ * @var $suffix
+ * @var $sSeparator
+ * @var $integeronly
+ * @var $qid
+ */
+#}
+
+<li id='javatbd{{ myfname }}' class="question-item answer-item numeric-item text-item slider-item {{ extraclass }}{% if alert %} ls-error-mandatory has-error fr-input-group--error{% endif %} fr-mb-3w">
+    <div class="fr-grid-row fr-grid-row--gutters ls-slider-item-row">
+        <label id="label-{{ myfname }}" class='fr-label fr-col-12 fr-col-md-{{ sLabelWidth }} fr-mt-3w{% if sLabelWidth == 0 %} fr-hidden{% endif %}' for="answer{{ myfname }}">
+            {{ processString(labelText) }}
+        </label>
+        <div class='fr-col-12 fr-col-md-{{ sInputContainerWidth }}'>
+            {% if slider_orientation is same as('horizontal') %}
+                {% include './survey/questions/answer/multiplenumeric/rows/sliders/horizontal_slider.twig' %}
+            {% endif %}
+            {% if slider_orientation is same as('vertical') %}
+                {% include './survey/questions/answer/multiplenumeric/rows/sliders/vertical_slider.twig' %}
+            {% endif %}
+        </div>
+    </div>
+</li>
+
+{#
+    LSSlider désactivé pour utiliser le range HTML5 natif DSFR
+    Le JavaScript dans horizontal_slider.twig gère la synchronisation des valeurs
+#}
+
+<!-- end of answer_row -->

@@ -1,0 +1,17 @@
+<div class="fr-grid-row question-container-printanswers" style="page-break-inside:avoid;">
+    {% include './subviews/printanswers/partials/_question_header.twig' %}
+    <div class="fr-col-lg-8">
+        <div class="fr-grid-row">
+            <div class="fr-col-lg-4 fr-text-right">
+            </div>
+            <div class="fr-col-lg-8 fr-text-left">
+                {{question.answervalue}} -
+                {% if question.answercode == '-oth-' %}
+                    {{question.answeroption.answer|escape}}
+                {% else %}
+                    {{question.answeroption.answer}}
+                {%endif %}
+            </div>
+        </div>
+    </div>
+</div>

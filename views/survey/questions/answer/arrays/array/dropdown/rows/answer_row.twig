@@ -1,0 +1,40 @@
+{#
+/**
+ * Array Dropdown Row - DSFR Theme
+ * Ligne de tableau avec label et select
+ *
+ * @var $myfname
+ * @var $answertext
+ * @var $value
+ * @var $error
+ * @var $options
+ * @var $right_exists
+ * @var $answertextright
+ */
+#}
+<tr id="javatbd{{ myfname }}" class="question-item answer-item ls-dropdown-item{% if error %} ls-error-mandatory has-error{% endif %}">
+    <th class="answertext" scope="row">
+        <label for="answer{{ myfname }}" class="fr-label">
+            {{ processString(answertext) }}
+        </label>
+
+        {# Value for expression manager javascript (use id) ; no need to submit #}
+        {{ C.Html.hiddenField("java"~myfname,value,({
+            'id' : "java"~myfname,
+            'disabled' : true,
+        }))
+        }}
+    </th>
+    <td>
+        <select class="fr-select" name="{{ myfname }}" id="answer{{ myfname }}">
+            {% for option in options %}
+                <option value="{{ option.value }}" {{ option.selected }}>
+                    {{ flatString(processString(option.text,1),1) }}
+                </option>
+            {% endfor %}
+        </select>
+    </td>
+    {% if right_exists %}
+        <th class='answertextright information-item' scope="row">{{ processString(answertextright) }}</th>
+    {% endif %}
+</tr>

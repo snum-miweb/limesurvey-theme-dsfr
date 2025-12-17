@@ -1,0 +1,19 @@
+<div class="fr-grid-row question-container-printanswers" style="page-break-inside:avoid;">
+    {% include './subviews/printanswers/partials/_question_header.twig' %}
+    <div class="fr-col-lg-8">
+        {% if question.subquestions is empty %}
+                {{question.answervalue}}
+        {% else %}
+                {% for subquestionId, subquestion in question.subquestions %}
+                    <div class="fr-grid-row">
+                        <div class="fr-col-lg-4 fr-text-right">
+                            <b>{{subquestion.question}} ({{subquestion.qid}})</b>
+                        </div>
+                        <div class="fr-col-lg-8 fr-text-left">
+                            {{subquestion.answervalue}}
+                        </div>
+                    </div>
+                {% endfor %}
+        {% endif %}
+    </div>
+</div>

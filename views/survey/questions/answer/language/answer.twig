@@ -1,0 +1,95 @@
+{#
+/**
+ * Language Question - DSFR Theme Override
+ * Uses DSFR fr-translate component instead of select
+ *
+ * @var $name
+ * @var $checkconditionFunction
+ * @var $answerlangs
+ * @var $sLang
+ */
+#}
+<!-- Language - DSFR -->
+
+<!-- answer -->
+<div class="language-question-container">
+    {# Get current language full name #}
+    {% set aCurrentLanguage = getLanguageNameFromCode(sLang, true) %}
+    {% set currentLangCode = sLang|split('-')[0]|upper %}
+    {% set currentLangName = aCurrentLanguage[1] %}
+
+    <div id="language-selector-{{ name }}" class="fr-translate fr-nav">
+        <div class="fr-nav__item">
+            <button
+                aria-controls="language-collapse-{{ name }}"
+                aria-expanded="false"
+                title="{{ gT('Choose your language') }}"
+                type="button"
+                id="language-button-{{ name }}"
+                class="fr-translate__btn fr-btn fr-btn--tertiary">
+                {{ currentLangCode }}<span class="fr-hidden-lg">&nbsp;- {{ currentLangName }}</span>
+            </button>
+            <div class="fr-collapse fr-translate__menu fr-menu" id="language-collapse-{{ name }}">
+                <ul class="fr-menu__list">
+                    {% for ansrow in answerlangs %}
+                        {% set aLanguage = getLanguageNameFromCode(ansrow, true) %}
+                        {% set langCode = ansrow|split('-')[0]|upper %}
+                        {% set langName = aLanguage[1] %}
+                        <li>
+                            <a
+                                class="fr-translate__language fr-nav__link language-option"
+                                hreflang="{{ ansrow }}"
+                                lang="{{ ansrow }}"
+                                href="#"
+                                data-lang="{{ ansrow }}"
+                                data-question-name="{{ name }}"
+                                {% if sLang == ansrow %}aria-current="true"{% endif %}>
+                                {{ langCode }} - {{ langName }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {# Hidden fields for LimeSurvey #}
+    <input type="hidden" name="{{ name }}" id="answer{{ name }}" value="{{ sLang }}" />
+    <input type="hidden" name="java{{ name }}" id="java{{ name }}" value="{{ sLang }}" />
+</div>
+
+<script type='text/javascript'>
+/*<![CDATA[*/
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle language selection clicks
+    document.querySelectorAll('#language-selector-{{ name }} .language-option').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            var selectedLang = this.getAttribute('data-lang');
+            var questionName = this.getAttribute('data-question-name');
+
+            // Update hidden fields
+            document.getElementById('answer' + questionName).value = selectedLang;
+            document.getElementById('java' + questionName).value = selectedLang;
+
+            // Add lang parameter to form (LimeSurvey requirement)
+            var existingLangInput = document.querySelector('form#limesurvey input[name="lang"]');
+            if (existingLangInput) {
+                existingLangInput.value = selectedLang;
+            } else {
+                var langInput = document.createElement('input');
+                langInput.type = 'hidden';
+                langInput.name = 'lang';
+                langInput.value = selectedLang;
+                document.querySelector('form#limesurvey').appendChild(langInput);
+            }
+
+            // Auto-submit form to change language immediately
+            document.querySelector('form#limesurvey').submit();
+        });
+    });
+});
+/*]]>*/
+</script>
+<!-- end of answer -->

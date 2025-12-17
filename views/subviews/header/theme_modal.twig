@@ -1,0 +1,147 @@
+{#
+LimeSurvey - DSFR Theme
+Modale DSFR pour la sélection du thème (clair/sombre/système)
+Structure conforme au composant officiel "Paramètres d'affichage" du DSFR
+Source: https://main--ds-gouv.netlify.app/example/component/display/
+Note: Utilise gT() avec textes français par défaut (fallback si traductions indisponibles)
+#}
+
+<dialog id="fr-theme-modal"
+        class="fr-modal"
+        aria-labelledby="fr-theme-modal-title"
+        aria-modal="true">
+    <div class="fr-container fr-container--fluid fr-container-md">
+        <div class="fr-grid-row fr-grid-row--center">
+            <div class="fr-col-12 fr-col-md-6 fr-col-lg-4">
+                <div class="fr-modal__body">
+                    <div class="fr-modal__header">
+                        <button aria-controls="fr-theme-modal"
+                                title="{{ gT("Fermer") }}"
+                                type="button"
+                                class="fr-btn--close fr-btn">
+                            {{ gT("Fermer") }}
+                        </button>
+                    </div>
+                    <div class="fr-modal__content">
+                        <h2 id="fr-theme-modal-title" class="fr-modal__title">
+                            {{ gT("Paramètres d'affichage") }}
+                        </h2>
+                        <div id="fr-display" class="fr-display">
+                            <fieldset class="fr-fieldset" id="display-fieldset">
+                                <legend class="fr-fieldset__legend--regular fr-fieldset__legend" id="display-fieldset-legend">
+                                    {{ gT("Choisissez un thème pour personnaliser l'apparence du site.") }}
+                                </legend>
+                                <div class="fr-fieldset__element">
+                                    <div class="fr-radio-group fr-radio-rich">
+                                        <input value="light"
+                                               type="radio"
+                                               id="fr-radios-theme-light"
+                                               name="fr-radios-theme">
+                                        <label class="fr-label" for="fr-radios-theme-light">
+                                            {{ gT("Thème clair") }}
+                                        </label>
+                                        <div class="fr-radio-rich__pictogram">
+                                            <svg aria-hidden="true" class="fr-artwork" viewBox="0 0 80 80" width="80px" height="80px">
+                                                <use class="fr-artwork-decorative" href="#artwork-sun-decorative"></use>
+                                                <use class="fr-artwork-minor" href="#artwork-sun-minor"></use>
+                                                <use class="fr-artwork-major" href="#artwork-sun-major"></use>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="fr-fieldset__element">
+                                    <div class="fr-radio-group fr-radio-rich">
+                                        <input value="dark"
+                                               type="radio"
+                                               id="fr-radios-theme-dark"
+                                               name="fr-radios-theme">
+                                        <label class="fr-label" for="fr-radios-theme-dark">
+                                            {{ gT("Thème sombre") }}
+                                        </label>
+                                        <div class="fr-radio-rich__pictogram">
+                                            <svg aria-hidden="true" class="fr-artwork" viewBox="0 0 80 80" width="80px" height="80px">
+                                                <use class="fr-artwork-decorative" href="#artwork-moon-decorative"></use>
+                                                <use class="fr-artwork-minor" href="#artwork-moon-minor"></use>
+                                                <use class="fr-artwork-major" href="#artwork-moon-major"></use>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="fr-fieldset__element">
+                                    <div class="fr-radio-group fr-radio-rich">
+                                        <input value="system"
+                                               type="radio"
+                                               id="fr-radios-theme-system"
+                                               name="fr-radios-theme"
+                                               checked>
+                                        <label class="fr-label" for="fr-radios-theme-system">
+                                            {{ gT("Système") }}
+                                            <span class="fr-hint-text">{{ gT("Utilise les paramètres système") }}</span>
+                                        </label>
+                                        <div class="fr-radio-rich__pictogram">
+                                            <svg aria-hidden="true" class="fr-artwork" viewBox="0 0 80 80" width="80px" height="80px">
+                                                <use class="fr-artwork-decorative" href="#artwork-system-decorative"></use>
+                                                <use class="fr-artwork-minor" href="#artwork-system-minor"></use>
+                                                <use class="fr-artwork-major" href="#artwork-system-major"></use>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>
+
+{# SVG Sprite pour les pictogrammes - Inline pour éviter les dépendances externes #}
+<svg aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden;">
+    <defs>
+        {# Pictogramme Soleil (Thème clair) #}
+        <symbol id="artwork-sun-decorative" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="12" fill="currentColor" opacity="0.2"/>
+        </symbol>
+        <symbol id="artwork-sun-minor" viewBox="0 0 80 80">
+            <g fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="40" y1="10" x2="40" y2="20"/>
+                <line x1="40" y1="60" x2="40" y2="70"/>
+                <line x1="10" y1="40" x2="20" y2="40"/>
+                <line x1="60" y1="40" x2="70" y2="40"/>
+                <line x1="17" y1="17" x2="24" y2="24"/>
+                <line x1="56" y1="56" x2="63" y2="63"/>
+                <line x1="17" y1="63" x2="24" y2="56"/>
+                <line x1="56" y1="24" x2="63" y2="17"/>
+            </g>
+        </symbol>
+        <symbol id="artwork-sun-major" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="15" fill="none" stroke="currentColor" stroke-width="2"/>
+        </symbol>
+
+        {# Pictogramme Lune (Thème sombre) #}
+        <symbol id="artwork-moon-decorative" viewBox="0 0 80 80">
+            <circle cx="45" cy="40" r="12" fill="currentColor" opacity="0.2"/>
+        </symbol>
+        <symbol id="artwork-moon-minor" viewBox="0 0 80 80">
+            <circle cx="30" cy="25" r="2" fill="currentColor"/>
+            <circle cx="50" cy="20" r="1.5" fill="currentColor"/>
+            <circle cx="55" cy="35" r="1" fill="currentColor"/>
+        </symbol>
+        <symbol id="artwork-moon-major" viewBox="0 0 80 80">
+            <path d="M 45 20 A 20 20 0 1 1 45 60 A 15 15 0 1 0 45 20 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        </symbol>
+
+        {# Pictogramme Système #}
+        <symbol id="artwork-system-decorative" viewBox="0 0 80 80">
+            <rect x="25" y="25" width="30" height="20" rx="2" fill="currentColor" opacity="0.2"/>
+        </symbol>
+        <symbol id="artwork-system-minor" viewBox="0 0 80 80">
+            <line x1="30" y1="50" x2="50" y2="50" stroke="currentColor" stroke-width="2"/>
+            <circle cx="40" cy="55" r="2" fill="currentColor"/>
+        </symbol>
+        <symbol id="artwork-system-major" viewBox="0 0 80 80">
+            <rect x="20" y="20" width="40" height="30" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
+        </symbol>
+    </defs>
+</svg>

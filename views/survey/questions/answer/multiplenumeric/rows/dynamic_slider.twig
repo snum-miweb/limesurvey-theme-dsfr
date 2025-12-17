@@ -1,0 +1,46 @@
+{# /**
+ * Multiple Numerical - Dynamic Row for Sliders - DSFR Theme
+ * @var $id
+ * @var $sumRemainingEqn
+ * @var $sumEqn
+ * @var $sLabelWidth
+ * @var $sInputContainerWidth
+ * @var $prefix
+ * @var $suffix
+ */ #}
+
+{% if sumRemainingEqn %}
+    <li class="fr-mb-3w ls-group-remaining">
+        <div class="fr-grid-row">
+            <div class="fr-col-12 fr-col-md-{{ sInputContainerWidth }} fr-col-offset-md-{{ sLabelWidth }}">
+                <span class="fr-text--bold">{{ gT('Remaining') }}:</span>
+                {% if prefix %}
+                    <span class="prefix-text prefix">
+                        {{ processString(prefix) }}
+                    </span>
+                {% endif %}
+                <span id="remainingvalue_{{ id }}" class="numeric dynamic-remaining" data-number="1">
+                    {{ sumRemainingEqn }}
+                </span>
+                {% if suffix %}
+                    <span class="suffix-text suffix">
+                       {{ processString(suffix) }}
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+    </li>
+{% endif %}
+
+{% if sumEqn %}
+    <li class="fr-mb-3w ls-group-total">
+        <div class="fr-grid-row">
+            <div class="fr-col-12 fr-col-md-{{ sInputContainerWidth }} fr-col-offset-md-{{ sLabelWidth }}">
+                <span class="fr-text--bold">{{ gT('Total:') }}</span>
+                <span id="totalvalue_{{ id }}" class="numeric dynamic-total" data-number="1">
+                    {{ sumEqn }}
+                </span>
+            </div>
+        </div>
+    </li>
+{% endif %}

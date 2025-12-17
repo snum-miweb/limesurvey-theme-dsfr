@@ -1,0 +1,85 @@
+{#
+/**
+ * Array by column - DSFR Theme
+ * Structure identique à array/no_dropdown pour cohérence
+ *
+ * @var $anscount
+ * @var $cellwidth
+ * @var $aQuestions
+ * @var $labels
+ * @var $anscode
+ * @var $checked
+ * @var $answerwidth
+ * @var $basename
+ * @var $coreClass
+ */
+#}
+
+<!-- Array by column - DSFR -->
+<div class="ls-table-wrapper" role="group" aria-labelledby="ls-question-text-{{ basename }}">
+    <div class="fr-table fr-table--bordered" data-fr-js-table="true">
+        <table class="{{ coreClass }}" data-fr-js-table-element="true">
+        <caption class="fr-sr-only">{{ gT('Response matrix by column') }}</caption>
+        <colgroup>
+            <col class="col-answers" style="width: {{ answerwidth }}%;" />
+            {% for i, question in aQuestions %}
+                <col
+                    class="answers-list radio-list {% if i % 2 %}ls-odd{% else %}ls-even{% endif %} dsfr-answers"
+                    style="width: {{ cellwidth }}%;"
+                    role="radiogroup"
+                    aria-labelledby="answertext{{ question.myfname }}"
+                >
+            {% endfor %}
+        </colgroup>
+
+        <thead>
+            <tr class="ls-heading">
+                <th scope="col"></th>
+                {% for i, question in aQuestions %}
+                    <th scope="col"
+                        id="answertext{{ question.myfname }}"
+                        class="answertext fr-text--bold{% if question.errormandatory %} has-error error-mandatory{% endif %}"
+                    >
+                        {{ processString(question.question) }}
+                    </th>
+                {% endfor %}
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for ansrow in labels %}
+                <tr id="javatbd{{ ansrow.myfname }}" class="answers-list dsfr-answers">
+                    <th scope="row" id="label-{{ ansrow.code }}" class="answertext fr-text--bold{% if answerwidth==0 %} fr-sr-only{% endif %}">
+                        {{ processString(ansrow.answer) }}
+                    </th>
+                    {% for i, ld in anscode %}
+                        <!-- radio-item et answer-item requis pour em_javascript.js -->
+                        <td class="answer_cell_{{ ld }} radio-item answer-item{% if ansrow.code=="" %} noanswer-item{% endif %}" style="display: table-cell;">
+                            <input
+                                type="radio"
+                                name="{{ aQuestions[i].myfname }}"
+                                value="{{ ansrow.code }}"
+                                id="answer{{ aQuestions[i].myfname }}-{{ ansrow.code }}"
+                                aria-labelledby="label-{{ ansrow.code }}"
+                                {{ checked[ansrow.code][ld] }}
+                            />
+                            <label class="fr-sr-only" for="answer{{ aQuestions[i].myfname }}-{{ ansrow.code }}">
+                                {{ processString(aQuestions[i].question) }}
+                            </label>
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+</div>
+
+{% for i, ld in anscode %}
+    {{ C.Html.hiddenField("java"~aQuestions[i].myfname, aQuestions[i].myfname_value, ({
+        'id' : "java"~aQuestions[i].myfname,
+        'disabled' : true,
+    })) }}
+{% endfor %}
+
+<!-- end of Array by column -->
