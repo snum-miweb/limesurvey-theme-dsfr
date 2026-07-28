@@ -75,8 +75,11 @@
 
                         <!-- First dropdown - select-item requis pour em_javascript.js -->
                         <td class="answer-item dropdown-item select-item{% if ansrow.mandatoryviolation and ansrow.sActualAnswer0=='' %} fr-input-group--error{% endif %}">
+                            {# #56 : vrai <label for> (et non une <div>) pour que chaque select
+                               garde une étiquette visible et programmatique en linéarisation
+                               mobile (le <thead> y est masqué). Mêmes classes, même rendu. #}
                             {% if leftheader != '' %}
-                                <div class='d-block d-md-none leftheader fr-label'>{{ leftheader }}</div>
+                                <label class='d-block d-md-none leftheader fr-label' for="answer{{ ansrow.myfid0 }}">{{ leftheader }}</label>
                             {% endif %}
                             {% if ddsuffix != '' or ddprefix != '' %}
                                 <div class="ls-input-group">
@@ -128,8 +131,9 @@
 
                         <!-- Second dropdown - select-item requis pour em_javascript.js -->
                         <td class="answer-item dropdown-item select-item{% if ansrow.mandatoryviolation and ansrow.sActualAnswer1=='' %} fr-input-group--error{% endif %}">
+                            {# #56 : idem échelle de droite — <label for> au lieu d'une <div>. #}
                             {% if rightheader != '' %}
-                                <div class='d-block d-md-none rightheader fr-label'>{{ rightheader }}</div>
+                                <label class='d-block d-md-none rightheader fr-label' for="answer{{ ansrow.myfid1 }}">{{ rightheader }}</label>
                             {% endif %}
                             {% if ddprefix != '' or ddsuffix != '' %}
                                 <div class="ls-input-group">
