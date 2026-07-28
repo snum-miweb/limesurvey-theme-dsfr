@@ -3200,19 +3200,10 @@ table.fr-table--bordered {
     display: none !important;
 }
 
-/* Force display of DSFR fieldset even when LimeSurvey adds visually-hidden class */
-.choice-5-pt-radio .fr-fieldset[data-display-mode="1"].visually-hidden,
-.choice-5-pt-radio .fr-fieldset[data-display-mode="2"].visually-hidden {
-    position: static !important;
-    width: auto !important;
-    height: auto !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: visible !important;
-    clip: auto !important;
-    white-space: normal !important;
-    clip-path: none !important;
-}
+/* Force display of DSFR fieldset even when LimeSurvey adds visually-hidden
+   class — règle déplacée dans la couche overrides (fin de fichier) : le
+   .visually-hidden !important de theme.css (couche theme) battait cette
+   parade depuis la migration @layer (#41). */
 
 /* Star rating mode (slider_rating == 1) - Progressive fill system CSS-only */
 .star-rating-container {
@@ -4690,5 +4681,25 @@ dialog.fr-modal[open] {
         table .ls-xs-only {
             display: none !important;
         }
+    }
+
+    /* 5-point choice étoiles/emoji : les scripts core (star-rating.js /
+       slider-rating.js) posent visually-hidden sur la liste de réponses pour
+       la remplacer par leur propre widget — que custom.css masque
+       (.stars-list, .ls-emojislider). Le .visually-hidden !important de
+       theme.css (couche theme) battait la parade historique de la couche
+       custom depuis @layer (#41) : question invisible dès que les scripts
+       core s'exécutent. Seul overrides bat l'important de la couche theme. */
+    .choice-5-pt-radio .fr-fieldset[data-display-mode="1"].visually-hidden,
+    .choice-5-pt-radio .fr-fieldset[data-display-mode="2"].visually-hidden {
+        position: static !important;
+        width: auto !important;
+        height: auto !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: visible !important;
+        clip: auto !important;
+        white-space: normal !important;
+        clip-path: none !important;
     }
 }
